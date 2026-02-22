@@ -6,9 +6,6 @@
 #include <apps/openmw-mp/Networking.hpp>
 #include <components/openmw-mp/NetworkMessages.hpp>
 
-template<typename... Types>
-constexpr char TypeString<Types...>::value[];
-
 void ScriptFunctions::MakePublic(ScriptFunc _public, const char *name, char ret_type, const char *def) noexcept
 {
     Public::MakePublic(_public, name, ret_type, def);

@@ -22,11 +22,10 @@
 #include <Script/Functions/Spells.hpp>
 #include <Script/Functions/Stats.hpp>
 #include <Script/Functions/Worldstate.hpp>
-#include <RakNetTypes.h>
-#include <tuple>
+#include <cstdarg>
 #include <apps/openmw-mp/Player.hpp>
+#include <apps/openmw-mp/Utils.hpp>
 #include "ScriptFunction.hpp"
-#include "Types.hpp"
 
 #include <components/openmw-mp/TimedLog.hpp>
 
