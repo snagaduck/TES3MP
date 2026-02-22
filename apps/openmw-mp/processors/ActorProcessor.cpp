@@ -1,5 +1,6 @@
 #include "ActorProcessor.hpp"
 #include "Networking.hpp"
+#include <components/openmw-mp/Net/RakNetManager.hpp>
 
 using namespace mwmp;
 
@@ -16,13 +17,13 @@ bool ActorProcessor::Process(RakNet::Packet &packet, BaseActorList &actorList) n
     // Clear our BaseActorList before loading new data in it
     actorList.cell.blank();
     actorList.baseActors.clear();
-    actorList.guid = packet.guid;
+    actorList.guid = mwmp::RakNetManager::getInstance()->ToPlayerId(packet.guid);
 
     for (auto &processor : processors)
     {
         if (processor.first == packet.data[0])
         {
-            Player *player = Players::getPlayer(packet.guid);
+            Player *player = Players::getPlayer(actorList.guid);
             ActorPacket *myPacket = Networking::get().getActorPacketController()->GetPacket(packet.data[0]);
 
             myPacket->setActorList(&actorList);

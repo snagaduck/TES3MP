@@ -116,8 +116,7 @@ const char *ServerFunctions::GetIP(unsigned short pid) noexcept
 {
     Player *player;
     GET_PLAYER(pid, player, "");
-    RakNet::SystemAddress addr = mwmp::Networking::getPtr()->getSystemAddress(player->guid);
-    return addr.ToString(false);
+    return mwmp::Networking::getPtr()->getSystemAddress(player->guid).c_str();
 }
 
 unsigned short ServerFunctions::GetPort() noexcept

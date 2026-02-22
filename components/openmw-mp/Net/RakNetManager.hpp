@@ -48,7 +48,12 @@ namespace mwmp
 
         RakNet::RakPeerInterface* GetPeer() const { return peer; }
 
+        // Global singleton — set once from Networking startup, used by BasePacket during bridge phase.
+        static RakNetManager* getInstance() { return sInstance; }
+        static void setInstance(RakNetManager* mgr) { sInstance = mgr; }
+
     private:
+        static RakNetManager* sInstance;
         RakNet::RakPeerInterface* peer;
 
         mutable std::mutex mapMutex;

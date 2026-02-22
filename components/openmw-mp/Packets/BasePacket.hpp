@@ -5,6 +5,7 @@
 #include <RakNetTypes.h>
 #include <BitStream.h>
 #include <PacketPriority.h>
+#include <components/openmw-mp/Net/PlayerId.hpp>
 
 
 namespace mwmp
@@ -18,20 +19,21 @@ namespace mwmp
 
         virtual void Packet(RakNet::BitStream *newBitstream, bool send);
         virtual uint32_t Send(bool toOtherPlayers = true);
-        virtual uint32_t Send(RakNet::AddressOrGUID destination);
+        virtual uint32_t Send(RakNet::AddressOrGUID destination); // kept for backward-compat during bridge phase
+        virtual uint32_t Send(mwmp::PlayerId target);             // new — replaces Send(RakNet::AddressOrGUID) in Segment 5
         virtual void Read();
 
-        void setGUID(RakNet::RakNetGUID newGuid);
-        RakNet::RakNetGUID getGUID();
+        void setGUID(mwmp::PlayerId newGuid);
+        mwmp::PlayerId getGUID();
 
         void SetReadStream(RakNet::BitStream *bitStream);
         void SetSendStream(RakNet::BitStream *bitStream);
         void SetStreams(RakNet::BitStream *inStream, RakNet::BitStream *outStream);
-        virtual uint32_t RequestData(RakNet::RakNetGUID targetGuid);
+        virtual uint32_t RequestData(mwmp::PlayerId targetGuid);
 
         static inline uint32_t headerSize()
         {
-            return static_cast<uint32_t>(1 + RakNet::RakNetGUID::size()); // packetID + RakNetGUID (uint64_t)
+            return static_cast<uint32_t>(1 + sizeof(mwmp::PlayerId)); // packetID + PlayerId (uint64_t)
         }
 
         uint8_t GetPacketID() const
@@ -126,7 +128,7 @@ namespace mwmp
         int8_t orderChannel;
         RakNet::BitStream *bsRead, *bsSend, *bs;
         RakNet::RakPeerInterface *peer;
-        RakNet::RakNetGUID guid;
+        mwmp::PlayerId guid;
         bool packetValid;
     };
 }

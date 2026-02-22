@@ -6,6 +6,7 @@
 #include <components/esm/records.hpp>
 #include <components/openmw-mp/Base/BaseActor.hpp>
 #include <components/openmw-mp/Base/BaseObject.hpp>
+#include <components/openmw-mp/Net/PlayerId.hpp>
 #include <components/openmw-mp/Packets/Actor/ActorPacket.hpp>
 #include <components/openmw-mp/Packets/Object/ObjectPacket.hpp>
 
@@ -31,8 +32,8 @@ public:
     mwmp::BaseActor *getActor(int refNum, int mpNum);
     void removeActors(const mwmp::BaseActorList *newActorList);
 
-    RakNet::RakNetGUID *getAuthority();
-    void setAuthority(const RakNet::RakNetGUID& guid);
+    mwmp::PlayerId *getAuthority();
+    void setAuthority(mwmp::PlayerId guid);
     mwmp::BaseActorList *getActorList();
 
     TPlayers getPlayers() const;
@@ -46,7 +47,7 @@ private:
     TPlayers players;
     ESM::Cell cell;
 
-    RakNet::RakNetGUID authorityGuid;
+    mwmp::PlayerId authorityGuid;
     mwmp::BaseActorList cellActorList;
 };
 

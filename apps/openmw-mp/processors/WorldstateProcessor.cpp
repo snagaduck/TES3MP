@@ -1,5 +1,6 @@
 #include "WorldstateProcessor.hpp"
 #include "Networking.hpp"
+#include <components/openmw-mp/Net/RakNetManager.hpp>
 
 using namespace mwmp;
 
@@ -13,13 +14,13 @@ void WorldstateProcessor::Do(WorldstatePacket &packet, Player &player, BaseWorld
 
 bool WorldstateProcessor::Process(RakNet::Packet &packet, BaseWorldstate &worldstate) noexcept
 {
-    worldstate.guid = packet.guid;
+    worldstate.guid = mwmp::RakNetManager::getInstance()->ToPlayerId(packet.guid);
 
     for (auto &processor : processors)
     {
         if (processor.first == packet.data[0])
         {
-            Player *player = Players::getPlayer(packet.guid);
+            Player *player = Players::getPlayer(worldstate.guid);
             WorldstatePacket *myPacket = Networking::get().getWorldstatePacketController()->GetPacket(packet.data[0]);
 
             myPacket->setWorldstate(&worldstate);

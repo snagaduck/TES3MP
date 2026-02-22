@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include <RakNetTypes.h>
+#include <components/openmw-mp/Net/PlayerId.hpp>
 
 namespace mwmp
 {
@@ -11,7 +11,7 @@ namespace mwmp
     {
     public:
 
-        BaseSystem(RakNet::RakNetGUID guid) : guid(guid)
+        BaseSystem(mwmp::PlayerId guid) : guid(guid)
         {
 
         }
@@ -21,7 +21,7 @@ namespace mwmp
 
         }
 
-        RakNet::RakNetGUID guid;
+        mwmp::PlayerId guid;
         std::string playerName;
         std::string serverPassword;
 

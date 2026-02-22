@@ -1,4 +1,5 @@
 #include <components/openmw-mp/NetworkMessages.hpp>
+#include <components/openmw-mp/Net/RakNetManager.hpp>
 #include <PacketPriority.h>
 #include <RakPeer.h>
 #include "BasePacket.hpp"
@@ -44,12 +45,13 @@ void BasePacket::SetStreams(RakNet::BitStream *inStream, RakNet::BitStream *outS
         bsSend = outStream;
 }
 
-uint32_t BasePacket::RequestData(RakNet::RakNetGUID targetGuid)
+uint32_t BasePacket::RequestData(mwmp::PlayerId targetGuid)
 {
     bsSend->ResetWritePointer();
     bsSend->Write(packetID);
-    bsSend->Write(targetGuid);
-    return peer->Send(bsSend, HIGH_PRIORITY, RELIABLE_ORDERED, orderChannel, targetGuid, false);
+    bsSend->Write(targetGuid); // uint64_t; BitStream can write it directly
+    RakNet::RakNetGUID rakGuid = mwmp::RakNetManager::getInstance()->ToGuid(targetGuid);
+    return peer->Send(bsSend, HIGH_PRIORITY, RELIABLE_ORDERED, orderChannel, rakGuid, false);
 }
 
 uint32_t BasePacket::Send(RakNet::AddressOrGUID destination)
@@ -59,11 +61,18 @@ uint32_t BasePacket::Send(RakNet::AddressOrGUID destination)
     return peer->Send(bsSend, priority, reliability, orderChannel, destination, false);
 }
 
+uint32_t BasePacket::Send(mwmp::PlayerId target)
+{
+    RakNet::RakNetGUID rakGuid = mwmp::RakNetManager::getInstance()->ToGuid(target);
+    return Send(RakNet::AddressOrGUID(rakGuid));
+}
+
 uint32_t BasePacket::Send(bool toOther)
 {
     bsSend->ResetWritePointer();
     Packet(bsSend, true);
-    return peer->Send(bsSend, priority, reliability, orderChannel, guid, toOther);
+    RakNet::RakNetGUID rakGuid = mwmp::RakNetManager::getInstance()->ToGuid(guid);
+    return peer->Send(bsSend, priority, reliability, orderChannel, rakGuid, toOther);
 }
 
 void BasePacket::Read()
@@ -71,12 +80,12 @@ void BasePacket::Read()
     Packet(bsRead, false);
 }
 
-void BasePacket::setGUID(RakNet::RakNetGUID newGuid)
+void BasePacket::setGUID(mwmp::PlayerId newGuid)
 {
     guid = newGuid;
 }
 
-RakNet::RakNetGUID BasePacket::getGUID()
+mwmp::PlayerId BasePacket::getGUID()
 {
     return guid;
 }

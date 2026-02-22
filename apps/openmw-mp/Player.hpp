@@ -4,8 +4,8 @@
 #include <map>
 #include <string>
 #include <chrono>
-#include <RakNetTypes.h>
 
+#include <components/openmw-mp/Net/PlayerId.hpp>
 #include <components/esm/npcstats.hpp>
 #include <components/esm/cellid.hpp>
 #include <components/esm/loadnpc.hpp>
@@ -17,19 +17,19 @@
 #include "Cell.hpp"
 #include "CellController.hpp"
 
-typedef std::map<RakNet::RakNetGUID, Player*> TPlayers;
+typedef std::map<mwmp::PlayerId, Player*> TPlayers;
 typedef std::map<unsigned short, Player*> TSlots;
 
 class Players
 {
 public:
-    static void newPlayer(RakNet::RakNetGUID guid);
-    static void deletePlayer(RakNet::RakNetGUID guid);
-    static Player *getPlayer(RakNet::RakNetGUID guid);
+    static void newPlayer(mwmp::PlayerId guid);
+    static void deletePlayer(mwmp::PlayerId guid);
+    static Player *getPlayer(mwmp::PlayerId guid);
     static Player *getPlayer(unsigned short id);
     static TPlayers *getPlayers();
     static unsigned short getLastPlayerId();
-    static bool doesPlayerExist(RakNet::RakNetGUID guid);
+    static bool doesPlayerExist(mwmp::PlayerId guid);
 
 private:
     static TPlayers players;
@@ -49,7 +49,7 @@ public:
         POSTLOADED,
         KICKED
     };
-    Player(RakNet::RakNetGUID guid);
+    Player(mwmp::PlayerId guid);
 
     unsigned short getId();
     void setId(unsigned short id);

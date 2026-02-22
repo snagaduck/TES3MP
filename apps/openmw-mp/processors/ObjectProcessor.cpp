@@ -1,5 +1,6 @@
 #include "ObjectProcessor.hpp"
 #include "Networking.hpp"
+#include <components/openmw-mp/Net/RakNetManager.hpp>
 
 using namespace mwmp;
 
@@ -16,13 +17,13 @@ bool ObjectProcessor::Process(RakNet::Packet &packet, BaseObjectList &objectList
     // Clear our BaseObjectList before loading new data in it
     objectList.cell.blank();
     objectList.baseObjects.clear();
-    objectList.guid = packet.guid;
+    objectList.guid = mwmp::RakNetManager::getInstance()->ToPlayerId(packet.guid);
 
     for (auto &processor : processors)
     {
         if (processor.first == packet.data[0])
         {
-            Player *player = Players::getPlayer(packet.guid);
+            Player *player = Players::getPlayer(objectList.guid);
             ObjectPacket *myPacket = Networking::get().getObjectPacketController()->GetPacket(packet.data[0]);
 
             myPacket->setObjectList(&objectList);

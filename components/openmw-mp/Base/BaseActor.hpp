@@ -5,8 +5,6 @@
 
 #include <components/openmw-mp/Base/BaseStructs.hpp>
 
-#include <RakNetTypes.h>
-
 namespace mwmp
 {
     class BaseActor
@@ -89,7 +87,7 @@ namespace mwmp
             WANDER = 6
         };
 
-        RakNet::RakNetGUID guid;
+        mwmp::PlayerId guid;
 
         std::vector<BaseActor> baseActors;
 

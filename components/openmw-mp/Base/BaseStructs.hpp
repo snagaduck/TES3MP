@@ -7,7 +7,7 @@
 #include <components/esm/loadcell.hpp>
 #include <components/esm/statstate.hpp>
 
-#include <RakNetTypes.h>
+#include <components/openmw-mp/Net/PlayerId.hpp>
 
 namespace mwmp
 {
@@ -101,7 +101,7 @@ namespace mwmp
 
         std::string name; // Remove this once the server can get names corresponding to different refIds
 
-        RakNet::RakNetGUID guid;
+        mwmp::PlayerId guid;
     };
 
     class Attack

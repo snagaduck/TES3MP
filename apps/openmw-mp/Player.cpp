@@ -4,9 +4,9 @@
 TPlayers Players::players;
 TSlots Players::slots;
 
-void Players::deletePlayer(RakNet::RakNetGUID guid)
+void Players::deletePlayer(mwmp::PlayerId guid)
 {
-    LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "Deleting player with guid %lu", guid.g);
+    LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "Deleting player with guid %lu", guid);
 
     if (players[guid] != 0)
     {
@@ -20,9 +20,9 @@ void Players::deletePlayer(RakNet::RakNetGUID guid)
     }
 }
 
-void Players::newPlayer(RakNet::RakNetGUID guid)
+void Players::newPlayer(mwmp::PlayerId guid)
 {
-    LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "Creating new player with guid %lu", guid.g);
+    LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "Creating new player with guid %lu", guid);
 
     players[guid] = new Player(guid);
     players[guid]->cell.blank();
@@ -46,7 +46,7 @@ void Players::newPlayer(RakNet::RakNetGUID guid)
     }
 }
 
-Player *Players::getPlayer(RakNet::RakNetGUID guid)
+Player *Players::getPlayer(mwmp::PlayerId guid)
 {
     auto it = players.find(guid);
     if (it == players.end())
@@ -64,7 +64,7 @@ unsigned short Players::getLastPlayerId()
     return slots.rbegin()->first;
 }
 
-Player::Player(RakNet::RakNetGUID guid) : BasePlayer(guid)
+Player::Player(mwmp::PlayerId guid) : BasePlayer(guid)
 {
     handshakeCounter = 0;
     loadState = NOTLOADED;
@@ -171,7 +171,7 @@ void Player::forEachLoaded(std::function<void(Player *pl, Player *other)> func)
     }
 }
 
-bool Players::doesPlayerExist(RakNet::RakNetGUID guid)
+bool Players::doesPlayerExist(mwmp::PlayerId guid)
 {
     return players.find(guid) != players.end();
 }

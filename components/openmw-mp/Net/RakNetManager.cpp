@@ -4,6 +4,8 @@
 
 using namespace mwmp;
 
+RakNetManager* RakNetManager::sInstance = nullptr;
+
 RakNetManager::RakNetManager(RakNet::RakPeerInterface* peer)
     : peer(peer)
 {}

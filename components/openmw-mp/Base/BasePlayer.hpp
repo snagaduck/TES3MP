@@ -11,7 +11,7 @@
 
 #include <components/openmw-mp/Base/BaseStructs.hpp>
 
-#include <RakNetTypes.h>
+#include <components/openmw-mp/Net/PlayerId.hpp>
 
 namespace mwmp
 {
@@ -168,7 +168,7 @@ namespace mwmp
             std::string data;
         };
 
-        BasePlayer(RakNet::RakNetGUID guid) : guid(guid)
+        BasePlayer(mwmp::PlayerId guid) : guid(guid)
         {
             inventoryChanges.action = 0;
             spellbookChanges.action = 0;
@@ -184,7 +184,7 @@ namespace mwmp
 
         }
 
-        RakNet::RakNetGUID guid;
+        mwmp::PlayerId guid;
 
         GUIMessageBox guiMessageBox;
 
@@ -217,7 +217,7 @@ namespace mwmp
         std::vector<Book> bookChanges;
         std::vector<CellState> cellStateChanges;
 
-        std::vector<RakNet::RakNetGUID> alliedPlayers;
+        std::vector<mwmp::PlayerId> alliedPlayers;
         CurrentContainer currentContainer;
 
         int difficulty = 0;

@@ -1,5 +1,6 @@
 #include "PlayerProcessor.hpp"
 #include "Networking.hpp"
+#include <components/openmw-mp/Net/RakNetManager.hpp>
 
 using namespace mwmp;
 
@@ -12,7 +13,7 @@ bool PlayerProcessor::Process(RakNet::Packet &packet) noexcept
     {
         if (processor.first == packet.data[0])
         {
-            Player *player = Players::getPlayer(packet.guid);
+            Player *player = Players::getPlayer(mwmp::RakNetManager::getInstance()->ToPlayerId(packet.guid));
             PlayerPacket *myPacket = Networking::get().getPlayerPacketController()->GetPacket(packet.data[0]);
             myPacket->setPlayer(player);
 
