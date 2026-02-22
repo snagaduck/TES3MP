@@ -198,6 +198,12 @@ endif()
 find_package(RakNet REQUIRED)
 include_directories(${RakNet_INCLUDES})
 
+find_package(GameNetworkingSockets)
+if(GameNetworkingSockets_FOUND)
+    include_directories(${GameNetworkingSockets_INCLUDE})
+    message(STATUS "GameNetworkingSockets found — GNS transport available")
+endif()
+
 # Dependencies
 find_package(OpenGL REQUIRED)
 

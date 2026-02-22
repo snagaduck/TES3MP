@@ -177,6 +177,7 @@ target_link_libraries(tes3mp-server
     #${Boost_FILESYSTEM_LIBRARY}
     #${Boost_PROGRAM_OPTIONS_LIBRARY}
     ${RakNet_LIBRARY}
+    $<$<BOOL:${GameNetworkingSockets_FOUND}>:${GameNetworkingSockets_LIBRARY}>
     components
     ${LuaJit_LIBRARIES}
     ${Breakpad_Library}

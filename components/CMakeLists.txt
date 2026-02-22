@@ -182,6 +182,10 @@ add_component_dir (openmw-mp
         TimedLog Utils ErrorMessages NetworkMessages Version
         )
 
+add_component_dir (openmw-mp/Net
+        RakNetManager
+        )
+
 add_component_dir (openmw-mp/Base
         BaseActor BaseObject BasePacketProcessor BasePlayer BaseStructs BaseSystem BaseWorldstate
         )
