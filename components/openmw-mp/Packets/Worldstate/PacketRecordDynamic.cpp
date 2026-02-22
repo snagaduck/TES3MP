@@ -12,7 +12,7 @@ PacketRecordDynamic::PacketRecordDynamic(RakNet::RakPeerInterface *peer) : World
     orderChannel = CHANNEL_WORLDSTATE;
 }
 
-void PacketRecordDynamic::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketRecordDynamic::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     WorldstatePacket::Packet(newBitstream, send);
 

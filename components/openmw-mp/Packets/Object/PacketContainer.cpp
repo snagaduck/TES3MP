@@ -10,7 +10,7 @@ PacketContainer::PacketContainer(RakNet::RakPeerInterface *peer) : ObjectPacket(
     hasCellData = true;
 }
 
-void PacketContainer::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketContainer::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     if (!PacketHeader(newBitstream, send))
         return;

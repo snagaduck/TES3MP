@@ -6,7 +6,7 @@ mwmp::PacketPlayerClass::PacketPlayerClass(RakNet::RakPeerInterface *peer) : Pla
     packetID = ID_PLAYER_CHARCLASS;
 }
 
-void mwmp::PacketPlayerClass::Packet(RakNet::BitStream *newBitstream, bool send)
+void mwmp::PacketPlayerClass::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream,  send);
 

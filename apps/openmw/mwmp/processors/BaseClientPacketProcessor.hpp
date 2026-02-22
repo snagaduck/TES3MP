@@ -29,7 +29,7 @@ namespace mwmp
         LocalPlayer *getLocalPlayer();
 
     protected:
-        static RakNet::RakNetGUID guid, myGuid;
+        static mwmp::PlayerId guid, myGuid;
         static RakNet::SystemAddress serverAddr;
 
         static bool request;

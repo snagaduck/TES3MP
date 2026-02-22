@@ -26,7 +26,7 @@ namespace mwmp
             {
                 mwmp::LocalPlayer *localPlayer = mwmp::Main::get().getLocalPlayer();
 
-                for (std::vector<RakNet::RakNetGUID>::iterator iter = localPlayer->alliedPlayers.begin(); iter != localPlayer->alliedPlayers.end(); )
+                for (std::vector<mwmp::PlayerId>::iterator iter = localPlayer->alliedPlayers.begin(); iter != localPlayer->alliedPlayers.end(); )
                 {
                     if (*iter == guid)
                     {

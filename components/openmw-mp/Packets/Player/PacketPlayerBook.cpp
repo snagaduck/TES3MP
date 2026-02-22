@@ -8,7 +8,7 @@ PacketPlayerBook::PacketPlayerBook(RakNet::RakPeerInterface *peer) : PlayerPacke
     packetID = ID_PLAYER_BOOK;
 }
 
-void PacketPlayerBook::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketPlayerBook::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

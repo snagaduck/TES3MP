@@ -349,7 +349,7 @@ void Networking::connect(const std::string &ip, unsigned short port, std::vector
     else
         preInit(content, collections);
 
-    getLocalPlayer()->guid = getLocalSystem()->guid = peer->GetMyGUID();
+    getLocalPlayer()->guid = getLocalSystem()->guid = static_cast<mwmp::PlayerId>(peer->GetMyGUID().g);
 }
 
 void Networking::preInit(std::vector<std::string> &content, Files::Collections &collections)
@@ -374,10 +374,9 @@ void Networking::preInit(std::vector<std::string> &content, Files::Collections &
     }
 
     PacketPreInit packetPreInit(peer);
-    RakNet::BitStream bs;
-    RakNet::RakNetGUID guid;
+    mwmp::NetBuffer bs;
     packetPreInit.setChecksums(&checksums);
-    packetPreInit.setGUID(guid);
+    packetPreInit.setGUID(mwmp::INVALID_PLAYER_ID);
     packetPreInit.SetSendStream(&bs);
     packetPreInit.Send(serverAddr);
 
@@ -392,9 +391,7 @@ void Networking::preInit(std::vector<std::string> &content, Files::Collections &
             continue;
         }
 
-        RakNet::BitStream bsIn(&packet->data[0], packet->length, false);
-        unsigned char packetId;
-        bsIn.Read(packetId);
+        uint8_t packetId = packet->data[0];
         switch(packetId)
         {
             case ID_DISCONNECTION_NOTIFICATION:
@@ -402,11 +399,17 @@ void Networking::preInit(std::vector<std::string> &content, Files::Collections &
                 done = true;
                 break;
             case ID_GAME_PREINIT:
-                bsIn.IgnoreBytes((unsigned) RakNet::RakNetGUID::size());
+            {
+                // Skip 1-byte packetID + 8-byte PlayerId header; wrap the payload.
+                const size_t hdrLen = 1 + sizeof(mwmp::PlayerId);
+                mwmp::NetBuffer bsIn(
+                    packet->data + hdrLen,
+                    packet->length > hdrLen ? packet->length - hdrLen : 0);
                 packetPreInit.setChecksums(&checksumsResponse);
                 packetPreInit.Packet(&bsIn, false);
                 done = true;
                 break;
+            }
         }
 
         peer->DeallocatePacket(packet);

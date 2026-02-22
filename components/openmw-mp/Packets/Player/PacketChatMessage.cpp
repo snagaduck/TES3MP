@@ -7,7 +7,7 @@ mwmp::PacketChatMessage::PacketChatMessage(RakNet::RakPeerInterface *peer) : Pla
     orderChannel = CHANNEL_SYSTEM;
 }
 
-void mwmp::PacketChatMessage::Packet(RakNet::BitStream *newBitstream, bool send)
+void mwmp::PacketChatMessage::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

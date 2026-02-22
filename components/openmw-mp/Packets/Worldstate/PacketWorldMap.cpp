@@ -9,7 +9,7 @@ PacketWorldMap::PacketWorldMap(RakNet::RakPeerInterface *peer) : WorldstatePacke
     packetID = ID_WORLD_MAP;
 }
 
-void PacketWorldMap::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketWorldMap::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     WorldstatePacket::Packet(newBitstream, send);
 

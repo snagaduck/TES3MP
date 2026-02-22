@@ -8,7 +8,7 @@ PacketPlayerRest::PacketPlayerRest(RakNet::RakPeerInterface *peer) : PlayerPacke
     packetID = ID_PLAYER_REST;
 }
 
-void PacketPlayerRest::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketPlayerRest::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

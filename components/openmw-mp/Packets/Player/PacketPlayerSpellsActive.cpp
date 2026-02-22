@@ -8,7 +8,7 @@ PacketPlayerSpellsActive::PacketPlayerSpellsActive(RakNet::RakPeerInterface *pee
     packetID = ID_PLAYER_SPELLS_ACTIVE;
 }
 
-void PacketPlayerSpellsActive::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketPlayerSpellsActive::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

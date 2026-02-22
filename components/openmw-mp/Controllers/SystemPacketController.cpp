@@ -21,7 +21,7 @@ mwmp::SystemPacket *mwmp::SystemPacketController::GetPacket(RakNet::MessageID id
     return packets[(unsigned char)id].get();
 }
 
-void mwmp::SystemPacketController::SetStream(RakNet::BitStream *inStream, RakNet::BitStream *outStream)
+void mwmp::SystemPacketController::SetStream(mwmp::NetBuffer *inStream, mwmp::NetBuffer *outStream)
 {
     for(const auto &packet : packets)
         packet.second->SetStreams(inStream, outStream);

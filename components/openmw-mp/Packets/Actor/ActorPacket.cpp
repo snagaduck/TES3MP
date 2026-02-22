@@ -25,7 +25,7 @@ void ActorPacket::setActorList(BaseActorList *newActorList)
     guid = actorList->guid;
 }
 
-void ActorPacket::Packet(RakNet::BitStream *newBitstream, bool send)
+void ActorPacket::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     if (!PacketHeader(newBitstream, send))
         return;
@@ -47,7 +47,7 @@ void ActorPacket::Packet(RakNet::BitStream *newBitstream, bool send)
     }
 }
 
-bool ActorPacket::PacketHeader(RakNet::BitStream *newBitstream, bool send)
+bool ActorPacket::PacketHeader(mwmp::NetBuffer *newBitstream, bool send)
 {
     BasePacket::Packet(newBitstream, send);
 

@@ -9,7 +9,7 @@ mwmp::PacketPlayerCellChange::PacketPlayerCellChange(RakNet::RakPeerInterface *p
     reliability = RELIABLE_ORDERED;
 }
 
-void mwmp::PacketPlayerCellChange::Packet(RakNet::BitStream *newBitstream, bool send)
+void mwmp::PacketPlayerCellChange::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

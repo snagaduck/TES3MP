@@ -3,6 +3,7 @@
 
 
 #include <RakPeerInterface.h>
+#include <components/openmw-mp/Net/NetBuffer.hpp>
 #include "../Packets/Object/ObjectPacket.hpp"
 #include <unordered_map>
 #include <memory>
@@ -14,7 +15,7 @@ namespace mwmp
     public:
         ObjectPacketController(RakNet::RakPeerInterface *peer);
         ObjectPacket *GetPacket(RakNet::MessageID id);
-        void SetStream(RakNet::BitStream *inStream, RakNet::BitStream *outStream);
+        void SetStream(mwmp::NetBuffer *inStream, mwmp::NetBuffer *outStream);
 
         bool ContainsPacket(RakNet::MessageID id);
 

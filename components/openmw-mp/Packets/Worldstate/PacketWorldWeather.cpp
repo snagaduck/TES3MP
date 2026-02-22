@@ -9,7 +9,7 @@ PacketWorldWeather::PacketWorldWeather(RakNet::RakPeerInterface *peer) : Worldst
     orderChannel = CHANNEL_WORLDSTATE;
 }
 
-void PacketWorldWeather::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketWorldWeather::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     WorldstatePacket::Packet(newBitstream, send);
 

@@ -16,7 +16,7 @@ namespace mwmp
 
         PacketPreInit(RakNet::RakPeerInterface *peer);
 
-        virtual void Packet(RakNet::BitStream *newBitstream, bool send);
+        virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
         void setChecksums(PluginContainer *checksums);
     private:
         PluginContainer *checksums;

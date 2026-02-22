@@ -8,7 +8,7 @@ PacketPlayerCooldowns::PacketPlayerCooldowns(RakNet::RakPeerInterface *peer) : P
     packetID = ID_PLAYER_COOLDOWNS;
 }
 
-void PacketPlayerCooldowns::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketPlayerCooldowns::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

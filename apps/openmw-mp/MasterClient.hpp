@@ -6,6 +6,7 @@
 #include <thread>
 #include <components/openmw-mp/Master/MasterData.hpp>
 #include <RakString.h>
+#include <components/openmw-mp/Net/NetBuffer.hpp>
 #include <components/openmw-mp/Master/PacketMasterAnnounce.hpp>
 
 class MasterClient
@@ -41,7 +42,7 @@ private:
     std::mutex mutexData;
     std::thread thrQuery;
     mwmp::PacketMasterAnnounce pma;
-    RakNet::BitStream writeStream;
+    mwmp::NetBuffer writeStream;
     bool updated;
 };
 

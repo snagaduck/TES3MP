@@ -7,12 +7,13 @@ mwmp::PacketPreInit::PacketPreInit(RakNet::RakPeerInterface *peer) : BasePacket(
     packetID = ID_GAME_PREINIT;
 }
 
-void mwmp::PacketPreInit::Packet(RakNet::BitStream *newBitstream, bool send)
+void mwmp::PacketPreInit::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     BasePacket::Packet(newBitstream, send);
 
-    const RakNet::BitSize_t packetSize = bs->GetNumberOfBytesUsed();
-    uint32_t expectedPacketSize = BasePacket::headerSize() + sizeof(uint32_t);
+    // bs is payload-only (header already stripped by the receive loop)
+    const size_t packetSize = bs->GetSize();
+    uint32_t expectedPacketSize = sizeof(uint32_t); // numberOfChecksums field
     if (!send && expectedPacketSize > packetSize)
     {
         LOG_MESSAGE(TimedLog::LOG_ERROR, "Wrong packet size %d when expected %d", packetSize, expectedPacketSize);

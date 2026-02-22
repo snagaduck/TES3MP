@@ -73,7 +73,7 @@ mwmp::ObjectPacket *mwmp::ObjectPacketController::GetPacket(RakNet::MessageID id
     return packets[(unsigned char)id].get();
 }
 
-void mwmp::ObjectPacketController::SetStream(RakNet::BitStream *inStream, RakNet::BitStream *outStream)
+void mwmp::ObjectPacketController::SetStream(mwmp::NetBuffer *inStream, mwmp::NetBuffer *outStream)
 {
     for(const auto &packet : packets)
         packet.second->SetStreams(inStream, outStream);

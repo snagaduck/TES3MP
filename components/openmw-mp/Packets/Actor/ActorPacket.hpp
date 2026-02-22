@@ -3,7 +3,6 @@
 
 #include <string>
 #include <RakNetTypes.h>
-#include <BitStream.h>
 #include <PacketPriority.h>
 #include <components/openmw-mp/Base/BaseActor.hpp>
 
@@ -21,9 +20,9 @@ namespace mwmp
 
         void setActorList(BaseActorList *newActorList);
 
-        virtual void Packet(RakNet::BitStream *newBitstream, bool send);
+        virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     protected:
-        bool PacketHeader(RakNet::BitStream *newBitstream, bool send);
+        bool PacketHeader(mwmp::NetBuffer *newBitstream, bool send);
         virtual void Actor(BaseActor &actor, bool send);
         BaseActorList *actorList;
         static const int maxActors = 3000;

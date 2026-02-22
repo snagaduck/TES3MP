@@ -602,7 +602,7 @@ bool Cell::hasLocalAuthority()
     return authorityGuid == Main::get().getLocalPlayer()->guid;
 }
 
-void Cell::setAuthority(const RakNet::RakNetGUID& guid)
+void Cell::setAuthority(mwmp::PlayerId guid)
 {
     authorityGuid = guid;
 }

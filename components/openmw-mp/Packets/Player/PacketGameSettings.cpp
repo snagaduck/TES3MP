@@ -9,7 +9,7 @@ PacketGameSettings::PacketGameSettings(RakNet::RakPeerInterface *peer) : PlayerP
     orderChannel = CHANNEL_SYSTEM;
 }
 
-void PacketGameSettings::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketGameSettings::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

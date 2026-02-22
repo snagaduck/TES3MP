@@ -1,6 +1,8 @@
 #include "QueryClient.hpp"
 #include <RakSleep.h>
+#include <BitStream.h>
 #include <components/openmw-mp/NetworkMessages.hpp>
+#include <components/openmw-mp/Net/NetBuffer.hpp>
 #include <iostream>
 #include <components/openmw-mp/Version.hpp>
 #include <qdebug.h>
@@ -124,7 +126,7 @@ MASTER_PACKETS QueryClient::GetAnswer(MASTER_PACKETS waitingPacket)
     {
         for (packet = peer->Receive(); packet; peer->DeallocatePacket(packet), packet = peer->Receive())
         {
-            BitStream data(packet->data, packet->length, false);
+            mwmp::NetBuffer data(packet->data, packet->length);
             pmq->SetReadStream(&data);
             pmu->SetReadStream(&data);
             data.Read(pid);

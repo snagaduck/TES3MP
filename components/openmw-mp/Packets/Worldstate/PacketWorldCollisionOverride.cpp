@@ -9,7 +9,7 @@ PacketWorldCollisionOverride::PacketWorldCollisionOverride(RakNet::RakPeerInterf
     orderChannel = CHANNEL_WORLDSTATE;
 }
 
-void PacketWorldCollisionOverride::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketWorldCollisionOverride::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     WorldstatePacket::Packet(newBitstream, send);
 

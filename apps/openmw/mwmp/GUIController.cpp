@@ -291,13 +291,13 @@ private:
     }
 };
 
-ESM::CustomMarker mwmp::GUIController::createMarker(const RakNet::RakNetGUID &guid)
+ESM::CustomMarker mwmp::GUIController::createMarker(mwmp::PlayerId guid)
 {
     DedicatedPlayer *player = PlayerList::getPlayer(guid);
     ESM::CustomMarker mEditingMarker;
     if (!player)
     {
-        LOG_MESSAGE_SIMPLE(TimedLog::LOG_ERROR, "Unknown player guid: %s", guid.ToString());
+        LOG_MESSAGE_SIMPLE(TimedLog::LOG_ERROR, "Unknown player guid: %llu", (unsigned long long)guid);
         return mEditingMarker;
     }
 

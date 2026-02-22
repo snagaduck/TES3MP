@@ -10,7 +10,7 @@ namespace mwmp
     public:
         PacketWorldCollisionOverride(RakNet::RakPeerInterface *peer);
 
-        virtual void Packet(RakNet::BitStream *newBitstream, bool send);
+        virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     };
 }
 

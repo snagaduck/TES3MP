@@ -9,7 +9,7 @@ PacketClientScriptSettings::PacketClientScriptSettings(RakNet::RakPeerInterface 
     orderChannel = CHANNEL_WORLDSTATE;
 }
 
-void PacketClientScriptSettings::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketClientScriptSettings::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     WorldstatePacket::Packet(newBitstream, send);
 

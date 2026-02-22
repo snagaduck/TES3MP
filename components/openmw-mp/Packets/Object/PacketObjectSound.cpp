@@ -9,7 +9,7 @@ PacketObjectSound::PacketObjectSound(RakNet::RakPeerInterface *peer) : ObjectPac
     hasCellData = true;
 }
 
-void PacketObjectSound::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketObjectSound::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     if (!PacketHeader(newBitstream, send))
         return;

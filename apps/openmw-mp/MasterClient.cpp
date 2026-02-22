@@ -113,8 +113,8 @@ bool MasterClient::Process(RakNet::Packet *packet)
     if (!sRun || packet->systemAddress != masterServer)
         return false;
 
-    BitStream rs(packet->data, packet->length, false);
-    unsigned char pid;
+    mwmp::NetBuffer rs(packet->data, packet->length);
+    uint8_t pid;
     rs.Read(pid);
     switch (pid)
     {

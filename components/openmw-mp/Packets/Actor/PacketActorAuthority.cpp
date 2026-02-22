@@ -8,7 +8,7 @@ PacketActorAuthority::PacketActorAuthority(RakNet::RakPeerInterface *peer) : Act
     packetID = ID_ACTOR_AUTHORITY;
 }
 
-void PacketActorAuthority::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketActorAuthority::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     BasePacket::Packet(newBitstream, send);
 

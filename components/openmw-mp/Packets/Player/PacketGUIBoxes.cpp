@@ -9,7 +9,7 @@ PacketGUIBoxes::PacketGUIBoxes(RakNet::RakPeerInterface *peer) : PlayerPacket(pe
     orderChannel = CHANNEL_SYSTEM;
 }
 
-void PacketGUIBoxes::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketGUIBoxes::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

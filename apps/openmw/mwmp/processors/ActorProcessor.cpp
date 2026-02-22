@@ -14,8 +14,9 @@ ActorProcessor::~ActorProcessor()
 
 bool ActorProcessor::Process(RakNet::Packet &packet, ActorList &actorList)
 {
-    RakNet::BitStream bsIn(&packet.data[1], packet.length, false);
-    bsIn.Read(guid);
+    std::memcpy(&guid, packet.data + 1, sizeof(mwmp::PlayerId));
+    const size_t hdrLen = 1 + sizeof(mwmp::PlayerId);
+    mwmp::NetBuffer bsIn(packet.data + hdrLen, packet.length > hdrLen ? packet.length - hdrLen : 0);
     actorList.guid = guid;
 
     ActorPacket *myPacket = Main::get().getNetworking()->getActorPacket(packet.data[0]);

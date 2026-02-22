@@ -2,8 +2,8 @@
 #define OPENMW_NETWORKING_HPP
 
 #include <RakPeerInterface.h>
-#include <BitStream.h>
 #include <string>
+#include <components/openmw-mp/Net/NetBuffer.hpp>
 
 #include <components/openmw-mp/NetworkMessages.hpp>
 
@@ -55,7 +55,7 @@ namespace mwmp
         bool connected;
         RakNet::RakPeerInterface *peer;
         RakNet::SystemAddress serverAddr;
-        RakNet::BitStream bsOut;
+        mwmp::NetBuffer bsOut;
 
         SystemPacketController systemPacketController;
         PlayerPacketController playerPacketController;

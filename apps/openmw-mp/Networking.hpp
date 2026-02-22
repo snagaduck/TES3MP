@@ -7,6 +7,7 @@
 #include <components/openmw-mp/Controllers/ObjectPacketController.hpp>
 #include <components/openmw-mp/Controllers/WorldstatePacketController.hpp>
 #include <components/openmw-mp/Net/PlayerId.hpp>
+#include <components/openmw-mp/Net/NetBuffer.hpp>
 #include <components/openmw-mp/Net/RakNetManager.hpp>
 #include <components/openmw-mp/Packets/PacketPreInit.hpp>
 #include "Player.hpp"
@@ -35,7 +36,7 @@ namespace  mwmp
         void processActorPacket(RakNet::Packet *packet, mwmp::PlayerId pid);
         void processObjectPacket(RakNet::Packet *packet, mwmp::PlayerId pid);
         void processWorldstatePacket(RakNet::Packet *packet, mwmp::PlayerId pid);
-        void update(RakNet::Packet *packet, mwmp::PlayerId pid, RakNet::BitStream &bsIn);
+        void update(RakNet::Packet *packet, mwmp::PlayerId pid, mwmp::NetBuffer &bsIn);
 
         unsigned short numberOfConnections() const;
         unsigned int maxConnections() const;
@@ -78,13 +79,13 @@ namespace  mwmp
 
         PacketPreInit::PluginContainer &getSamples();
     private:
-        bool preInit(RakNet::Packet *packet, mwmp::PlayerId pid, RakNet::BitStream &bsIn);
+        bool preInit(RakNet::Packet *packet, mwmp::PlayerId pid, mwmp::NetBuffer &bsIn);
         std::string serverPassword;
         static Networking *sThis;
 
         RakNet::RakPeerInterface *peer;
         mwmp::RakNetManager *rakNetManager;
-        RakNet::BitStream bsOut;
+        mwmp::NetBuffer bsOut;
         TPlayers *players;
         MasterClient *mclient;
 

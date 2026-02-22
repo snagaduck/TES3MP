@@ -8,7 +8,7 @@ PacketActorList::PacketActorList(RakNet::RakPeerInterface *peer) : ActorPacket(p
     packetID = ID_ACTOR_LIST;
 }
 
-void PacketActorList::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketActorList::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     if (!ActorPacket::PacketHeader(newBitstream, send))
         return;

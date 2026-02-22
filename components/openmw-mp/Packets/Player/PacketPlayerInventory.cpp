@@ -8,7 +8,7 @@ PacketPlayerInventory::PacketPlayerInventory(RakNet::RakPeerInterface *peer) : P
     packetID = ID_PLAYER_INVENTORY;
 }
 
-void PacketPlayerInventory::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketPlayerInventory::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

@@ -3,7 +3,6 @@
 
 #include <string>
 #include <RakNetTypes.h>
-#include <BitStream.h>
 #include <PacketPriority.h>
 #include <components/openmw-mp/Base/BasePlayer.hpp>
 

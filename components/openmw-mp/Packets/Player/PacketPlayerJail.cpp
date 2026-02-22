@@ -9,7 +9,7 @@ PacketPlayerJail::PacketPlayerJail(RakNet::RakPeerInterface *peer) : PlayerPacke
     packetID = ID_PLAYER_JAIL;
 }
 
-void PacketPlayerJail::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketPlayerJail::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

@@ -12,7 +12,7 @@ PacketMasterUpdate::PacketMasterUpdate(RakNet::RakPeerInterface *peer) : BasePac
     reliability = RELIABLE_ORDERED_WITH_ACK_RECEIPT;
 }
 
-void PacketMasterUpdate::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketMasterUpdate::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     bs = newBitstream;
     if (send)

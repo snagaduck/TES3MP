@@ -8,7 +8,7 @@ PacketPlayerAttack::PacketPlayerAttack(RakNet::RakPeerInterface *peer) : PlayerP
     packetID = ID_PLAYER_ATTACK;
 }
 
-void PacketPlayerAttack::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketPlayerAttack::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

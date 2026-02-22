@@ -66,7 +66,7 @@ namespace mwmp
 
     private:
 
-        DedicatedPlayer(RakNet::RakNetGUID guid);
+        DedicatedPlayer(mwmp::PlayerId guid);
         virtual ~DedicatedPlayer();
 
         MWWorld::ManualRef* reference;

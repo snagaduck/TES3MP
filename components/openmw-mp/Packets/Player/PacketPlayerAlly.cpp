@@ -6,7 +6,7 @@ mwmp::PacketPlayerAlly::PacketPlayerAlly(RakNet::RakPeerInterface *peer) : Playe
     packetID = ID_PLAYER_ALLY;
 }
 
-void mwmp::PacketPlayerAlly::Packet(RakNet::BitStream *newBitstream, bool send)
+void mwmp::PacketPlayerAlly::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

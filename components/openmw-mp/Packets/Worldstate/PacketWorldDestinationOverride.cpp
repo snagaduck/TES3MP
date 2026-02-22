@@ -11,7 +11,7 @@ PacketWorldDestinationOverride::PacketWorldDestinationOverride(RakNet::RakPeerIn
     orderChannel = CHANNEL_WORLDSTATE;
 }
 
-void PacketWorldDestinationOverride::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketWorldDestinationOverride::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     WorldstatePacket::Packet(newBitstream, send);
 

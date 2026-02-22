@@ -8,7 +8,7 @@ PacketPlayerJournal::PacketPlayerJournal(RakNet::RakPeerInterface *peer) : Playe
     packetID = ID_PLAYER_JOURNAL;
 }
 
-void PacketPlayerJournal::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketPlayerJournal::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

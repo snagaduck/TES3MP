@@ -9,7 +9,7 @@ PacketObjectHit::PacketObjectHit(RakNet::RakPeerInterface *peer) : ObjectPacket(
     hasCellData = true;
 }
 
-void PacketObjectHit::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketObjectHit::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     if (!PacketHeader(newBitstream, send))
         return;

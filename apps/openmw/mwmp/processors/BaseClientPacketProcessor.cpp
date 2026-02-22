@@ -3,8 +3,8 @@
 
 using namespace mwmp;
 
-RakNet::RakNetGUID BaseClientPacketProcessor::guid;
-RakNet::RakNetGUID BaseClientPacketProcessor::myGuid;
+mwmp::PlayerId BaseClientPacketProcessor::guid;
+mwmp::PlayerId BaseClientPacketProcessor::myGuid;
 RakNet::SystemAddress BaseClientPacketProcessor::serverAddr;
 bool BaseClientPacketProcessor::request;
 

@@ -14,8 +14,9 @@ PlayerProcessor::~PlayerProcessor()
 
 bool PlayerProcessor::Process(RakNet::Packet &packet)
 {
-    RakNet::BitStream bsIn(&packet.data[1], packet.length, false);
-    bsIn.Read(guid);
+    std::memcpy(&guid, packet.data + 1, sizeof(mwmp::PlayerId));
+    const size_t hdrLen = 1 + sizeof(mwmp::PlayerId);
+    mwmp::NetBuffer bsIn(packet.data + hdrLen, packet.length > hdrLen ? packet.length - hdrLen : 0);
 
     PlayerPacket *myPacket = Main::get().getNetworking()->getPlayerPacket(packet.data[0]);
     myPacket->SetReadStream(&bsIn);

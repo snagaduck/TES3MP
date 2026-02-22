@@ -8,7 +8,7 @@ PacketPlayerQuickKeys::PacketPlayerQuickKeys(RakNet::RakPeerInterface *peer) : P
     packetID = ID_PLAYER_QUICKKEYS;
 }
 
-void PacketPlayerQuickKeys::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketPlayerQuickKeys::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

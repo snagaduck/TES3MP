@@ -40,7 +40,7 @@
 
 using namespace mwmp;
 
-DedicatedPlayer::DedicatedPlayer(RakNet::RakNetGUID guid) : BasePlayer(guid)
+DedicatedPlayer::DedicatedPlayer(mwmp::PlayerId guid) : BasePlayer(guid)
 {
     reference = 0;
     attack.pressed = false;

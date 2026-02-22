@@ -20,7 +20,7 @@
 
 using namespace mwmp;
 
-std::map <RakNet::RakNetGUID, DedicatedPlayer *> PlayerList::playerList;
+std::map <mwmp::PlayerId, DedicatedPlayer *> PlayerList::playerList;
 
 void PlayerList::update(float dt)
 {
@@ -33,9 +33,9 @@ void PlayerList::update(float dt)
     }
 }
 
-DedicatedPlayer *PlayerList::newPlayer(RakNet::RakNetGUID guid)
+DedicatedPlayer *PlayerList::newPlayer(mwmp::PlayerId guid)
 {
-    LOG_APPEND(TimedLog::LOG_INFO, "- Creating new DedicatedPlayer with guid %s", guid.ToString());
+    LOG_APPEND(TimedLog::LOG_INFO, "- Creating new DedicatedPlayer with guid %llu", (unsigned long long)guid);
 
     playerList[guid] = new DedicatedPlayer(guid);
 
@@ -44,7 +44,7 @@ DedicatedPlayer *PlayerList::newPlayer(RakNet::RakNetGUID guid)
     return playerList[guid];
 }
 
-void PlayerList::deletePlayer(RakNet::RakNetGUID guid)
+void PlayerList::deletePlayer(mwmp::PlayerId guid)
 {
     if (playerList[guid]->reference)
         playerList[guid]->deleteReference();
@@ -59,7 +59,7 @@ void PlayerList::cleanUp()
         delete playerEntry.second;
 }
 
-DedicatedPlayer *PlayerList::getPlayer(RakNet::RakNetGUID guid)
+DedicatedPlayer *PlayerList::getPlayer(mwmp::PlayerId guid)
 {
     return playerList[guid];
 }
@@ -97,13 +97,13 @@ DedicatedPlayer* PlayerList::getPlayer(int actorId)
     return nullptr;
 }
 
-std::vector<RakNet::RakNetGUID> PlayerList::getPlayersInCell(const ESM::Cell& cell)
+std::vector<mwmp::PlayerId> PlayerList::getPlayersInCell(const ESM::Cell& cell)
 {
-    std::vector<RakNet::RakNetGUID> playersInCell;
+    std::vector<mwmp::PlayerId> playersInCell;
 
     for (auto& playerEntry : playerList)
     {
-        if (playerEntry.first != RakNet::UNASSIGNED_CRABNET_GUID)
+        if (playerEntry.first != mwmp::INVALID_PLAYER_ID)
         {
             if (Main::get().getCellController()->isSameCell(cell, playerEntry.second->cell))
             {

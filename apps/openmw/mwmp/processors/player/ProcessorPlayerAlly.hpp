@@ -23,7 +23,7 @@ namespace mwmp
             {
                 LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "Received ID_PLAYER_ALLY about LocalPlayer %s from server", localPlayer->npc.mName.c_str());
 
-                for (std::vector<RakNet::RakNetGUID>::iterator iter = localPlayer->alliedPlayers.begin(); iter != localPlayer->alliedPlayers.end(); )
+                for (std::vector<mwmp::PlayerId>::iterator iter = localPlayer->alliedPlayers.begin(); iter != localPlayer->alliedPlayers.end(); )
                 {
                     DedicatedPlayer *dedicatedPlayer = PlayerList::getPlayer(*iter);
 
@@ -39,7 +39,7 @@ namespace mwmp
             {
                 LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "Received ID_PLAYER_ALLY about DedicatedPlayer %s from server", player->npc.mName.c_str());
 
-                for (std::vector<RakNet::RakNetGUID>::iterator iter = player->alliedPlayers.begin(); iter != player->alliedPlayers.end(); )
+                for (std::vector<mwmp::PlayerId>::iterator iter = player->alliedPlayers.begin(); iter != player->alliedPlayers.end(); )
                 {
                     if (*iter == localPlayer->guid)
                     {

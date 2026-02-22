@@ -10,7 +10,7 @@ PacketPlayerPosition::PacketPlayerPosition(RakNet::RakPeerInterface *peer) : Pla
     //reliability = UNRELIABLE_SEQUENCED;
 }
 
-void PacketPlayerPosition::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketPlayerPosition::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

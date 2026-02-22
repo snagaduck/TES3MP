@@ -3,9 +3,9 @@
 
 #include <string>
 #include <RakNetTypes.h>
-#include <BitStream.h>
 #include <PacketPriority.h>
 #include <components/openmw-mp/Net/PlayerId.hpp>
+#include <components/openmw-mp/Net/NetBuffer.hpp>
 
 
 namespace mwmp
@@ -17,18 +17,18 @@ namespace mwmp
 
         virtual ~BasePacket() = default;
 
-        virtual void Packet(RakNet::BitStream *newBitstream, bool send);
+        virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
         virtual uint32_t Send(bool toOtherPlayers = true);
-        virtual uint32_t Send(RakNet::AddressOrGUID destination); // kept for backward-compat during bridge phase
-        virtual uint32_t Send(mwmp::PlayerId target);             // new — replaces Send(RakNet::AddressOrGUID) in Segment 5
+        virtual uint32_t Send(RakNet::AddressOrGUID destination); // kept during bridge phase
+        virtual uint32_t Send(mwmp::PlayerId target);
         virtual void Read();
 
         void setGUID(mwmp::PlayerId newGuid);
         mwmp::PlayerId getGUID();
 
-        void SetReadStream(RakNet::BitStream *bitStream);
-        void SetSendStream(RakNet::BitStream *bitStream);
-        void SetStreams(RakNet::BitStream *inStream, RakNet::BitStream *outStream);
+        void SetReadStream(mwmp::NetBuffer *bitStream);
+        void SetSendStream(mwmp::NetBuffer *bitStream);
+        void SetStreams(mwmp::NetBuffer *inStream, mwmp::NetBuffer *outStream);
         virtual uint32_t RequestData(mwmp::PlayerId targetGuid);
 
         static inline uint32_t headerSize()
@@ -47,6 +47,7 @@ namespace mwmp
         }
 
     protected:
+        // RW with explicit byte count
         template<class templateType>
         bool RW(templateType &data, uint32_t size, bool write)
         {
@@ -57,6 +58,7 @@ namespace mwmp
             return true;
         }
 
+        // RW with optional compression (compression is a no-op in NetBuffer)
         template<class templateType>
         bool RW(templateType &data, bool write, bool compress = 0)
         {
@@ -90,35 +92,21 @@ namespace mwmp
 
         bool RW(std::string &str, bool write, bool compress = false, std::string::size_type maxSize = maxStrSize)
         {
-            bool res = true;
+            // RakString + compression removed — protocol break from RakNet.
+            // NetBuffer uses a length-prefixed UTF-8 string format.
             if (write)
             {
-                if (compress)
-                    RakNet::RakString::SerializeCompressed(str.substr(0, maxSize).c_str(), bs); // todo: remove extra copy of string
-                else
-                {
-                    RakNet::RakString rstr;
-                    rstr.AppendBytes(str.c_str(), str.size() > maxSize ? maxSize : str.size());
-                    bs->Write(rstr);
-                }
+                std::string capped = str.size() > maxSize ? str.substr(0, maxSize) : str;
+                bs->Write(capped);
+                return true;
             }
             else
             {
-                RakNet::RakString rstr;
-                if (compress)
-                    res = rstr.DeserializeCompressed(bs);
-                else
-                    res = bs->Read(rstr);
-
-                if (res)
-                {
-                    rstr.Truncate(rstr.GetLength() > maxSize ? maxSize : rstr.GetLength());
-                    str = rstr.C_String();
-                }
-                else
-                    str = std::string();
+                bool res = bs->Read(str);
+                if (res && str.size() > maxSize)
+                    str.resize(maxSize);
+                return res;
             }
-            return res;
         }
 
     protected:
@@ -126,7 +114,7 @@ namespace mwmp
         PacketReliability reliability;
         PacketPriority priority;
         int8_t orderChannel;
-        RakNet::BitStream *bsRead, *bsSend, *bs;
+        mwmp::NetBuffer *bsRead, *bsSend, *bs;
         RakNet::RakPeerInterface *peer;
         mwmp::PlayerId guid;
         bool packetValid;

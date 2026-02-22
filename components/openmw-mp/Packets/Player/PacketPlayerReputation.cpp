@@ -8,7 +8,7 @@ PacketPlayerReputation::PacketPlayerReputation(RakNet::RakPeerInterface *peer) :
     packetID = ID_PLAYER_REPUTATION;
 }
 
-void PacketPlayerReputation::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketPlayerReputation::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

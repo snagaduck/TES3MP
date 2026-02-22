@@ -9,7 +9,7 @@ PacketPlayerMomentum::PacketPlayerMomentum(RakNet::RakPeerInterface *peer) : Pla
     priority = MEDIUM_PRIORITY;
 }
 
-void PacketPlayerMomentum::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketPlayerMomentum::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
     

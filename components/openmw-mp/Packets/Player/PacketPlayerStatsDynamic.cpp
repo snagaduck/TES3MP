@@ -9,7 +9,7 @@ PacketPlayerStatsDynamic::PacketPlayerStatsDynamic(RakNet::RakPeerInterface *pee
     packetID = ID_PLAYER_STATS_DYNAMIC;
 }
 
-void PacketPlayerStatsDynamic::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketPlayerStatsDynamic::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

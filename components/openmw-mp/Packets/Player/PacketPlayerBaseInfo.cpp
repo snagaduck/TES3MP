@@ -8,7 +8,7 @@ PacketPlayerBaseInfo::PacketPlayerBaseInfo(RakNet::RakPeerInterface *peer) : Pla
     packetID = ID_PLAYER_BASEINFO;
 }
 
-void PacketPlayerBaseInfo::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketPlayerBaseInfo::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

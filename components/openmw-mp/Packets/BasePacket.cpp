@@ -15,7 +15,7 @@ BasePacket::BasePacket(RakNet::RakPeerInterface *peer)
     this->peer = peer;
 }
 
-void BasePacket::Packet(RakNet::BitStream *newBitstream, bool send)
+void BasePacket::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     bs = newBitstream;
     packetValid = true;
@@ -27,17 +27,17 @@ void BasePacket::Packet(RakNet::BitStream *newBitstream, bool send)
     }
 }
 
-void BasePacket::SetReadStream(RakNet::BitStream *bitStream)
+void BasePacket::SetReadStream(mwmp::NetBuffer *bitStream)
 {
     bsRead = bitStream;
 }
 
-void BasePacket::SetSendStream(RakNet::BitStream *bitStream)
+void BasePacket::SetSendStream(mwmp::NetBuffer *bitStream)
 {
     bsSend = bitStream;
 }
 
-void BasePacket::SetStreams(RakNet::BitStream *inStream, RakNet::BitStream *outStream)
+void BasePacket::SetStreams(mwmp::NetBuffer *inStream, mwmp::NetBuffer *outStream)
 {
     if (inStream != nullptr)
         bsRead = inStream;
@@ -51,14 +51,18 @@ uint32_t BasePacket::RequestData(mwmp::PlayerId targetGuid)
     bsSend->Write(packetID);
     bsSend->Write(targetGuid); // uint64_t; BitStream can write it directly
     RakNet::RakNetGUID rakGuid = mwmp::RakNetManager::getInstance()->ToGuid(targetGuid);
-    return peer->Send(bsSend, HIGH_PRIORITY, RELIABLE_ORDERED, orderChannel, rakGuid, false);
+    return peer->Send(reinterpret_cast<const char*>(bsSend->GetData()),
+                      static_cast<int>(bsSend->GetSize()),
+                      HIGH_PRIORITY, RELIABLE_ORDERED, orderChannel, rakGuid, false);
 }
 
 uint32_t BasePacket::Send(RakNet::AddressOrGUID destination)
 {
     bsSend->ResetWritePointer();
     Packet(bsSend, true);
-    return peer->Send(bsSend, priority, reliability, orderChannel, destination, false);
+    return peer->Send(reinterpret_cast<const char*>(bsSend->GetData()),
+                      static_cast<int>(bsSend->GetSize()),
+                      priority, reliability, orderChannel, destination, false);
 }
 
 uint32_t BasePacket::Send(mwmp::PlayerId target)
@@ -72,7 +76,9 @@ uint32_t BasePacket::Send(bool toOther)
     bsSend->ResetWritePointer();
     Packet(bsSend, true);
     RakNet::RakNetGUID rakGuid = mwmp::RakNetManager::getInstance()->ToGuid(guid);
-    return peer->Send(bsSend, priority, reliability, orderChannel, rakGuid, toOther);
+    return peer->Send(reinterpret_cast<const char*>(bsSend->GetData()),
+                      static_cast<int>(bsSend->GetSize()),
+                      priority, reliability, orderChannel, rakGuid, toOther);
 }
 
 void BasePacket::Read()

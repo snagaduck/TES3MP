@@ -9,7 +9,7 @@ PacketWorldTime::PacketWorldTime(RakNet::RakPeerInterface *peer) : WorldstatePac
     orderChannel = CHANNEL_WORLDSTATE;
 }
 
-void PacketWorldTime::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketWorldTime::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     WorldstatePacket::Packet(newBitstream, send);
 

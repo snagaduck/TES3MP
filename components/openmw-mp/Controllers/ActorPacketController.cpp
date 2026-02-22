@@ -50,7 +50,7 @@ mwmp::ActorPacket *mwmp::ActorPacketController::GetPacket(RakNet::MessageID id)
     return packets[(unsigned char)id].get();
 }
 
-void mwmp::ActorPacketController::SetStream(RakNet::BitStream *inStream, RakNet::BitStream *outStream)
+void mwmp::ActorPacketController::SetStream(mwmp::NetBuffer *inStream, mwmp::NetBuffer *outStream)
 {
     for(const auto &packet : packets)
         packet.second->SetStreams(inStream, outStream);

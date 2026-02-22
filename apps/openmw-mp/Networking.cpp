@@ -234,7 +234,7 @@ void Networking::processWorldstatePacket(RakNet::Packet *packet, mwmp::PlayerId 
 
 }
 
-bool Networking::preInit(RakNet::Packet *packet, mwmp::PlayerId pid, RakNet::BitStream &bsIn)
+bool Networking::preInit(RakNet::Packet *packet, mwmp::PlayerId pid, mwmp::NetBuffer &bsIn)
 {
     if (packet->data[0] != ID_GAME_PREINIT)
     {
@@ -281,7 +281,7 @@ bool Networking::preInit(RakNet::Packet *packet, mwmp::PlayerId pid, RakNet::Bit
                 break;
         }
     }
-    RakNet::BitStream bs;
+    mwmp::NetBuffer bs;
     packetPreInit.SetSendStream(&bs);
 
     // If the loop above was broken, then the client's data files do not match the server's
@@ -307,7 +307,7 @@ bool Networking::preInit(RakNet::Packet *packet, mwmp::PlayerId pid, RakNet::Bit
     return false;
 }
 
-void Networking::update(RakNet::Packet *packet, mwmp::PlayerId pid, RakNet::BitStream &bsIn)
+void Networking::update(RakNet::Packet *packet, mwmp::PlayerId pid, mwmp::NetBuffer &bsIn)
 {
     if (systemPacketController->ContainsPacket(packet->data[0]))
     {
@@ -568,8 +568,11 @@ int Networking::mainLoop()
                     break;
                 default:
                 {
-                    RakNet::BitStream bsIn(&packet->data[1], packet->length, false);
-                    bsIn.IgnoreBytes((unsigned int) sizeof(mwmp::PlayerId)); // Ignore GUID from received packet
+                    // Skip 1-byte packetID + 8-byte PlayerId header; wrap the payload only.
+                    const size_t hdrLen = 1 + sizeof(mwmp::PlayerId);
+                    mwmp::NetBuffer bsIn(
+                        packet->data + hdrLen,
+                        packet->length > hdrLen ? packet->length - hdrLen : 0);
 
                     mwmp::PlayerId pid = rakNetManager->ToPlayerId(packet->guid);
 

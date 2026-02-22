@@ -3,7 +3,6 @@
 
 #include <string>
 #include <RakNetTypes.h>
-#include <BitStream.h>
 #include <PacketPriority.h>
 #include <components/openmw-mp/Base/BaseObject.hpp>
 
@@ -21,11 +20,11 @@ namespace mwmp
 
         void setObjectList(BaseObjectList *newObjectList);
 
-        virtual void Packet(RakNet::BitStream *newBitstream, bool send);
+        virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
 
     protected:
         virtual void Object(BaseObject &baseObject, bool send);
-        bool PacketHeader(RakNet::BitStream *newBitstream, bool send);
+        bool PacketHeader(mwmp::NetBuffer *newBitstream, bool send);
         BaseObjectList *objectList;
         static const int maxObjects = 3000;
         bool hasCellData;

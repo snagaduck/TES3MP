@@ -8,7 +8,7 @@ PacketPlayerDeath::PacketPlayerDeath(RakNet::RakPeerInterface *peer) : PlayerPac
     packetID = ID_PLAYER_DEATH;
 }
 
-void PacketPlayerDeath::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketPlayerDeath::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

@@ -26,7 +26,7 @@ void ObjectPacket::setObjectList(BaseObjectList *newObjectList)
     guid = objectList->guid;
 }
 
-void ObjectPacket::Packet(RakNet::BitStream *newBitstream, bool send)
+void ObjectPacket::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     if (!PacketHeader(newBitstream, send))
         return;
@@ -44,7 +44,7 @@ void ObjectPacket::Packet(RakNet::BitStream *newBitstream, bool send)
     }
 }
 
-bool ObjectPacket::PacketHeader(RakNet::BitStream *newBitstream, bool send)
+bool ObjectPacket::PacketHeader(mwmp::NetBuffer *newBitstream, bool send)
 {
     BasePacket::Packet(newBitstream, send);
 

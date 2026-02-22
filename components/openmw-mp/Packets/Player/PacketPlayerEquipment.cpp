@@ -9,7 +9,7 @@ PacketPlayerEquipment::PacketPlayerEquipment(RakNet::RakPeerInterface *peer) : P
     packetID = ID_PLAYER_EQUIPMENT;
 }
 
-void PacketPlayerEquipment::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketPlayerEquipment::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

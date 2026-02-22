@@ -41,7 +41,7 @@ mwmp::WorldstatePacket *mwmp::WorldstatePacketController::GetPacket(RakNet::Mess
     return packets[(unsigned char)id].get();
 }
 
-void mwmp::WorldstatePacketController::SetStream(RakNet::BitStream *inStream, RakNet::BitStream *outStream)
+void mwmp::WorldstatePacketController::SetStream(mwmp::NetBuffer *inStream, mwmp::NetBuffer *outStream)
 {
     for(const auto &packet : packets)
         packet.second->SetStreams(inStream, outStream);

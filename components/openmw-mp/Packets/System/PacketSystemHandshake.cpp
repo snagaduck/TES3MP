@@ -9,7 +9,7 @@ PacketSystemHandshake::PacketSystemHandshake(RakNet::RakPeerInterface *peer) : S
     orderChannel = CHANNEL_SYSTEM;
 }
 
-void PacketSystemHandshake::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketSystemHandshake::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     SystemPacket::Packet(newBitstream, send);
 

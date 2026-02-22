@@ -8,7 +8,7 @@ PacketPlayerShapeshift::PacketPlayerShapeshift(RakNet::RakPeerInterface *peer) :
     packetID = ID_PLAYER_SHAPESHIFT;
 }
 
-void PacketPlayerShapeshift::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketPlayerShapeshift::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 

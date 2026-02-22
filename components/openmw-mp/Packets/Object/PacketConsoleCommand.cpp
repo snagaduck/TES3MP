@@ -9,7 +9,7 @@ PacketConsoleCommand::PacketConsoleCommand(RakNet::RakPeerInterface *peer) : Obj
     hasCellData = true;
 }
 
-void PacketConsoleCommand::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketConsoleCommand::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     if (!PacketHeader(newBitstream, send))
         return;

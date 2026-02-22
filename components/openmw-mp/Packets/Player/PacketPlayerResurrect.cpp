@@ -9,7 +9,7 @@ PacketPlayerResurrect::PacketPlayerResurrect(RakNet::RakPeerInterface *peer) : P
     packetID = ID_PLAYER_RESURRECT;
 }
 
-void PacketPlayerResurrect::Packet(RakNet::BitStream *newBitstream, bool send)
+void PacketPlayerResurrect::Packet(mwmp::NetBuffer *newBitstream, bool send)
 {
     PlayerPacket::Packet(newBitstream, send);
 
