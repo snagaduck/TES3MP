@@ -1,28 +1,22 @@
 #ifndef OPENMW_FACTIONAPI_HPP
 #define OPENMW_FACTIONAPI_HPP
 
-#define FACTIONAPI \
-    {"ClearFactionChanges",      FactionFunctions::ClearFactionChanges},\
-    \
-    {"GetFactionChangesSize",    FactionFunctions::GetFactionChangesSize},\
-    {"GetFactionChangesAction",  FactionFunctions::GetFactionChangesAction},\
-    \
-    {"GetFactionId",             FactionFunctions::GetFactionId},\
-    {"GetFactionRank",           FactionFunctions::GetFactionRank},\
-    {"GetFactionExpulsionState", FactionFunctions::GetFactionExpulsionState},\
-    {"GetFactionReputation",     FactionFunctions::GetFactionReputation},\
-    \
-    {"SetFactionChangesAction",  FactionFunctions::SetFactionChangesAction},\
-    {"SetFactionId",             FactionFunctions::SetFactionId},\
-    {"SetFactionRank",           FactionFunctions::SetFactionRank},\
-    {"SetFactionExpulsionState", FactionFunctions::SetFactionExpulsionState},\
-    {"SetFactionReputation",     FactionFunctions::SetFactionReputation},\
-    \
-    {"AddFaction",               FactionFunctions::AddFaction},\
-    \
-    {"SendFactionChanges",       FactionFunctions::SendFactionChanges},\
-    \
-    {"InitializeFactionChanges", FactionFunctions::InitializeFactionChanges}
+#define FACTIONAPI(t) \
+    t.set_function("ClearFactionChanges", &FactionFunctions::ClearFactionChanges); \
+    t.set_function("GetFactionChangesSize", &FactionFunctions::GetFactionChangesSize); \
+    t.set_function("GetFactionChangesAction", &FactionFunctions::GetFactionChangesAction); \
+    t.set_function("GetFactionId", &FactionFunctions::GetFactionId); \
+    t.set_function("GetFactionRank", &FactionFunctions::GetFactionRank); \
+    t.set_function("GetFactionExpulsionState", &FactionFunctions::GetFactionExpulsionState); \
+    t.set_function("GetFactionReputation", &FactionFunctions::GetFactionReputation); \
+    t.set_function("SetFactionChangesAction", &FactionFunctions::SetFactionChangesAction); \
+    t.set_function("SetFactionId", &FactionFunctions::SetFactionId); \
+    t.set_function("SetFactionRank", &FactionFunctions::SetFactionRank); \
+    t.set_function("SetFactionExpulsionState", &FactionFunctions::SetFactionExpulsionState); \
+    t.set_function("SetFactionReputation", &FactionFunctions::SetFactionReputation); \
+    t.set_function("AddFaction", &FactionFunctions::AddFaction); \
+    t.set_function("SendFactionChanges", &FactionFunctions::SendFactionChanges); \
+    t.set_function("InitializeFactionChanges", &FactionFunctions::InitializeFactionChanges);
 
 class FactionFunctions
 {

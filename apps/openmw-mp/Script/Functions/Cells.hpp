@@ -3,24 +3,19 @@
 
 #include "../Types.hpp"
 
-#define CELLAPI \
-    {"GetCellStateChangesSize", CellFunctions::GetCellStateChangesSize},\
-    \
-    {"GetCellStateType",        CellFunctions::GetCellStateType},\
-    {"GetCellStateDescription", CellFunctions::GetCellStateDescription},\
-    \
-    {"GetCell",                 CellFunctions::GetCell},\
-    {"GetExteriorX",            CellFunctions::GetExteriorX},\
-    {"GetExteriorY",            CellFunctions::GetExteriorY},\
-    {"IsInExterior",            CellFunctions::IsInExterior},\
-    \
-    {"GetRegion",               CellFunctions::GetRegion},\
-    {"IsChangingRegion",        CellFunctions::IsChangingRegion},\
-    \
-    {"SetCell",                 CellFunctions::SetCell},\
-    {"SetExteriorCell",         CellFunctions::SetExteriorCell},\
-    \
-    {"SendCell",                CellFunctions::SendCell}
+#define CELLAPI(t) \
+    t.set_function("GetCellStateChangesSize", &CellFunctions::GetCellStateChangesSize); \
+    t.set_function("GetCellStateType", &CellFunctions::GetCellStateType); \
+    t.set_function("GetCellStateDescription", &CellFunctions::GetCellStateDescription); \
+    t.set_function("GetCell", &CellFunctions::GetCell); \
+    t.set_function("GetExteriorX", &CellFunctions::GetExteriorX); \
+    t.set_function("GetExteriorY", &CellFunctions::GetExteriorY); \
+    t.set_function("IsInExterior", &CellFunctions::IsInExterior); \
+    t.set_function("GetRegion", &CellFunctions::GetRegion); \
+    t.set_function("IsChangingRegion", &CellFunctions::IsChangingRegion); \
+    t.set_function("SetCell", &CellFunctions::SetCell); \
+    t.set_function("SetExteriorCell", &CellFunctions::SetExteriorCell); \
+    t.set_function("SendCell", &CellFunctions::SendCell);
 
 
 class CellFunctions

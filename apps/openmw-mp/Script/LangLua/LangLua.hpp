@@ -3,19 +3,12 @@
 
 #include "lua.hpp"
 
-#include <extern/LuaBridge/LuaBridge.h>
-#include <LuaBridge.h>
+#include <sol/sol.hpp>
 #include <set>
 
 #include <boost/any.hpp>
 #include "../ScriptFunction.hpp"
 #include "../Language.hpp"
-
-struct LuaFunctionData
-{
-    const char* name;
-    lua_CFunction func;
-};
 
 class LangLua: public Language
 {
@@ -39,8 +32,8 @@ public:
     virtual void LoadProgram(const char *filename) override;
     virtual int FreeProgram() override;
     virtual bool IsCallbackPresent(const char *name) override;
-    virtual boost::any Call(const char *name, const char *argl, int buf, ...) override;
-    virtual boost::any Call(const char *name, const char *argl, const std::vector<boost::any> &args) override;
+    virtual void Call(const char* name, std::function<void(lua_State*)> pushArgs, int nargs) override;
+    virtual boost::any Call(const char* name, const char* argl, const std::vector<boost::any>& args) override;
 private:
     static std::set<std::string> packageCPath;
     static std::set<std::string> packagePath;

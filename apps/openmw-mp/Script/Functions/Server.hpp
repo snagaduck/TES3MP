@@ -3,47 +3,47 @@
 
 #include "../Types.hpp"
 
-#define SERVERAPI \
-    {"LogMessage",                      ServerFunctions::LogMessage},\
-    {"LogAppend",                       ServerFunctions::LogAppend},\
+#define SERVERAPI(t) \
+    t.set_function("LogMessage", &ServerFunctions::LogMessage);\
+    t.set_function("LogAppend", &ServerFunctions::LogAppend);\
     \
-    {"StopServer",                      ServerFunctions::StopServer},\
+    t.set_function("StopServer", &ServerFunctions::StopServer);\
     \
-    {"Kick",                            ServerFunctions::Kick},\
-    {"BanAddress",                      ServerFunctions::BanAddress},\
-    {"UnbanAddress",                    ServerFunctions::UnbanAddress},\
+    t.set_function("Kick", &ServerFunctions::Kick);\
+    t.set_function("BanAddress", &ServerFunctions::BanAddress);\
+    t.set_function("UnbanAddress", &ServerFunctions::UnbanAddress);\
     \
-    {"DoesFilePathExist",               ServerFunctions::DoesFilePathExist},\
-    {"GetCaseInsensitiveFilename",      ServerFunctions::GetCaseInsensitiveFilename},\
-    {"GetDataPath",                     ServerFunctions::GetDataPath},\
-    {"GetMillisecondsSinceServerStart", ServerFunctions::GetMillisecondsSinceServerStart},\
-    {"GetOperatingSystemType",          ServerFunctions::GetOperatingSystemType},\
-    {"GetArchitectureType",             ServerFunctions::GetArchitectureType},\
-    {"GetServerVersion",                ServerFunctions::GetServerVersion},\
-    {"GetProtocolVersion",              ServerFunctions::GetProtocolVersion},\
-    {"GetAvgPing",                      ServerFunctions::GetAvgPing},\
-    {"GetIP",                           ServerFunctions::GetIP},\
-    {"GetMaxPlayers",                   ServerFunctions::GetMaxPlayers},\
-    {"GetPort",                         ServerFunctions::GetPort},\
-    {"HasPassword",                     ServerFunctions::HasPassword},\
-    {"GetDataFileEnforcementState",     ServerFunctions::GetDataFileEnforcementState},\
-    {"GetScriptErrorIgnoringState",     ServerFunctions::GetScriptErrorIgnoringState},\
+    t.set_function("DoesFilePathExist", &ServerFunctions::DoesFilePathExist);\
+    t.set_function("GetCaseInsensitiveFilename", &ServerFunctions::GetCaseInsensitiveFilename);\
+    t.set_function("GetDataPath", &ServerFunctions::GetDataPath);\
+    t.set_function("GetMillisecondsSinceServerStart", &ServerFunctions::GetMillisecondsSinceServerStart);\
+    t.set_function("GetOperatingSystemType", &ServerFunctions::GetOperatingSystemType);\
+    t.set_function("GetArchitectureType", &ServerFunctions::GetArchitectureType);\
+    t.set_function("GetServerVersion", &ServerFunctions::GetServerVersion);\
+    t.set_function("GetProtocolVersion", &ServerFunctions::GetProtocolVersion);\
+    t.set_function("GetAvgPing", &ServerFunctions::GetAvgPing);\
+    t.set_function("GetIP", &ServerFunctions::GetIP);\
+    t.set_function("GetMaxPlayers", &ServerFunctions::GetMaxPlayers);\
+    t.set_function("GetPort", &ServerFunctions::GetPort);\
+    t.set_function("HasPassword", &ServerFunctions::HasPassword);\
+    t.set_function("GetDataFileEnforcementState", &ServerFunctions::GetDataFileEnforcementState);\
+    t.set_function("GetScriptErrorIgnoringState", &ServerFunctions::GetScriptErrorIgnoringState);\
     \
-    {"SetGameMode",                     ServerFunctions::SetGameMode},\
-    {"SetHostname",                     ServerFunctions::SetHostname},\
-    {"SetServerPassword",               ServerFunctions::SetServerPassword},\
-    {"SetDataFileEnforcementState",     ServerFunctions::SetDataFileEnforcementState},\
-    {"SetScriptErrorIgnoringState",     ServerFunctions::SetScriptErrorIgnoringState},\
-    {"SetRuleString",                   ServerFunctions::SetRuleString},\
-    {"SetRuleValue",                    ServerFunctions::SetRuleValue},\
+    t.set_function("SetGameMode", &ServerFunctions::SetGameMode);\
+    t.set_function("SetHostname", &ServerFunctions::SetHostname);\
+    t.set_function("SetServerPassword", &ServerFunctions::SetServerPassword);\
+    t.set_function("SetDataFileEnforcementState", &ServerFunctions::SetDataFileEnforcementState);\
+    t.set_function("SetScriptErrorIgnoringState", &ServerFunctions::SetScriptErrorIgnoringState);\
+    t.set_function("SetRuleString", &ServerFunctions::SetRuleString);\
+    t.set_function("SetRuleValue", &ServerFunctions::SetRuleValue);\
     \
-    {"AddDataFileRequirement",          ServerFunctions::AddDataFileRequirement},\
+    t.set_function("AddDataFileRequirement", &ServerFunctions::AddDataFileRequirement);\
     \
-    {"DoesFileExist",                   ServerFunctions::DoesFileExist},\
-    {"GetModDir",                       ServerFunctions::GetModDir},\
-    {"GetPluginEnforcementState",       ServerFunctions::GetPluginEnforcementState},\
-    {"SetPluginEnforcementState",       ServerFunctions::SetPluginEnforcementState},\
-    {"AddPluginHash",                   ServerFunctions::AddPluginHash}
+    t.set_function("DoesFileExist", &ServerFunctions::DoesFileExist);\
+    t.set_function("GetModDir", &ServerFunctions::GetModDir);\
+    t.set_function("GetPluginEnforcementState", &ServerFunctions::GetPluginEnforcementState);\
+    t.set_function("SetPluginEnforcementState", &ServerFunctions::SetPluginEnforcementState);\
+    t.set_function("AddPluginHash", &ServerFunctions::AddPluginHash);
 
 class ServerFunctions
 {

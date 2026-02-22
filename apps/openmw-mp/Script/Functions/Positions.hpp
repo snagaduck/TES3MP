@@ -3,24 +3,20 @@
 
 #include "../Types.hpp"
 
-#define POSITIONAPI \
-    {"GetPosX",             PositionFunctions::GetPosX},\
-    {"GetPosY",             PositionFunctions::GetPosY},\
-    {"GetPosZ",             PositionFunctions::GetPosZ},\
-    \
-    {"GetPreviousCellPosX", PositionFunctions::GetPreviousCellPosX},\
-    {"GetPreviousCellPosY", PositionFunctions::GetPreviousCellPosY},\
-    {"GetPreviousCellPosZ", PositionFunctions::GetPreviousCellPosZ},\
-    \
-    {"GetRotX",             PositionFunctions::GetRotX},\
-    {"GetRotZ",             PositionFunctions::GetRotZ},\
-    \
-    {"SetPos",              PositionFunctions::SetPos},\
-    {"SetRot",              PositionFunctions::SetRot},\
-    {"SetMomentum",         PositionFunctions::SetMomentum},\
-    \
-    {"SendPos",             PositionFunctions::SendPos},\
-    {"SendMomentum",        PositionFunctions::SendMomentum}
+#define POSITIONAPI(t) \
+    t.set_function("GetPosX", &PositionFunctions::GetPosX); \
+    t.set_function("GetPosY", &PositionFunctions::GetPosY); \
+    t.set_function("GetPosZ", &PositionFunctions::GetPosZ); \
+    t.set_function("GetPreviousCellPosX", &PositionFunctions::GetPreviousCellPosX); \
+    t.set_function("GetPreviousCellPosY", &PositionFunctions::GetPreviousCellPosY); \
+    t.set_function("GetPreviousCellPosZ", &PositionFunctions::GetPreviousCellPosZ); \
+    t.set_function("GetRotX", &PositionFunctions::GetRotX); \
+    t.set_function("GetRotZ", &PositionFunctions::GetRotZ); \
+    t.set_function("SetPos", &PositionFunctions::SetPos); \
+    t.set_function("SetRot", &PositionFunctions::SetRot); \
+    t.set_function("SetMomentum", &PositionFunctions::SetMomentum); \
+    t.set_function("SendPos", &PositionFunctions::SendPos); \
+    t.set_function("SendMomentum", &PositionFunctions::SendMomentum);
 
 
 class PositionFunctions

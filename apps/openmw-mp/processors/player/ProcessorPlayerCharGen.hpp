@@ -18,7 +18,7 @@ namespace mwmp
             DEBUG_PRINTF(strPacketID.c_str());
 
             if (player.charGenState.currentStage == player.charGenState.endStage)
-                Script::Call<Script::CallbackIdentity("OnPlayerEndCharGen")>(player.getId());
+                Script::Call("OnPlayerEndCharGen", player.getId());
         }
     };
 }

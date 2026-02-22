@@ -309,7 +309,7 @@ int main(int argc, char *argv[])
     catch (std::exception &e)
     {
         LOG_MESSAGE_SIMPLE(TimedLog::LOG_ERROR, e.what());
-        Script::Call<Script::CallbackIdentity("OnServerScriptCrash")>(e.what());
+        Script::Call("OnServerScriptCrash", e.what());
         throw; //fall through
     }
 

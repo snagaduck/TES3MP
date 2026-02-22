@@ -58,7 +58,7 @@ Networking::Networking(RakNet::RakPeerInterface *peer) : mclient(nullptr)
     running = true;
     exitCode = 0;
 
-    Script::Call<Script::CallbackIdentity("OnServerInit")>();
+    Script::Call("OnServerInit");
 
     serverPassword = TES3MP_DEFAULT_PASSW;
 
@@ -67,7 +67,7 @@ Networking::Networking(RakNet::RakPeerInterface *peer) : mclient(nullptr)
 
 Networking::~Networking()
 {
-    Script::Call<Script::CallbackIdentity("OnServerExit")>(false);
+    Script::Call("OnServerExit", false);
 
     CellController::destroy();
 
@@ -159,7 +159,7 @@ void Networking::processPlayerPacket(RakNet::Packet *packet)
         player->setLoadState(Player::LOADED);
 
         unsigned short pid = Players::getPlayer(packet->guid)->getId();
-        Script::Call<Script::CallbackIdentity("OnPlayerConnect")>(pid);
+        Script::Call("OnPlayerConnect", pid);
 
         if (player->getLoadState() == Player::KICKED) // kicked inside in OnPlayerConnect
         {
@@ -384,7 +384,7 @@ void Networking::disconnectPlayer(RakNet::RakNetGUID guid)
     Player *player = Players::getPlayer(guid);
     if (!player)
         return;
-    Script::Call<Script::CallbackIdentity("OnPlayerDisconnect")>(player->getId());
+    Script::Call("OnPlayerDisconnect", player->getId());
 
     playerPacketController->GetPacket(ID_USER_DISCONNECTED)->setPlayer(player);
     playerPacketController->GetPacket(ID_USER_DISCONNECTED)->Send(true);
@@ -439,7 +439,7 @@ void Networking::setCurrentMpNum(int value)
 int Networking::incrementMpNum()
 {
     currentMpNum++;
-    Script::Call<Script::CallbackIdentity("OnMpNumIncrement")>(currentMpNum);
+    Script::Call("OnMpNumIncrement", currentMpNum);
     return currentMpNum;
 }
 
@@ -623,8 +623,8 @@ void Networking::InitQuery(std::string queryAddr, unsigned short queryPort)
 
 void Networking::postInit()
 {
-    Script::Call<Script::CallbackIdentity("OnRequestDataFileList")>();
-    Script::Call<Script::CallbackIdentity("OnServerPostInit")>();
+    Script::Call("OnRequestDataFileList");
+    Script::Call("OnServerPostInit");
 }
 
 PacketPreInit::PluginContainer &Networking::getSamples()

@@ -1,28 +1,21 @@
 #ifndef OPENMW_QUESTAPI_HPP
 #define OPENMW_QUESTAPI_HPP
 
-#define QUESTAPI \
-    {"ClearJournalChanges",               QuestFunctions::ClearJournalChanges},\
-    \
-    {"GetJournalChangesSize",             QuestFunctions::GetJournalChangesSize},\
-    \
-    {"AddJournalEntry",                   QuestFunctions::AddJournalEntry},\
-    {"AddJournalEntryWithTimestamp",      QuestFunctions::AddJournalEntryWithTimestamp},\
-    {"AddJournalIndex",                   QuestFunctions::AddJournalIndex},\
-    \
-    {"SetReputation",                     QuestFunctions::SetReputation},\
-    \
-    {"GetJournalItemQuest",               QuestFunctions::GetJournalItemQuest},\
-    {"GetJournalItemIndex",               QuestFunctions::GetJournalItemIndex},\
-    {"GetJournalItemType",                QuestFunctions::GetJournalItemType},\
-    {"GetJournalItemActorRefId",          QuestFunctions::GetJournalItemActorRefId},\
-    \
-    {"GetReputation",                     QuestFunctions::GetReputation},\
-    \
-    {"SendJournalChanges",                QuestFunctions::SendJournalChanges},\
-    {"SendReputation",                    QuestFunctions::SendReputation},\
-    \
-    {"InitializeJournalChanges",          QuestFunctions::InitializeJournalChanges}
+#define QUESTAPI(t) \
+    t.set_function("ClearJournalChanges", &QuestFunctions::ClearJournalChanges); \
+    t.set_function("GetJournalChangesSize", &QuestFunctions::GetJournalChangesSize); \
+    t.set_function("AddJournalEntry", &QuestFunctions::AddJournalEntry); \
+    t.set_function("AddJournalEntryWithTimestamp", &QuestFunctions::AddJournalEntryWithTimestamp); \
+    t.set_function("AddJournalIndex", &QuestFunctions::AddJournalIndex); \
+    t.set_function("SetReputation", &QuestFunctions::SetReputation); \
+    t.set_function("GetJournalItemQuest", &QuestFunctions::GetJournalItemQuest); \
+    t.set_function("GetJournalItemIndex", &QuestFunctions::GetJournalItemIndex); \
+    t.set_function("GetJournalItemType", &QuestFunctions::GetJournalItemType); \
+    t.set_function("GetJournalItemActorRefId", &QuestFunctions::GetJournalItemActorRefId); \
+    t.set_function("GetReputation", &QuestFunctions::GetReputation); \
+    t.set_function("SendJournalChanges", &QuestFunctions::SendJournalChanges); \
+    t.set_function("SendReputation", &QuestFunctions::SendReputation); \
+    t.set_function("InitializeJournalChanges", &QuestFunctions::InitializeJournalChanges);
 
 class QuestFunctions
 {

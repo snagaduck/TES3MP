@@ -8,8 +8,6 @@
 
 template<typename... Types>
 constexpr char TypeString<Types...>::value[];
-constexpr ScriptFunctionData ScriptFunctions::functions[];
-constexpr ScriptCallbackData ScriptFunctions::callbacks[];
 
 void ScriptFunctions::MakePublic(ScriptFunc _public, const char *name, char ret_type, const char *def) noexcept
 {

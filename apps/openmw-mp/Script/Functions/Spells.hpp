@@ -1,51 +1,51 @@
 #ifndef OPENMW_SPELLAPI_HPP
 #define OPENMW_SPELLAPI_HPP
 
-#define SPELLAPI \
-    {"ClearSpellbookChanges",            SpellFunctions::ClearSpellbookChanges},\
-    {"ClearSpellsActiveChanges",         SpellFunctions::ClearSpellsActiveChanges},\
-    {"ClearCooldownChanges",             SpellFunctions::ClearCooldownChanges},\
+#define SPELLAPI(t) \
+    t.set_function("ClearSpellbookChanges", &SpellFunctions::ClearSpellbookChanges);\
+    t.set_function("ClearSpellsActiveChanges", &SpellFunctions::ClearSpellsActiveChanges);\
+    t.set_function("ClearCooldownChanges", &SpellFunctions::ClearCooldownChanges);\
     \
-    {"GetSpellbookChangesSize",          SpellFunctions::GetSpellbookChangesSize},\
-    {"GetSpellbookChangesAction",        SpellFunctions::GetSpellbookChangesAction},\
-    {"GetSpellsActiveChangesSize",       SpellFunctions::GetSpellsActiveChangesSize},\
-    {"GetSpellsActiveChangesAction",     SpellFunctions::GetSpellsActiveChangesAction},\
-    {"GetCooldownChangesSize",           SpellFunctions::GetCooldownChangesSize},\
+    t.set_function("GetSpellbookChangesSize", &SpellFunctions::GetSpellbookChangesSize);\
+    t.set_function("GetSpellbookChangesAction", &SpellFunctions::GetSpellbookChangesAction);\
+    t.set_function("GetSpellsActiveChangesSize", &SpellFunctions::GetSpellsActiveChangesSize);\
+    t.set_function("GetSpellsActiveChangesAction", &SpellFunctions::GetSpellsActiveChangesAction);\
+    t.set_function("GetCooldownChangesSize", &SpellFunctions::GetCooldownChangesSize);\
     \
-    {"SetSpellbookChangesAction",        SpellFunctions::SetSpellbookChangesAction},\
-    {"SetSpellsActiveChangesAction",     SpellFunctions::SetSpellsActiveChangesAction},\
+    t.set_function("SetSpellbookChangesAction", &SpellFunctions::SetSpellbookChangesAction);\
+    t.set_function("SetSpellsActiveChangesAction", &SpellFunctions::SetSpellsActiveChangesAction);\
     \
-    {"AddSpell",                         SpellFunctions::AddSpell},\
-    {"AddSpellActive",                   SpellFunctions::AddSpellActive},\
-    {"AddSpellActiveEffect",             SpellFunctions::AddSpellActiveEffect},\
-    {"AddCooldownSpell",                 SpellFunctions::AddCooldownSpell},\
+    t.set_function("AddSpell", &SpellFunctions::AddSpell);\
+    t.set_function("AddSpellActive", &SpellFunctions::AddSpellActive);\
+    t.set_function("AddSpellActiveEffect", &SpellFunctions::AddSpellActiveEffect);\
+    t.set_function("AddCooldownSpell", &SpellFunctions::AddCooldownSpell);\
     \
-    {"GetSpellId",                       SpellFunctions::GetSpellId},\
-    {"GetSpellsActiveId",                SpellFunctions::GetSpellsActiveId},\
-    {"GetSpellsActiveDisplayName",       SpellFunctions::GetSpellsActiveDisplayName},\
-    {"GetSpellsActiveStackingState",     SpellFunctions::GetSpellsActiveStackingState},\
-    {"GetSpellsActiveEffectCount",       SpellFunctions::GetSpellsActiveEffectCount},\
-    {"GetSpellsActiveEffectId",          SpellFunctions::GetSpellsActiveEffectId},\
-    {"GetSpellsActiveEffectArg",         SpellFunctions::GetSpellsActiveEffectArg},\
-    {"GetSpellsActiveEffectMagnitude",   SpellFunctions::GetSpellsActiveEffectMagnitude},\
-    {"GetSpellsActiveEffectDuration",    SpellFunctions::GetSpellsActiveEffectDuration},\
-    {"GetSpellsActiveEffectTimeLeft",    SpellFunctions::GetSpellsActiveEffectTimeLeft},\
+    t.set_function("GetSpellId", &SpellFunctions::GetSpellId);\
+    t.set_function("GetSpellsActiveId", &SpellFunctions::GetSpellsActiveId);\
+    t.set_function("GetSpellsActiveDisplayName", &SpellFunctions::GetSpellsActiveDisplayName);\
+    t.set_function("GetSpellsActiveStackingState", &SpellFunctions::GetSpellsActiveStackingState);\
+    t.set_function("GetSpellsActiveEffectCount", &SpellFunctions::GetSpellsActiveEffectCount);\
+    t.set_function("GetSpellsActiveEffectId", &SpellFunctions::GetSpellsActiveEffectId);\
+    t.set_function("GetSpellsActiveEffectArg", &SpellFunctions::GetSpellsActiveEffectArg);\
+    t.set_function("GetSpellsActiveEffectMagnitude", &SpellFunctions::GetSpellsActiveEffectMagnitude);\
+    t.set_function("GetSpellsActiveEffectDuration", &SpellFunctions::GetSpellsActiveEffectDuration);\
+    t.set_function("GetSpellsActiveEffectTimeLeft", &SpellFunctions::GetSpellsActiveEffectTimeLeft);\
     \
-    {"DoesSpellsActiveHavePlayerCaster", SpellFunctions::DoesSpellsActiveHavePlayerCaster},\
-    {"GetSpellsActiveCasterPid",         SpellFunctions::GetSpellsActiveCasterPid},\
-    {"GetSpellsActiveCasterRefId",       SpellFunctions::GetSpellsActiveCasterRefId},\
-    {"GetSpellsActiveCasterRefNum",      SpellFunctions::GetSpellsActiveCasterRefNum},\
-    {"GetSpellsActiveCasterMpNum",       SpellFunctions::GetSpellsActiveCasterMpNum},\
+    t.set_function("DoesSpellsActiveHavePlayerCaster", &SpellFunctions::DoesSpellsActiveHavePlayerCaster);\
+    t.set_function("GetSpellsActiveCasterPid", &SpellFunctions::GetSpellsActiveCasterPid);\
+    t.set_function("GetSpellsActiveCasterRefId", &SpellFunctions::GetSpellsActiveCasterRefId);\
+    t.set_function("GetSpellsActiveCasterRefNum", &SpellFunctions::GetSpellsActiveCasterRefNum);\
+    t.set_function("GetSpellsActiveCasterMpNum", &SpellFunctions::GetSpellsActiveCasterMpNum);\
     \
-    {"GetCooldownSpellId",               SpellFunctions::GetCooldownSpellId},\
-    {"GetCooldownStartDay",              SpellFunctions::GetCooldownStartDay},\
-    {"GetCooldownStartHour",             SpellFunctions::GetCooldownStartHour},\
+    t.set_function("GetCooldownSpellId", &SpellFunctions::GetCooldownSpellId);\
+    t.set_function("GetCooldownStartDay", &SpellFunctions::GetCooldownStartDay);\
+    t.set_function("GetCooldownStartHour", &SpellFunctions::GetCooldownStartHour);\
     \
-    {"SendSpellbookChanges",             SpellFunctions::SendSpellbookChanges},\
-    {"SendSpellsActiveChanges",          SpellFunctions::SendSpellsActiveChanges},\
-    {"SendCooldownChanges",              SpellFunctions::SendCooldownChanges},\
+    t.set_function("SendSpellbookChanges", &SpellFunctions::SendSpellbookChanges);\
+    t.set_function("SendSpellsActiveChanges", &SpellFunctions::SendSpellsActiveChanges);\
+    t.set_function("SendCooldownChanges", &SpellFunctions::SendCooldownChanges);\
     \
-    {"InitializeSpellbookChanges",     SpellFunctions::InitializeSpellbookChanges}
+    t.set_function("InitializeSpellbookChanges", &SpellFunctions::InitializeSpellbookChanges);
 
 class SpellFunctions
 {

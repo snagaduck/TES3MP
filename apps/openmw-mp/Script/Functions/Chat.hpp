@@ -3,10 +3,10 @@
 
 #include "../Types.hpp"
 
-#define CHATAPI \
-    {"SendMessage",       ChatFunctions::SendMessage},\
-    {"CleanChatForPid",   ChatFunctions::CleanChatForPid},\
-    {"CleanChat",         ChatFunctions::CleanChat}
+#define CHATAPI(t) \
+    t.set_function("SendMessage", &ChatFunctions::SendMessage); \
+    t.set_function("CleanChatForPid", &ChatFunctions::CleanChatForPid); \
+    t.set_function("CleanChat", &ChatFunctions::CleanChat);
 
 class ChatFunctions
 {

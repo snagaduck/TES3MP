@@ -3,23 +3,23 @@
 
 #include "../Types.hpp"
 
-#define SETTINGSAPI \
-    {"SetDifficulty",               SettingFunctions::SetDifficulty},\
-    {"SetEnforcedLogLevel",         SettingFunctions::SetEnforcedLogLevel},\
-    {"SetPhysicsFramerate",         SettingFunctions::SetPhysicsFramerate},\
+#define SETTINGSAPI(t) \
+    t.set_function("SetDifficulty", &SettingFunctions::SetDifficulty);\
+    t.set_function("SetEnforcedLogLevel", &SettingFunctions::SetEnforcedLogLevel);\
+    t.set_function("SetPhysicsFramerate", &SettingFunctions::SetPhysicsFramerate);\
     \
-    {"SetConsoleAllowed",           SettingFunctions::SetConsoleAllowed},\
-    {"SetBedRestAllowed",           SettingFunctions::SetBedRestAllowed},\
-    {"SetWildernessRestAllowed",    SettingFunctions::SetWildernessRestAllowed},\
-    {"SetWaitAllowed",              SettingFunctions::SetWaitAllowed},\
+    t.set_function("SetConsoleAllowed", &SettingFunctions::SetConsoleAllowed);\
+    t.set_function("SetBedRestAllowed", &SettingFunctions::SetBedRestAllowed);\
+    t.set_function("SetWildernessRestAllowed", &SettingFunctions::SetWildernessRestAllowed);\
+    t.set_function("SetWaitAllowed", &SettingFunctions::SetWaitAllowed);\
     \
-    {"SetGameSettingValue",         SettingFunctions::SetGameSettingValue},\
-    {"ClearGameSettingValues",      SettingFunctions::ClearGameSettingValues},\
+    t.set_function("SetGameSettingValue", &SettingFunctions::SetGameSettingValue);\
+    t.set_function("ClearGameSettingValues", &SettingFunctions::ClearGameSettingValues);\
     \
-    {"SetVRSettingValue",           SettingFunctions::SetVRSettingValue},\
-    {"ClearVRSettingValues",        SettingFunctions::ClearVRSettingValues},\
+    t.set_function("SetVRSettingValue", &SettingFunctions::SetVRSettingValue);\
+    t.set_function("ClearVRSettingValues", &SettingFunctions::ClearVRSettingValues);\
     \
-    {"SendSettings",                SettingFunctions::SendSettings}
+    t.set_function("SendSettings", &SettingFunctions::SendSettings);
 
 class SettingFunctions
 {

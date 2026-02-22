@@ -3,15 +3,12 @@
 
 #include "../Types.hpp"
 
-#define MISCELLANEOUSAPI \
-    {"GenerateRandomString",        MiscellaneousFunctions::GenerateRandomString},\
-    \
-    {"GetSHA256Hash",               MiscellaneousFunctions::GetSHA256Hash},\
-    \
-    {"GetLastPlayerId",             MiscellaneousFunctions::GetLastPlayerId},\
-    \
-    {"GetCurrentMpNum",             MiscellaneousFunctions::GetCurrentMpNum},\
-    {"SetCurrentMpNum",             MiscellaneousFunctions::SetCurrentMpNum}
+#define MISCELLANEOUSAPI(t) \
+    t.set_function("GenerateRandomString", &MiscellaneousFunctions::GenerateRandomString); \
+    t.set_function("GetSHA256Hash", &MiscellaneousFunctions::GetSHA256Hash); \
+    t.set_function("GetLastPlayerId", &MiscellaneousFunctions::GetLastPlayerId); \
+    t.set_function("GetCurrentMpNum", &MiscellaneousFunctions::GetCurrentMpNum); \
+    t.set_function("SetCurrentMpNum", &MiscellaneousFunctions::SetCurrentMpNum);
 
 class MiscellaneousFunctions
 {

@@ -3,25 +3,23 @@
 
 #include "../Types.hpp"
 
-#define CHARCLASSAPI \
-    {"GetDefaultClass",        CharClassFunctions::GetDefaultClass},\
-    {"GetClassName",           CharClassFunctions::GetClassName},\
-    {"GetClassDesc",           CharClassFunctions::GetClassDesc},\
-    {"GetClassMajorAttribute", CharClassFunctions::GetClassMajorAttribute},\
-    {"GetClassSpecialization", CharClassFunctions::GetClassSpecialization},\
-    {"GetClassMajorSkill",     CharClassFunctions::GetClassMajorSkill},\
-    {"GetClassMinorSkill",     CharClassFunctions::GetClassMinorSkill},\
-    {"IsClassDefault",         CharClassFunctions::IsClassDefault},\
-    \
-    {"SetDefaultClass",        CharClassFunctions::SetDefaultClass},\
-    {"SetClassName",           CharClassFunctions::SetClassName},\
-    {"SetClassDesc",           CharClassFunctions::SetClassDesc},\
-    {"SetClassMajorAttribute", CharClassFunctions::SetClassMajorAttribute},\
-    {"SetClassSpecialization", CharClassFunctions::SetClassSpecialization},\
-    {"SetClassMajorSkill",     CharClassFunctions::SetClassMajorSkill},\
-    {"SetClassMinorSkill",     CharClassFunctions::SetClassMinorSkill},\
-    \
-    {"SendClass",              CharClassFunctions::SendClass}
+#define CHARCLASSAPI(t) \
+    t.set_function("GetDefaultClass", &CharClassFunctions::GetDefaultClass); \
+    t.set_function("GetClassName", &CharClassFunctions::GetClassName); \
+    t.set_function("GetClassDesc", &CharClassFunctions::GetClassDesc); \
+    t.set_function("GetClassMajorAttribute", &CharClassFunctions::GetClassMajorAttribute); \
+    t.set_function("GetClassSpecialization", &CharClassFunctions::GetClassSpecialization); \
+    t.set_function("GetClassMajorSkill", &CharClassFunctions::GetClassMajorSkill); \
+    t.set_function("GetClassMinorSkill", &CharClassFunctions::GetClassMinorSkill); \
+    t.set_function("IsClassDefault", &CharClassFunctions::IsClassDefault); \
+    t.set_function("SetDefaultClass", &CharClassFunctions::SetDefaultClass); \
+    t.set_function("SetClassName", &CharClassFunctions::SetClassName); \
+    t.set_function("SetClassDesc", &CharClassFunctions::SetClassDesc); \
+    t.set_function("SetClassMajorAttribute", &CharClassFunctions::SetClassMajorAttribute); \
+    t.set_function("SetClassSpecialization", &CharClassFunctions::SetClassSpecialization); \
+    t.set_function("SetClassMajorSkill", &CharClassFunctions::SetClassMajorSkill); \
+    t.set_function("SetClassMinorSkill", &CharClassFunctions::SetClassMinorSkill); \
+    t.set_function("SendClass", &CharClassFunctions::SendClass);
 
 
 class CharClassFunctions

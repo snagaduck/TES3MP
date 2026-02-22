@@ -1,85 +1,85 @@
 #ifndef OPENMW_STATAPI_HPP
 #define OPENMW_STATAPI_HPP
 
-#define STATAPI \
-    {"GetAttributeCount",       StatsFunctions::GetAttributeCount},\
-    {"GetSkillCount",           StatsFunctions::GetSkillCount},\
-    {"GetAttributeId",          StatsFunctions::GetAttributeId},\
-    {"GetSkillId",              StatsFunctions::GetSkillId},\
-    {"GetAttributeName",        StatsFunctions::GetAttributeName},\
-    {"GetSkillName",            StatsFunctions::GetSkillName},\
+#define STATAPI(t) \
+    t.set_function("GetAttributeCount", &StatsFunctions::GetAttributeCount);\
+    t.set_function("GetSkillCount", &StatsFunctions::GetSkillCount);\
+    t.set_function("GetAttributeId", &StatsFunctions::GetAttributeId);\
+    t.set_function("GetSkillId", &StatsFunctions::GetSkillId);\
+    t.set_function("GetAttributeName", &StatsFunctions::GetAttributeName);\
+    t.set_function("GetSkillName", &StatsFunctions::GetSkillName);\
     \
-    {"GetName",                 StatsFunctions::GetName},\
-    {"GetRace",                 StatsFunctions::GetRace},\
-    {"GetHead",                 StatsFunctions::GetHead},\
-    {"GetHair",                 StatsFunctions::GetHairstyle},\
-    {"GetIsMale",               StatsFunctions::GetIsMale},\
-    {"GetModel",                StatsFunctions::GetModel},\
-    {"GetBirthsign",            StatsFunctions::GetBirthsign},\
+    t.set_function("GetName", &StatsFunctions::GetName);\
+    t.set_function("GetRace", &StatsFunctions::GetRace);\
+    t.set_function("GetHead", &StatsFunctions::GetHead);\
+    t.set_function("GetHair", &StatsFunctions::GetHairstyle);\
+    t.set_function("GetIsMale", &StatsFunctions::GetIsMale);\
+    t.set_function("GetModel", &StatsFunctions::GetModel);\
+    t.set_function("GetBirthsign", &StatsFunctions::GetBirthsign);\
     \
-    {"GetLevel",                StatsFunctions::GetLevel},\
-    {"GetLevelProgress",        StatsFunctions::GetLevelProgress},\
+    t.set_function("GetLevel", &StatsFunctions::GetLevel);\
+    t.set_function("GetLevelProgress", &StatsFunctions::GetLevelProgress);\
     \
-    {"GetHealthBase",           StatsFunctions::GetHealthBase},\
-    {"GetHealthCurrent",        StatsFunctions::GetHealthCurrent},\
+    t.set_function("GetHealthBase", &StatsFunctions::GetHealthBase);\
+    t.set_function("GetHealthCurrent", &StatsFunctions::GetHealthCurrent);\
     \
-    {"GetMagickaBase",          StatsFunctions::GetMagickaBase},\
-    {"GetMagickaCurrent",       StatsFunctions::GetMagickaCurrent},\
+    t.set_function("GetMagickaBase", &StatsFunctions::GetMagickaBase);\
+    t.set_function("GetMagickaCurrent", &StatsFunctions::GetMagickaCurrent);\
     \
-    {"GetFatigueBase",          StatsFunctions::GetFatigueBase},\
-    {"GetFatigueCurrent",       StatsFunctions::GetFatigueCurrent},\
+    t.set_function("GetFatigueBase", &StatsFunctions::GetFatigueBase);\
+    t.set_function("GetFatigueCurrent", &StatsFunctions::GetFatigueCurrent);\
     \
-    {"GetAttributeBase",        StatsFunctions::GetAttributeBase},\
-    {"GetAttributeModifier",    StatsFunctions::GetAttributeModifier},\
-    {"GetAttributeDamage",      StatsFunctions::GetAttributeDamage},\
+    t.set_function("GetAttributeBase", &StatsFunctions::GetAttributeBase);\
+    t.set_function("GetAttributeModifier", &StatsFunctions::GetAttributeModifier);\
+    t.set_function("GetAttributeDamage", &StatsFunctions::GetAttributeDamage);\
     \
-    {"GetSkillBase",            StatsFunctions::GetSkillBase},\
-    {"GetSkillModifier",        StatsFunctions::GetSkillModifier},\
-    {"GetSkillDamage",          StatsFunctions::GetSkillDamage},\
-    {"GetSkillProgress",        StatsFunctions::GetSkillProgress},\
-    {"GetSkillIncrease",        StatsFunctions::GetSkillIncrease},\
+    t.set_function("GetSkillBase", &StatsFunctions::GetSkillBase);\
+    t.set_function("GetSkillModifier", &StatsFunctions::GetSkillModifier);\
+    t.set_function("GetSkillDamage", &StatsFunctions::GetSkillDamage);\
+    t.set_function("GetSkillProgress", &StatsFunctions::GetSkillProgress);\
+    t.set_function("GetSkillIncrease", &StatsFunctions::GetSkillIncrease);\
     \
-    {"GetBounty",               StatsFunctions::GetBounty},\
+    t.set_function("GetBounty", &StatsFunctions::GetBounty);\
     \
-    {"SetName",                 StatsFunctions::SetName},\
-    {"SetRace",                 StatsFunctions::SetRace},\
-    {"SetHead",                 StatsFunctions::SetHead},\
-    {"SetHair",                 StatsFunctions::SetHairstyle},\
-    {"SetIsMale",               StatsFunctions::SetIsMale},\
-    {"SetModel",                StatsFunctions::SetModel},\
-    {"SetBirthsign",            StatsFunctions::SetBirthsign},\
-    {"SetResetStats",           StatsFunctions::SetResetStats},\
+    t.set_function("SetName", &StatsFunctions::SetName);\
+    t.set_function("SetRace", &StatsFunctions::SetRace);\
+    t.set_function("SetHead", &StatsFunctions::SetHead);\
+    t.set_function("SetHair", &StatsFunctions::SetHairstyle);\
+    t.set_function("SetIsMale", &StatsFunctions::SetIsMale);\
+    t.set_function("SetModel", &StatsFunctions::SetModel);\
+    t.set_function("SetBirthsign", &StatsFunctions::SetBirthsign);\
+    t.set_function("SetResetStats", &StatsFunctions::SetResetStats);\
     \
-    {"SetLevel",                StatsFunctions::SetLevel},\
-    {"SetLevelProgress",        StatsFunctions::SetLevelProgress},\
+    t.set_function("SetLevel", &StatsFunctions::SetLevel);\
+    t.set_function("SetLevelProgress", &StatsFunctions::SetLevelProgress);\
     \
-    {"SetHealthBase",           StatsFunctions::SetHealthBase},\
-    {"SetHealthCurrent",        StatsFunctions::SetHealthCurrent},\
-    {"SetMagickaBase",          StatsFunctions::SetMagickaBase},\
-    {"SetMagickaCurrent",       StatsFunctions::SetMagickaCurrent},\
-    {"SetFatigueBase",          StatsFunctions::SetFatigueBase},\
-    {"SetFatigueCurrent",       StatsFunctions::SetFatigueCurrent},\
+    t.set_function("SetHealthBase", &StatsFunctions::SetHealthBase);\
+    t.set_function("SetHealthCurrent", &StatsFunctions::SetHealthCurrent);\
+    t.set_function("SetMagickaBase", &StatsFunctions::SetMagickaBase);\
+    t.set_function("SetMagickaCurrent", &StatsFunctions::SetMagickaCurrent);\
+    t.set_function("SetFatigueBase", &StatsFunctions::SetFatigueBase);\
+    t.set_function("SetFatigueCurrent", &StatsFunctions::SetFatigueCurrent);\
     \
-    {"SetAttributeBase",        StatsFunctions::SetAttributeBase},\
-    {"ClearAttributeModifier",  StatsFunctions::ClearAttributeModifier},\
-    {"SetAttributeDamage",      StatsFunctions::SetAttributeDamage},\
+    t.set_function("SetAttributeBase", &StatsFunctions::SetAttributeBase);\
+    t.set_function("ClearAttributeModifier", &StatsFunctions::ClearAttributeModifier);\
+    t.set_function("SetAttributeDamage", &StatsFunctions::SetAttributeDamage);\
     \
-    {"SetSkillBase",            StatsFunctions::SetSkillBase},\
-    {"ClearSkillModifier",      StatsFunctions::ClearSkillModifier},\
-    {"SetSkillDamage",          StatsFunctions::SetSkillDamage},\
-    {"SetSkillProgress",        StatsFunctions::SetSkillProgress},\
-    {"SetSkillIncrease",        StatsFunctions::SetSkillIncrease},\
+    t.set_function("SetSkillBase", &StatsFunctions::SetSkillBase);\
+    t.set_function("ClearSkillModifier", &StatsFunctions::ClearSkillModifier);\
+    t.set_function("SetSkillDamage", &StatsFunctions::SetSkillDamage);\
+    t.set_function("SetSkillProgress", &StatsFunctions::SetSkillProgress);\
+    t.set_function("SetSkillIncrease", &StatsFunctions::SetSkillIncrease);\
     \
-    {"SetBounty",               StatsFunctions::SetBounty},\
-    {"SetCharGenStage",         StatsFunctions::SetCharGenStage},\
+    t.set_function("SetBounty", &StatsFunctions::SetBounty);\
+    t.set_function("SetCharGenStage", &StatsFunctions::SetCharGenStage);\
     \
-    {"SendBaseInfo",            StatsFunctions::SendBaseInfo},\
+    t.set_function("SendBaseInfo", &StatsFunctions::SendBaseInfo);\
     \
-    {"SendStatsDynamic",        StatsFunctions::SendStatsDynamic},\
-    {"SendAttributes",          StatsFunctions::SendAttributes},\
-    {"SendSkills",              StatsFunctions::SendSkills},\
-    {"SendLevel",               StatsFunctions::SendLevel},\
-    {"SendBounty",              StatsFunctions::SendBounty}
+    t.set_function("SendStatsDynamic", &StatsFunctions::SendStatsDynamic);\
+    t.set_function("SendAttributes", &StatsFunctions::SendAttributes);\
+    t.set_function("SendSkills", &StatsFunctions::SendSkills);\
+    t.set_function("SendLevel", &StatsFunctions::SendLevel);\
+    t.set_function("SendBounty", &StatsFunctions::SendBounty);
 
 class StatsFunctions
 {

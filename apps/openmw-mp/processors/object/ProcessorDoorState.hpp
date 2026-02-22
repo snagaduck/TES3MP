@@ -17,7 +17,7 @@ namespace mwmp
         {
             packet.Send(true);
 
-            Script::Call<Script::CallbackIdentity("OnDoorState")>(player.getId(), objectList.cell.getShortDescription().c_str());
+            Script::Call("OnDoorState", player.getId(), objectList.cell.getShortDescription().c_str());
         }
     };
 }

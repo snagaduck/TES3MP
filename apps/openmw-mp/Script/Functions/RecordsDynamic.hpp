@@ -3,140 +3,140 @@
 
 #include "../Types.hpp"
 
-#define RECORDSDYNAMICAPI \
-    {"ClearRecords",                            RecordsDynamicFunctions::ClearRecords},\
+#define RECORDSDYNAMICAPI(t) \
+    t.set_function("ClearRecords", &RecordsDynamicFunctions::ClearRecords);\
     \
-    {"GetRecordType",                           RecordsDynamicFunctions::GetRecordType},\
-    {"GetRecordCount",                          RecordsDynamicFunctions::GetRecordCount},\
-    {"GetRecordEffectCount",                    RecordsDynamicFunctions::GetRecordEffectCount},\
+    t.set_function("GetRecordType", &RecordsDynamicFunctions::GetRecordType);\
+    t.set_function("GetRecordCount", &RecordsDynamicFunctions::GetRecordCount);\
+    t.set_function("GetRecordEffectCount", &RecordsDynamicFunctions::GetRecordEffectCount);\
     \
-    {"GetRecordId",                             RecordsDynamicFunctions::GetRecordId},\
-    {"GetRecordBaseId",                         RecordsDynamicFunctions::GetRecordBaseId},\
+    t.set_function("GetRecordId", &RecordsDynamicFunctions::GetRecordId);\
+    t.set_function("GetRecordBaseId", &RecordsDynamicFunctions::GetRecordBaseId);\
     \
-    {"GetRecordSubtype",                        RecordsDynamicFunctions::GetRecordSubtype},\
-    {"GetRecordName",                           RecordsDynamicFunctions::GetRecordName},\
-    {"GetRecordModel",                          RecordsDynamicFunctions::GetRecordModel},\
-    {"GetRecordIcon",                           RecordsDynamicFunctions::GetRecordIcon},\
-    {"GetRecordScript",                         RecordsDynamicFunctions::GetRecordScript},\
-    {"GetRecordEnchantmentId",                  RecordsDynamicFunctions::GetRecordEnchantmentId},\
-    {"GetRecordEnchantmentCharge",              RecordsDynamicFunctions::GetRecordEnchantmentCharge},\
+    t.set_function("GetRecordSubtype", &RecordsDynamicFunctions::GetRecordSubtype);\
+    t.set_function("GetRecordName", &RecordsDynamicFunctions::GetRecordName);\
+    t.set_function("GetRecordModel", &RecordsDynamicFunctions::GetRecordModel);\
+    t.set_function("GetRecordIcon", &RecordsDynamicFunctions::GetRecordIcon);\
+    t.set_function("GetRecordScript", &RecordsDynamicFunctions::GetRecordScript);\
+    t.set_function("GetRecordEnchantmentId", &RecordsDynamicFunctions::GetRecordEnchantmentId);\
+    t.set_function("GetRecordEnchantmentCharge", &RecordsDynamicFunctions::GetRecordEnchantmentCharge);\
     \
-    {"GetRecordAutoCalc",                       RecordsDynamicFunctions::GetRecordAutoCalc},\
-    {"GetRecordCharge",                         RecordsDynamicFunctions::GetRecordCharge},\
-    {"GetRecordCost",                           RecordsDynamicFunctions::GetRecordCost},\
-    {"GetRecordFlags",                          RecordsDynamicFunctions::GetRecordFlags},\
-    {"GetRecordValue",                          RecordsDynamicFunctions::GetRecordValue},\
-    {"GetRecordWeight",                         RecordsDynamicFunctions::GetRecordWeight},\
-    {"GetRecordQuantity",                       RecordsDynamicFunctions::GetRecordQuantity},\
+    t.set_function("GetRecordAutoCalc", &RecordsDynamicFunctions::GetRecordAutoCalc);\
+    t.set_function("GetRecordCharge", &RecordsDynamicFunctions::GetRecordCharge);\
+    t.set_function("GetRecordCost", &RecordsDynamicFunctions::GetRecordCost);\
+    t.set_function("GetRecordFlags", &RecordsDynamicFunctions::GetRecordFlags);\
+    t.set_function("GetRecordValue", &RecordsDynamicFunctions::GetRecordValue);\
+    t.set_function("GetRecordWeight", &RecordsDynamicFunctions::GetRecordWeight);\
+    t.set_function("GetRecordQuantity", &RecordsDynamicFunctions::GetRecordQuantity);\
     \
-    {"GetRecordEffectId",                       RecordsDynamicFunctions::GetRecordEffectId},\
-    {"GetRecordEffectAttribute",                RecordsDynamicFunctions::GetRecordEffectAttribute},\
-    {"GetRecordEffectSkill",                    RecordsDynamicFunctions::GetRecordEffectSkill},\
-    {"GetRecordEffectRangeType",                RecordsDynamicFunctions::GetRecordEffectRangeType},\
-    {"GetRecordEffectArea",                     RecordsDynamicFunctions::GetRecordEffectArea},\
-    {"GetRecordEffectDuration",                 RecordsDynamicFunctions::GetRecordEffectDuration},\
-    {"GetRecordEffectMagnitudeMax",             RecordsDynamicFunctions::GetRecordEffectMagnitudeMax},\
-    {"GetRecordEffectMagnitudeMin",             RecordsDynamicFunctions::GetRecordEffectMagnitudeMin},\
+    t.set_function("GetRecordEffectId", &RecordsDynamicFunctions::GetRecordEffectId);\
+    t.set_function("GetRecordEffectAttribute", &RecordsDynamicFunctions::GetRecordEffectAttribute);\
+    t.set_function("GetRecordEffectSkill", &RecordsDynamicFunctions::GetRecordEffectSkill);\
+    t.set_function("GetRecordEffectRangeType", &RecordsDynamicFunctions::GetRecordEffectRangeType);\
+    t.set_function("GetRecordEffectArea", &RecordsDynamicFunctions::GetRecordEffectArea);\
+    t.set_function("GetRecordEffectDuration", &RecordsDynamicFunctions::GetRecordEffectDuration);\
+    t.set_function("GetRecordEffectMagnitudeMax", &RecordsDynamicFunctions::GetRecordEffectMagnitudeMax);\
+    t.set_function("GetRecordEffectMagnitudeMin", &RecordsDynamicFunctions::GetRecordEffectMagnitudeMin);\
     \
-    {"SetRecordType",                           RecordsDynamicFunctions::SetRecordType},\
+    t.set_function("SetRecordType", &RecordsDynamicFunctions::SetRecordType);\
     \
-    {"SetRecordId",                             RecordsDynamicFunctions::SetRecordId},\
-    {"SetRecordBaseId",                         RecordsDynamicFunctions::SetRecordBaseId},\
-    {"SetRecordInventoryBaseId",                RecordsDynamicFunctions::SetRecordInventoryBaseId},\
+    t.set_function("SetRecordId", &RecordsDynamicFunctions::SetRecordId);\
+    t.set_function("SetRecordBaseId", &RecordsDynamicFunctions::SetRecordBaseId);\
+    t.set_function("SetRecordInventoryBaseId", &RecordsDynamicFunctions::SetRecordInventoryBaseId);\
     \
-    {"SetRecordSubtype",                        RecordsDynamicFunctions::SetRecordSubtype},\
-    {"SetRecordName",                           RecordsDynamicFunctions::SetRecordName},\
-    {"SetRecordModel",                          RecordsDynamicFunctions::SetRecordModel},\
-    {"SetRecordIcon",                           RecordsDynamicFunctions::SetRecordIcon},\
-    {"SetRecordScript",                         RecordsDynamicFunctions::SetRecordScript},\
-    {"SetRecordEnchantmentId",                  RecordsDynamicFunctions::SetRecordEnchantmentId},\
-    {"SetRecordEnchantmentCharge",              RecordsDynamicFunctions::SetRecordEnchantmentCharge},\
+    t.set_function("SetRecordSubtype", &RecordsDynamicFunctions::SetRecordSubtype);\
+    t.set_function("SetRecordName", &RecordsDynamicFunctions::SetRecordName);\
+    t.set_function("SetRecordModel", &RecordsDynamicFunctions::SetRecordModel);\
+    t.set_function("SetRecordIcon", &RecordsDynamicFunctions::SetRecordIcon);\
+    t.set_function("SetRecordScript", &RecordsDynamicFunctions::SetRecordScript);\
+    t.set_function("SetRecordEnchantmentId", &RecordsDynamicFunctions::SetRecordEnchantmentId);\
+    t.set_function("SetRecordEnchantmentCharge", &RecordsDynamicFunctions::SetRecordEnchantmentCharge);\
     \
-    {"SetRecordAutoCalc",                       RecordsDynamicFunctions::SetRecordAutoCalc},\
-    {"SetRecordCharge",                         RecordsDynamicFunctions::SetRecordCharge},\
-    {"SetRecordCost",                           RecordsDynamicFunctions::SetRecordCost},\
-    {"SetRecordFlags",                          RecordsDynamicFunctions::SetRecordFlags},\
-    {"SetRecordValue",                          RecordsDynamicFunctions::SetRecordValue},\
-    {"SetRecordWeight",                         RecordsDynamicFunctions::SetRecordWeight},\
-    {"SetRecordQuality",                        RecordsDynamicFunctions::SetRecordQuality},\
-    {"SetRecordUses",                           RecordsDynamicFunctions::SetRecordUses},\
-    {"SetRecordTime",                           RecordsDynamicFunctions::SetRecordTime},\
-    {"SetRecordRadius",                         RecordsDynamicFunctions::SetRecordRadius},\
-    {"SetRecordColor",                          RecordsDynamicFunctions::SetRecordColor},\
+    t.set_function("SetRecordAutoCalc", &RecordsDynamicFunctions::SetRecordAutoCalc);\
+    t.set_function("SetRecordCharge", &RecordsDynamicFunctions::SetRecordCharge);\
+    t.set_function("SetRecordCost", &RecordsDynamicFunctions::SetRecordCost);\
+    t.set_function("SetRecordFlags", &RecordsDynamicFunctions::SetRecordFlags);\
+    t.set_function("SetRecordValue", &RecordsDynamicFunctions::SetRecordValue);\
+    t.set_function("SetRecordWeight", &RecordsDynamicFunctions::SetRecordWeight);\
+    t.set_function("SetRecordQuality", &RecordsDynamicFunctions::SetRecordQuality);\
+    t.set_function("SetRecordUses", &RecordsDynamicFunctions::SetRecordUses);\
+    t.set_function("SetRecordTime", &RecordsDynamicFunctions::SetRecordTime);\
+    t.set_function("SetRecordRadius", &RecordsDynamicFunctions::SetRecordRadius);\
+    t.set_function("SetRecordColor", &RecordsDynamicFunctions::SetRecordColor);\
     \
-    {"SetRecordArmorRating",                    RecordsDynamicFunctions::SetRecordArmorRating},\
-    {"SetRecordHealth",                         RecordsDynamicFunctions::SetRecordHealth},\
+    t.set_function("SetRecordArmorRating", &RecordsDynamicFunctions::SetRecordArmorRating);\
+    t.set_function("SetRecordHealth", &RecordsDynamicFunctions::SetRecordHealth);\
     \
-    {"SetRecordDamageChop",                     RecordsDynamicFunctions::SetRecordDamageChop},\
-    {"SetRecordDamageSlash",                    RecordsDynamicFunctions::SetRecordDamageSlash},\
-    {"SetRecordDamageThrust",                   RecordsDynamicFunctions::SetRecordDamageThrust},\
-    {"SetRecordReach",                          RecordsDynamicFunctions::SetRecordReach},\
-    {"SetRecordSpeed",                          RecordsDynamicFunctions::SetRecordSpeed},\
+    t.set_function("SetRecordDamageChop", &RecordsDynamicFunctions::SetRecordDamageChop);\
+    t.set_function("SetRecordDamageSlash", &RecordsDynamicFunctions::SetRecordDamageSlash);\
+    t.set_function("SetRecordDamageThrust", &RecordsDynamicFunctions::SetRecordDamageThrust);\
+    t.set_function("SetRecordReach", &RecordsDynamicFunctions::SetRecordReach);\
+    t.set_function("SetRecordSpeed", &RecordsDynamicFunctions::SetRecordSpeed);\
     \
-    {"SetRecordKeyState",                       RecordsDynamicFunctions::SetRecordKeyState},\
-    {"SetRecordScrollState",                    RecordsDynamicFunctions::SetRecordScrollState},\
-    {"SetRecordSkillId",                        RecordsDynamicFunctions::SetRecordSkillId},\
-    {"SetRecordText",                           RecordsDynamicFunctions::SetRecordText},\
+    t.set_function("SetRecordKeyState", &RecordsDynamicFunctions::SetRecordKeyState);\
+    t.set_function("SetRecordScrollState", &RecordsDynamicFunctions::SetRecordScrollState);\
+    t.set_function("SetRecordSkillId", &RecordsDynamicFunctions::SetRecordSkillId);\
+    t.set_function("SetRecordText", &RecordsDynamicFunctions::SetRecordText);\
     \
-    {"SetRecordHair",                           RecordsDynamicFunctions::SetRecordHair},\
-    {"SetRecordHead",                           RecordsDynamicFunctions::SetRecordHead},\
-    {"SetRecordGender",                         RecordsDynamicFunctions::SetRecordGender},\
-    {"SetRecordRace",                           RecordsDynamicFunctions::SetRecordRace},\
-    {"SetRecordClass",                          RecordsDynamicFunctions::SetRecordClass},\
-    {"SetRecordFaction",                        RecordsDynamicFunctions::SetRecordFaction},\
+    t.set_function("SetRecordHair", &RecordsDynamicFunctions::SetRecordHair);\
+    t.set_function("SetRecordHead", &RecordsDynamicFunctions::SetRecordHead);\
+    t.set_function("SetRecordGender", &RecordsDynamicFunctions::SetRecordGender);\
+    t.set_function("SetRecordRace", &RecordsDynamicFunctions::SetRecordRace);\
+    t.set_function("SetRecordClass", &RecordsDynamicFunctions::SetRecordClass);\
+    t.set_function("SetRecordFaction", &RecordsDynamicFunctions::SetRecordFaction);\
     \
-    {"SetRecordScale",                          RecordsDynamicFunctions::SetRecordScale},\
-    {"SetRecordBloodType",                      RecordsDynamicFunctions::SetRecordBloodType},\
-    {"SetRecordVampireState",                   RecordsDynamicFunctions::SetRecordVampireState},\
+    t.set_function("SetRecordScale", &RecordsDynamicFunctions::SetRecordScale);\
+    t.set_function("SetRecordBloodType", &RecordsDynamicFunctions::SetRecordBloodType);\
+    t.set_function("SetRecordVampireState", &RecordsDynamicFunctions::SetRecordVampireState);\
     \
-    {"SetRecordLevel",                          RecordsDynamicFunctions::SetRecordLevel},\
-    {"SetRecordMagicka",                        RecordsDynamicFunctions::SetRecordMagicka},\
-    {"SetRecordFatigue",                        RecordsDynamicFunctions::SetRecordFatigue},\
+    t.set_function("SetRecordLevel", &RecordsDynamicFunctions::SetRecordLevel);\
+    t.set_function("SetRecordMagicka", &RecordsDynamicFunctions::SetRecordMagicka);\
+    t.set_function("SetRecordFatigue", &RecordsDynamicFunctions::SetRecordFatigue);\
     \
-    {"SetRecordSoulValue",                      RecordsDynamicFunctions::SetRecordSoulValue},\
+    t.set_function("SetRecordSoulValue", &RecordsDynamicFunctions::SetRecordSoulValue);\
     \
-    {"SetRecordAIFight",                        RecordsDynamicFunctions::SetRecordAIFight},\
-    {"SetRecordAIFlee",                         RecordsDynamicFunctions::SetRecordAIFlee},\
-    {"SetRecordAIAlarm",                        RecordsDynamicFunctions::SetRecordAIAlarm},\
-    {"SetRecordAIServices",                     RecordsDynamicFunctions::SetRecordAIServices},\
+    t.set_function("SetRecordAIFight", &RecordsDynamicFunctions::SetRecordAIFight);\
+    t.set_function("SetRecordAIFlee", &RecordsDynamicFunctions::SetRecordAIFlee);\
+    t.set_function("SetRecordAIAlarm", &RecordsDynamicFunctions::SetRecordAIAlarm);\
+    t.set_function("SetRecordAIServices", &RecordsDynamicFunctions::SetRecordAIServices);\
     \
-    {"SetRecordSound",                          RecordsDynamicFunctions::SetRecordSound},\
-    {"SetRecordVolume",                         RecordsDynamicFunctions::SetRecordVolume},\
-    {"SetRecordMinRange",                       RecordsDynamicFunctions::SetRecordMinRange},\
-    {"SetRecordMaxRange",                       RecordsDynamicFunctions::SetRecordMaxRange},\
-    {"SetRecordOpenSound",                      RecordsDynamicFunctions::SetRecordOpenSound},\
-    {"SetRecordCloseSound",                     RecordsDynamicFunctions::SetRecordCloseSound},\
+    t.set_function("SetRecordSound", &RecordsDynamicFunctions::SetRecordSound);\
+    t.set_function("SetRecordVolume", &RecordsDynamicFunctions::SetRecordVolume);\
+    t.set_function("SetRecordMinRange", &RecordsDynamicFunctions::SetRecordMinRange);\
+    t.set_function("SetRecordMaxRange", &RecordsDynamicFunctions::SetRecordMaxRange);\
+    t.set_function("SetRecordOpenSound", &RecordsDynamicFunctions::SetRecordOpenSound);\
+    t.set_function("SetRecordCloseSound", &RecordsDynamicFunctions::SetRecordCloseSound);\
     \
-    {"SetRecordScriptText",                     RecordsDynamicFunctions::SetRecordScriptText},\
-    {"SetRecordIntegerVariable",                RecordsDynamicFunctions::SetRecordIntegerVariable},\
-    {"SetRecordFloatVariable",                  RecordsDynamicFunctions::SetRecordFloatVariable},\
-    {"SetRecordStringVariable",                 RecordsDynamicFunctions::SetRecordStringVariable},\
+    t.set_function("SetRecordScriptText", &RecordsDynamicFunctions::SetRecordScriptText);\
+    t.set_function("SetRecordIntegerVariable", &RecordsDynamicFunctions::SetRecordIntegerVariable);\
+    t.set_function("SetRecordFloatVariable", &RecordsDynamicFunctions::SetRecordFloatVariable);\
+    t.set_function("SetRecordStringVariable", &RecordsDynamicFunctions::SetRecordStringVariable);\
     \
-    {"SetRecordIdByIndex",                      RecordsDynamicFunctions::SetRecordIdByIndex},\
-    {"SetRecordEnchantmentIdByIndex",           RecordsDynamicFunctions::SetRecordEnchantmentIdByIndex},\
+    t.set_function("SetRecordIdByIndex", &RecordsDynamicFunctions::SetRecordIdByIndex);\
+    t.set_function("SetRecordEnchantmentIdByIndex", &RecordsDynamicFunctions::SetRecordEnchantmentIdByIndex);\
     \
-    {"SetRecordEffectId",                       RecordsDynamicFunctions::SetRecordEffectId},\
-    {"SetRecordEffectAttribute",                RecordsDynamicFunctions::SetRecordEffectAttribute},\
-    {"SetRecordEffectSkill",                    RecordsDynamicFunctions::SetRecordEffectSkill},\
-    {"SetRecordEffectRangeType",                RecordsDynamicFunctions::SetRecordEffectRangeType},\
-    {"SetRecordEffectArea",                     RecordsDynamicFunctions::SetRecordEffectArea},\
-    {"SetRecordEffectDuration",                 RecordsDynamicFunctions::SetRecordEffectDuration},\
-    {"SetRecordEffectMagnitudeMax",             RecordsDynamicFunctions::SetRecordEffectMagnitudeMax},\
-    {"SetRecordEffectMagnitudeMin",             RecordsDynamicFunctions::SetRecordEffectMagnitudeMin},\
+    t.set_function("SetRecordEffectId", &RecordsDynamicFunctions::SetRecordEffectId);\
+    t.set_function("SetRecordEffectAttribute", &RecordsDynamicFunctions::SetRecordEffectAttribute);\
+    t.set_function("SetRecordEffectSkill", &RecordsDynamicFunctions::SetRecordEffectSkill);\
+    t.set_function("SetRecordEffectRangeType", &RecordsDynamicFunctions::SetRecordEffectRangeType);\
+    t.set_function("SetRecordEffectArea", &RecordsDynamicFunctions::SetRecordEffectArea);\
+    t.set_function("SetRecordEffectDuration", &RecordsDynamicFunctions::SetRecordEffectDuration);\
+    t.set_function("SetRecordEffectMagnitudeMax", &RecordsDynamicFunctions::SetRecordEffectMagnitudeMax);\
+    t.set_function("SetRecordEffectMagnitudeMin", &RecordsDynamicFunctions::SetRecordEffectMagnitudeMin);\
     \
-    {"SetRecordBodyPartType",                   RecordsDynamicFunctions::SetRecordBodyPartType},\
-    {"SetRecordBodyPartIdForMale",              RecordsDynamicFunctions::SetRecordBodyPartIdForMale},\
-    {"SetRecordBodyPartIdForFemale",            RecordsDynamicFunctions::SetRecordBodyPartIdForFemale},\
+    t.set_function("SetRecordBodyPartType", &RecordsDynamicFunctions::SetRecordBodyPartType);\
+    t.set_function("SetRecordBodyPartIdForMale", &RecordsDynamicFunctions::SetRecordBodyPartIdForMale);\
+    t.set_function("SetRecordBodyPartIdForFemale", &RecordsDynamicFunctions::SetRecordBodyPartIdForFemale);\
     \
-    {"SetRecordInventoryItemId",                RecordsDynamicFunctions::SetRecordInventoryItemId},\
-    {"SetRecordInventoryItemCount",             RecordsDynamicFunctions::SetRecordInventoryItemCount},\
+    t.set_function("SetRecordInventoryItemId", &RecordsDynamicFunctions::SetRecordInventoryItemId);\
+    t.set_function("SetRecordInventoryItemCount", &RecordsDynamicFunctions::SetRecordInventoryItemCount);\
     \
-    {"AddRecord",                               RecordsDynamicFunctions::AddRecord},\
-    {"AddRecordEffect",                         RecordsDynamicFunctions::AddRecordEffect},\
-    {"AddRecordBodyPart",                       RecordsDynamicFunctions::AddRecordBodyPart},\
-    {"AddRecordInventoryItem",                  RecordsDynamicFunctions::AddRecordInventoryItem},\
+    t.set_function("AddRecord", &RecordsDynamicFunctions::AddRecord);\
+    t.set_function("AddRecordEffect", &RecordsDynamicFunctions::AddRecordEffect);\
+    t.set_function("AddRecordBodyPart", &RecordsDynamicFunctions::AddRecordBodyPart);\
+    t.set_function("AddRecordInventoryItem", &RecordsDynamicFunctions::AddRecordInventoryItem);\
     \
-    {"SendRecordDynamic",                       RecordsDynamicFunctions::SendRecordDynamic}
+    t.set_function("SendRecordDynamic", &RecordsDynamicFunctions::SendRecordDynamic);
 
 class RecordsDynamicFunctions
 {

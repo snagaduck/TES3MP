@@ -25,21 +25,17 @@ if(BUILD_WITH_LUA)
     set(LuaScript_Sources
             Script/LangLua/LangLua.cpp
             Script/LangLua/LuaFunc.cpp)
-    set(LuaScript_Headers ${LUA_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/extern/LuaBridge ${CMAKE_SOURCE_DIR}/extern/LuaBridge/detail
+    set(LuaScript_Headers ${LUA_INCLUDE_DIR}
             Script/LangLua/LangLua.hpp)
 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLE_LUA")
-    include_directories(SYSTEM ${LuaJit_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/extern/LuaBridge)
+    include_directories(SYSTEM ${LuaJit_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/extern/sol2/include)
 endif(BUILD_WITH_LUA)
 
 include_directories(${CMAKE_SOURCE_DIR}/extern/PicoSHA2)
 
-set(NativeScript_Sources
-        Script/LangNative/LangNative.cpp
-        )
-set(NativeScript_Headers
-        Script/LangNative/LangNative.hpp
-        )
+set(NativeScript_Sources)
+set(NativeScript_Headers)
 
 # local files
 set(SERVER
@@ -70,7 +66,7 @@ set(SERVER
 )
 
 set(SERVER_HEADER
-        Script/Types.hpp Script/Script.hpp Script/SystemInterface.hpp
+        Script/Types.hpp Script/Script.hpp
         Script/ScriptFunction.hpp Script/Platform.hpp Script/Language.hpp
         Script/ScriptFunctions.hpp Script/API/TimerAPI.hpp Script/API/PublicFnAPI.hpp
         ${LuaScript_Headers}

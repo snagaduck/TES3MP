@@ -42,7 +42,7 @@ void Cell::addPlayer(Player *player)
 
     LOG_APPEND(TimedLog::LOG_INFO, "- Adding %s to Cell %s", player->npc.mName.c_str(), getShortDescription().c_str());
 
-    Script::Call<Script::CallbackIdentity("OnCellLoad")>(player->getId(), getShortDescription().c_str());
+    Script::Call("OnCellLoad", player->getId(), getShortDescription().c_str());
 
     players.push_back(player);
 }
@@ -66,7 +66,7 @@ void Cell::removePlayer(Player *player, bool cleanPlayer)
 
             LOG_APPEND(TimedLog::LOG_INFO, "- Removing %s from Cell %s", player->npc.mName.c_str(), getShortDescription().c_str());
 
-            Script::Call<Script::CallbackIdentity("OnCellUnload")>(player->getId(), getShortDescription().c_str());
+            Script::Call("OnCellUnload", player->getId(), getShortDescription().c_str());
 
             players.erase(it);
             return;

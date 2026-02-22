@@ -1,47 +1,47 @@
 #ifndef OPENMW_ITEMAPI_HPP
 #define OPENMW_ITEMAPI_HPP
 
-#define ITEMAPI \
-    {"ClearInventoryChanges",                 ItemFunctions::ClearInventoryChanges},\
+#define ITEMAPI(t) \
+    t.set_function("ClearInventoryChanges", &ItemFunctions::ClearInventoryChanges);\
     \
-    {"GetEquipmentSize",                      ItemFunctions::GetEquipmentSize},\
-    {"GetEquipmentChangesSize",               ItemFunctions::GetEquipmentChangesSize},\
-    {"GetInventoryChangesSize",               ItemFunctions::GetInventoryChangesSize},\
-    {"GetInventoryChangesAction",             ItemFunctions::GetInventoryChangesAction},\
+    t.set_function("GetEquipmentSize", &ItemFunctions::GetEquipmentSize);\
+    t.set_function("GetEquipmentChangesSize", &ItemFunctions::GetEquipmentChangesSize);\
+    t.set_function("GetInventoryChangesSize", &ItemFunctions::GetInventoryChangesSize);\
+    t.set_function("GetInventoryChangesAction", &ItemFunctions::GetInventoryChangesAction);\
     \
-    {"SetInventoryChangesAction",             ItemFunctions::SetInventoryChangesAction},\
+    t.set_function("SetInventoryChangesAction", &ItemFunctions::SetInventoryChangesAction);\
     \
-    {"EquipItem",                             ItemFunctions::EquipItem},\
-    {"UnequipItem",                           ItemFunctions::UnequipItem},\
+    t.set_function("EquipItem", &ItemFunctions::EquipItem);\
+    t.set_function("UnequipItem", &ItemFunctions::UnequipItem);\
     \
-    {"AddItemChange",                         ItemFunctions::AddItemChange},\
+    t.set_function("AddItemChange", &ItemFunctions::AddItemChange);\
     \
-    {"HasItemEquipped",                       ItemFunctions::HasItemEquipped},\
+    t.set_function("HasItemEquipped", &ItemFunctions::HasItemEquipped);\
     \
-    {"GetEquipmentChangesSlot",                ItemFunctions::GetEquipmentChangesSlot},\
-    {"GetEquipmentItemRefId",                 ItemFunctions::GetEquipmentItemRefId},\
-    {"GetEquipmentItemCount",                 ItemFunctions::GetEquipmentItemCount},\
-    {"GetEquipmentItemCharge",                ItemFunctions::GetEquipmentItemCharge},\
-    {"GetEquipmentItemEnchantmentCharge",     ItemFunctions::GetEquipmentItemEnchantmentCharge},\
+    t.set_function("GetEquipmentChangesSlot", &ItemFunctions::GetEquipmentChangesSlot);\
+    t.set_function("GetEquipmentItemRefId", &ItemFunctions::GetEquipmentItemRefId);\
+    t.set_function("GetEquipmentItemCount", &ItemFunctions::GetEquipmentItemCount);\
+    t.set_function("GetEquipmentItemCharge", &ItemFunctions::GetEquipmentItemCharge);\
+    t.set_function("GetEquipmentItemEnchantmentCharge", &ItemFunctions::GetEquipmentItemEnchantmentCharge);\
     \
-    {"GetInventoryItemRefId",                 ItemFunctions::GetInventoryItemRefId},\
-    {"GetInventoryItemCount",                 ItemFunctions::GetInventoryItemCount},\
-    {"GetInventoryItemCharge",                ItemFunctions::GetInventoryItemCharge},\
-    {"GetInventoryItemEnchantmentCharge",     ItemFunctions::GetInventoryItemEnchantmentCharge},\
-    {"GetInventoryItemSoul",                  ItemFunctions::GetInventoryItemSoul},\
+    t.set_function("GetInventoryItemRefId", &ItemFunctions::GetInventoryItemRefId);\
+    t.set_function("GetInventoryItemCount", &ItemFunctions::GetInventoryItemCount);\
+    t.set_function("GetInventoryItemCharge", &ItemFunctions::GetInventoryItemCharge);\
+    t.set_function("GetInventoryItemEnchantmentCharge", &ItemFunctions::GetInventoryItemEnchantmentCharge);\
+    t.set_function("GetInventoryItemSoul", &ItemFunctions::GetInventoryItemSoul);\
     \
-    {"GetUsedItemRefId",                      ItemFunctions::GetUsedItemRefId},\
-    {"GetUsedItemCount",                      ItemFunctions::GetUsedItemCount},\
-    {"GetUsedItemCharge",                     ItemFunctions::GetUsedItemCharge},\
-    {"GetUsedItemEnchantmentCharge",          ItemFunctions::GetUsedItemEnchantmentCharge},\
-    {"GetUsedItemSoul",                       ItemFunctions::GetUsedItemSoul},\
+    t.set_function("GetUsedItemRefId", &ItemFunctions::GetUsedItemRefId);\
+    t.set_function("GetUsedItemCount", &ItemFunctions::GetUsedItemCount);\
+    t.set_function("GetUsedItemCharge", &ItemFunctions::GetUsedItemCharge);\
+    t.set_function("GetUsedItemEnchantmentCharge", &ItemFunctions::GetUsedItemEnchantmentCharge);\
+    t.set_function("GetUsedItemSoul", &ItemFunctions::GetUsedItemSoul);\
     \
-    {"SendEquipment",                         ItemFunctions::SendEquipment},\
-    {"SendInventoryChanges",                  ItemFunctions::SendInventoryChanges},\
-    {"SendItemUse",                           ItemFunctions::SendItemUse},\
+    t.set_function("SendEquipment", &ItemFunctions::SendEquipment);\
+    t.set_function("SendInventoryChanges", &ItemFunctions::SendInventoryChanges);\
+    t.set_function("SendItemUse", &ItemFunctions::SendItemUse);\
     \
-    {"InitializeInventoryChanges",            ItemFunctions::InitializeInventoryChanges},\
-    {"AddItem",                               ItemFunctions::AddItem}
+    t.set_function("InitializeInventoryChanges", &ItemFunctions::InitializeInventoryChanges);\
+    t.set_function("AddItem", &ItemFunctions::AddItem);
 
 class ItemFunctions
 {

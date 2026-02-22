@@ -121,7 +121,7 @@ void CellController::removeCell(Cell *cell)
     {
         if (*it != nullptr && *it == cell)
         {
-            Script::Call<Script::CallbackIdentity("OnCellDeletion")>(cell->getShortDescription().c_str());
+            Script::Call("OnCellDeletion", cell->getShortDescription().c_str());
             LOG_APPEND(TimedLog::LOG_INFO, "- Removing %s from CellController", cell->getShortDescription().c_str());
 
             delete *it;

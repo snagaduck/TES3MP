@@ -3,18 +3,16 @@
 
 #include "../Types.hpp"
 
-#define SHAPESHIFTAPI \
-    {"GetScale",                    ShapeshiftFunctions::GetScale},\
-    {"IsWerewolf",                  ShapeshiftFunctions::IsWerewolf},\
-    {"GetCreatureRefId",            ShapeshiftFunctions::GetCreatureRefId},\
-    {"GetCreatureNameDisplayState", ShapeshiftFunctions::GetCreatureNameDisplayState},\
-    \
-    {"SetScale",                    ShapeshiftFunctions::SetScale},\
-    {"SetWerewolfState",            ShapeshiftFunctions::SetWerewolfState},\
-    {"SetCreatureRefId",            ShapeshiftFunctions::SetCreatureRefId},\
-    {"SetCreatureNameDisplayState", ShapeshiftFunctions::SetCreatureNameDisplayState},\
-    \
-    {"SendShapeshift",              ShapeshiftFunctions::SendShapeshift}
+#define SHAPESHIFTAPI(t) \
+    t.set_function("GetScale", &ShapeshiftFunctions::GetScale); \
+    t.set_function("IsWerewolf", &ShapeshiftFunctions::IsWerewolf); \
+    t.set_function("GetCreatureRefId", &ShapeshiftFunctions::GetCreatureRefId); \
+    t.set_function("GetCreatureNameDisplayState", &ShapeshiftFunctions::GetCreatureNameDisplayState); \
+    t.set_function("SetScale", &ShapeshiftFunctions::SetScale); \
+    t.set_function("SetWerewolfState", &ShapeshiftFunctions::SetWerewolfState); \
+    t.set_function("SetCreatureRefId", &ShapeshiftFunctions::SetCreatureRefId); \
+    t.set_function("SetCreatureNameDisplayState", &ShapeshiftFunctions::SetCreatureNameDisplayState); \
+    t.set_function("SendShapeshift", &ShapeshiftFunctions::SendShapeshift);
 
 class ShapeshiftFunctions
 {

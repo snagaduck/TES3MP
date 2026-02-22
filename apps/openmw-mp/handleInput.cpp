@@ -12,7 +12,7 @@ namespace mwmp_input {
             std::cout << c << std::flush;
             if (c == '\n' || c == '\r') { // handle carriage return as new line on Windows
                 std::cout << std::endl;
-                Script::Call<Script::CallbackIdentity("OnServerWindowInput")>(windowInputBuffer.c_str());
+                Script::Call("OnServerWindowInput", windowInputBuffer.c_str());
                 windowInputBuffer.assign("");
             }
             else if (c == '\b') {

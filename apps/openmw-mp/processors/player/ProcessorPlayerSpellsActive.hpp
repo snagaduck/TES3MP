@@ -17,7 +17,7 @@ namespace mwmp
         {
             DEBUG_PRINTF(strPacketID.c_str());
 
-            Script::Call<Script::CallbackIdentity("OnPlayerSpellsActive")>(player.getId());
+            Script::Call("OnPlayerSpellsActive", player.getId());
         }
     };
 }

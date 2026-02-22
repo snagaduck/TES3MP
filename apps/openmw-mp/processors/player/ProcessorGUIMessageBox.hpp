@@ -17,7 +17,7 @@ namespace mwmp
         {
             DEBUG_PRINTF(strPacketID.c_str());
 
-            Script::Call<Script::CallbackIdentity("OnGUIAction")>(player.getId(), (int)player.guiMessageBox.id,
+            Script::Call("OnGUIAction", player.getId(), (int)player.guiMessageBox.id,
                                                                   player.guiMessageBox.data.c_str());
         }
     };

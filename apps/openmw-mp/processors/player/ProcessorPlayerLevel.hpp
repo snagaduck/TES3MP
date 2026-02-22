@@ -17,7 +17,7 @@ namespace mwmp
         {
             if (!player.creatureStats.mDead)
             {
-                Script::Call<Script::CallbackIdentity("OnPlayerLevel")>(player.getId());
+                Script::Call("OnPlayerLevel", player.getId());
             }
         }
     };

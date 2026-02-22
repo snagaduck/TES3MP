@@ -1,18 +1,13 @@
 #ifndef OPENMW_BOOKAPI_HPP
 #define OPENMW_BOOKAPI_HPP
 
-#define BOOKAPI \
-    {"ClearBookChanges",       BookFunctions::ClearBookChanges},\
-    \
-    {"GetBookChangesSize",     BookFunctions::GetBookChangesSize},\
-    \
-    {"AddBook",                BookFunctions::AddBook},\
-    \
-    {"GetBookId",              BookFunctions::GetBookId},\
-    \
-    {"SendBookChanges",        BookFunctions::SendBookChanges},\
-    \
-    {"InitializeBookChanges",  BookFunctions::InitializeBookChanges}
+#define BOOKAPI(t) \
+    t.set_function("ClearBookChanges", &BookFunctions::ClearBookChanges); \
+    t.set_function("GetBookChangesSize", &BookFunctions::GetBookChangesSize); \
+    t.set_function("AddBook", &BookFunctions::AddBook); \
+    t.set_function("GetBookId", &BookFunctions::GetBookId); \
+    t.set_function("SendBookChanges", &BookFunctions::SendBookChanges); \
+    t.set_function("InitializeBookChanges", &BookFunctions::InitializeBookChanges);
 
 class BookFunctions
 {

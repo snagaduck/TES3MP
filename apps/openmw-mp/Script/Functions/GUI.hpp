@@ -1,29 +1,22 @@
 #ifndef OPENMW_GUIAPI_HPP
 #define OPENMW_GUIAPI_HPP
 
-#define GUIAPI \
-    {"MessageBox",                 GUIFunctions::_MessageBox},\
-    {"CustomMessageBox",           GUIFunctions::CustomMessageBox},\
-    {"InputDialog",                GUIFunctions::InputDialog},\
-    {"PasswordDialog",             GUIFunctions::PasswordDialog},\
-    {"ListBox",                    GUIFunctions::ListBox},\
-    \
-    {"ClearQuickKeyChanges",       GUIFunctions::ClearQuickKeyChanges},\
-    \
-    {"GetQuickKeyChangesSize",     GUIFunctions::GetQuickKeyChangesSize},\
-    \
-    {"GetQuickKeySlot",            GUIFunctions::GetQuickKeySlot},\
-    {"GetQuickKeyType",            GUIFunctions::GetQuickKeyType},\
-    {"GetQuickKeyItemId",          GUIFunctions::GetQuickKeyItemId},\
-    \
-    {"AddQuickKey",                GUIFunctions::AddQuickKey},\
-    \
-    {"SendQuickKeyChanges",        GUIFunctions::SendQuickKeyChanges},\
-    \
-    {"SetMapVisibility",           GUIFunctions::SetMapVisibility},\
-    {"SetMapVisibilityAll",        GUIFunctions::SetMapVisibilityAll},\
-    \
-    {"InitializeQuickKeyChanges",  GUIFunctions::InitializeQuickKeyChanges}
+#define GUIAPI(t) \
+    t.set_function("MessageBox", &GUIFunctions::_MessageBox); \
+    t.set_function("CustomMessageBox", &GUIFunctions::CustomMessageBox); \
+    t.set_function("InputDialog", &GUIFunctions::InputDialog); \
+    t.set_function("PasswordDialog", &GUIFunctions::PasswordDialog); \
+    t.set_function("ListBox", &GUIFunctions::ListBox); \
+    t.set_function("ClearQuickKeyChanges", &GUIFunctions::ClearQuickKeyChanges); \
+    t.set_function("GetQuickKeyChangesSize", &GUIFunctions::GetQuickKeyChangesSize); \
+    t.set_function("GetQuickKeySlot", &GUIFunctions::GetQuickKeySlot); \
+    t.set_function("GetQuickKeyType", &GUIFunctions::GetQuickKeyType); \
+    t.set_function("GetQuickKeyItemId", &GUIFunctions::GetQuickKeyItemId); \
+    t.set_function("AddQuickKey", &GUIFunctions::AddQuickKey); \
+    t.set_function("SendQuickKeyChanges", &GUIFunctions::SendQuickKeyChanges); \
+    t.set_function("SetMapVisibility", &GUIFunctions::SetMapVisibility); \
+    t.set_function("SetMapVisibilityAll", &GUIFunctions::SetMapVisibilityAll); \
+    t.set_function("InitializeQuickKeyChanges", &GUIFunctions::InitializeQuickKeyChanges);
 
 class GUIFunctions
 {

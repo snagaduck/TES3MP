@@ -3,45 +3,45 @@
 
 #include "../Types.hpp"
 
-#define MECHANICSAPI \
-    {"ClearAlliedPlayersForPlayer", MechanicsFunctions::ClearAlliedPlayersForPlayer},\
+#define MECHANICSAPI(t) \
+    t.set_function("ClearAlliedPlayersForPlayer", &MechanicsFunctions::ClearAlliedPlayersForPlayer);\
     \
-    {"GetMiscellaneousChangeType",  MechanicsFunctions::GetMiscellaneousChangeType},\
+    t.set_function("GetMiscellaneousChangeType", &MechanicsFunctions::GetMiscellaneousChangeType);\
     \
-    {"GetMarkCell",                 MechanicsFunctions::GetMarkCell},\
-    {"GetMarkPosX",                 MechanicsFunctions::GetMarkPosX},\
-    {"GetMarkPosY",                 MechanicsFunctions::GetMarkPosY},\
-    {"GetMarkPosZ",                 MechanicsFunctions::GetMarkPosZ},\
-    {"GetMarkRotX",                 MechanicsFunctions::GetMarkRotX},\
-    {"GetMarkRotZ",                 MechanicsFunctions::GetMarkRotZ},\
-    {"GetSelectedSpellId",          MechanicsFunctions::GetSelectedSpellId},\
+    t.set_function("GetMarkCell", &MechanicsFunctions::GetMarkCell);\
+    t.set_function("GetMarkPosX", &MechanicsFunctions::GetMarkPosX);\
+    t.set_function("GetMarkPosY", &MechanicsFunctions::GetMarkPosY);\
+    t.set_function("GetMarkPosZ", &MechanicsFunctions::GetMarkPosZ);\
+    t.set_function("GetMarkRotX", &MechanicsFunctions::GetMarkRotX);\
+    t.set_function("GetMarkRotZ", &MechanicsFunctions::GetMarkRotZ);\
+    t.set_function("GetSelectedSpellId", &MechanicsFunctions::GetSelectedSpellId);\
     \
-    {"DoesPlayerHavePlayerKiller",  MechanicsFunctions::DoesPlayerHavePlayerKiller},\
-    {"GetPlayerKillerPid",          MechanicsFunctions::GetPlayerKillerPid},\
-    {"GetPlayerKillerRefId",        MechanicsFunctions::GetPlayerKillerRefId},\
-    {"GetPlayerKillerRefNum",       MechanicsFunctions::GetPlayerKillerRefNum},\
-    {"GetPlayerKillerMpNum",        MechanicsFunctions::GetPlayerKillerMpNum},\
-    {"GetPlayerKillerName",         MechanicsFunctions::GetPlayerKillerName},\
+    t.set_function("DoesPlayerHavePlayerKiller", &MechanicsFunctions::DoesPlayerHavePlayerKiller);\
+    t.set_function("GetPlayerKillerPid", &MechanicsFunctions::GetPlayerKillerPid);\
+    t.set_function("GetPlayerKillerRefId", &MechanicsFunctions::GetPlayerKillerRefId);\
+    t.set_function("GetPlayerKillerRefNum", &MechanicsFunctions::GetPlayerKillerRefNum);\
+    t.set_function("GetPlayerKillerMpNum", &MechanicsFunctions::GetPlayerKillerMpNum);\
+    t.set_function("GetPlayerKillerName", &MechanicsFunctions::GetPlayerKillerName);\
     \
-    {"GetDrawState",                MechanicsFunctions::GetDrawState},\
-    {"GetSneakState",               MechanicsFunctions::GetSneakState},\
+    t.set_function("GetDrawState", &MechanicsFunctions::GetDrawState);\
+    t.set_function("GetSneakState", &MechanicsFunctions::GetSneakState);\
     \
-    {"SetMarkCell",                 MechanicsFunctions::SetMarkCell},\
-    {"SetMarkPos",                  MechanicsFunctions::SetMarkPos},\
-    {"SetMarkRot",                  MechanicsFunctions::SetMarkRot},\
-    {"SetSelectedSpellId",          MechanicsFunctions::SetSelectedSpellId},\
+    t.set_function("SetMarkCell", &MechanicsFunctions::SetMarkCell);\
+    t.set_function("SetMarkPos", &MechanicsFunctions::SetMarkPos);\
+    t.set_function("SetMarkRot", &MechanicsFunctions::SetMarkRot);\
+    t.set_function("SetSelectedSpellId", &MechanicsFunctions::SetSelectedSpellId);\
     \
-    {"AddAlliedPlayerForPlayer",    MechanicsFunctions::AddAlliedPlayerForPlayer},\
+    t.set_function("AddAlliedPlayerForPlayer", &MechanicsFunctions::AddAlliedPlayerForPlayer);\
     \
-    {"SendMarkLocation",            MechanicsFunctions::SendMarkLocation},\
-    {"SendSelectedSpell",           MechanicsFunctions::SendSelectedSpell},\
-    {"SendAlliedPlayers",           MechanicsFunctions::SendAlliedPlayers},\
+    t.set_function("SendMarkLocation", &MechanicsFunctions::SendMarkLocation);\
+    t.set_function("SendSelectedSpell", &MechanicsFunctions::SendSelectedSpell);\
+    t.set_function("SendAlliedPlayers", &MechanicsFunctions::SendAlliedPlayers);\
     \
-    {"Jail",                        MechanicsFunctions::Jail},\
-    {"Resurrect",                   MechanicsFunctions::Resurrect},\
+    t.set_function("Jail", &MechanicsFunctions::Jail);\
+    t.set_function("Resurrect", &MechanicsFunctions::Resurrect);\
     \
-    {"GetDeathReason",              MechanicsFunctions::GetDeathReason},\
-    {"GetPlayerKillerRefNumIndex",  MechanicsFunctions::GetPlayerKillerRefNumIndex}
+    t.set_function("GetDeathReason", &MechanicsFunctions::GetDeathReason);\
+    t.set_function("GetPlayerKillerRefNumIndex", &MechanicsFunctions::GetPlayerKillerRefNumIndex);
 
 class MechanicsFunctions
 {

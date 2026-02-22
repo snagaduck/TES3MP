@@ -1,5 +1,4 @@
 #include "Script.hpp"
-#include "LangNative/LangNative.hpp"
 
 #if defined (ENABLE_LUA)
 #include "LangLua/LangLua.hpp"
@@ -17,23 +16,14 @@ Script::Script(const char *path)
 
     fclose(file);
 
-#ifdef _WIN32
-    if (strstr(path, ".dll"))
-#else
-    if (strstr(path, ".so"))
-#endif
-    {
-        script_type = SCRIPT_CPP;
-        lang = new LangNative();
-    }
 #if defined (ENABLE_LUA)
-    else if (strstr(path, ".lua") || strstr(path, ".t"))
+    if (strstr(path, ".lua") || strstr(path, ".t"))
     {
         lang = new LangLua();
         script_type = SCRIPT_LUA;
     }
-#endif
     else
+#endif
         throw std::runtime_error("Script type not recognized: " + std::string(path));
 
     try

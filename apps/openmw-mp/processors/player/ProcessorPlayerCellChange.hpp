@@ -23,7 +23,7 @@ namespace mwmp
             LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "Received %s from %s", strPacketID.c_str(), player.npc.mName.c_str());
             LOG_APPEND(TimedLog::LOG_INFO, "- Moved to %s", player.cell.getShortDescription().c_str());
 
-            Script::Call<Script::CallbackIdentity("OnPlayerCellChange")>(player.getId());
+            Script::Call("OnPlayerCellChange", player.getId());
 
             player.exchangeFullInfo = true;
 
