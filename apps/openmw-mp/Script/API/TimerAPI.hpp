@@ -2,8 +2,8 @@
 #define OPENMW_TIMERAPI_HPP
 
 #include <string>
+#include <unordered_map>
 
-#include <Script/Script.hpp>
 #include <Script/ScriptFunction.hpp>
 
 namespace mwmp
@@ -16,10 +16,8 @@ namespace mwmp
         friend class TimerAPI;
 
     public:
-
-        Timer(ScriptFunc callback, long msec, const std::string& def, std::vector<boost::any> args);
 #if defined(ENABLE_LUA)
-        Timer(lua_State *lua, ScriptFuncLua callback, long msec, const std::string& def, std::vector<boost::any> args);
+        Timer(lua_State *lua, const std::string& callback, long msec, std::vector<sol::object> args);
 #endif
         void Tick();
 
@@ -29,9 +27,7 @@ namespace mwmp
         void Restart(int msec);
     private:
         double startTime, targetMsec;
-        std::string publ, arg_types;
-        std::vector<boost::any> args;
-        Script *scr;
+        std::vector<sol::object> args;
         bool isEnded;
     };
 
@@ -39,9 +35,8 @@ namespace mwmp
     {
     public:
 #if defined(ENABLE_LUA)
-        static int CreateTimerLua(lua_State *lua, ScriptFuncLua callback, long msec, const std::string& def, std::vector<boost::any> args);
+        static int CreateTimerLua(lua_State *lua, const std::string& callback, long msec, std::vector<sol::object> args);
 #endif
-        static int CreateTimer(ScriptFunc callback, long msec, const std::string& def, std::vector<boost::any> args);
         static void FreeTimer(int timerid);
         static void ResetTimer(int timerid, long msec);
         static void StartTimer(int timerid);

@@ -1,24 +1,14 @@
 #include "TimerAPI.hpp"
 
 #include <chrono>
-
 #include <iostream>
+
 using namespace mwmp;
 
-Timer::Timer(ScriptFunc callback, long msec, const std::string& def, std::vector<boost::any> args) : ScriptFunction(callback, 'v', def)
-{
-    targetMsec = msec;
-    this->args = args;
-    isEnded = true;
-}
-
 #if defined(ENABLE_LUA)
-Timer::Timer(lua_State *lua, ScriptFuncLua callback, long msec, const std::string& def, std::vector<boost::any> args): ScriptFunction(callback, lua, 'v', def)
-{
-    targetMsec = msec;
-    this->args = args;
-    isEnded = true;
-}
+Timer::Timer(lua_State *lua, const std::string& callback, long msec, std::vector<sol::object> args)
+    : ScriptFunction(callback, lua), targetMsec(msec), args(std::move(args)), isEnded(true)
+{}
 #endif
 
 void Timer::Tick()
@@ -65,7 +55,7 @@ int TimerAPI::pointer = 0;
 std::unordered_map<int, Timer* > TimerAPI::timers;
 
 #if defined(ENABLE_LUA)
-int TimerAPI::CreateTimerLua(lua_State *lua, ScriptFuncLua callback, long msec, const std::string& def, std::vector<boost::any> args)
+int TimerAPI::CreateTimerLua(lua_State *lua, const std::string& callback, long msec, std::vector<sol::object> args)
 {
     int id = -1;
 
@@ -73,13 +63,13 @@ int TimerAPI::CreateTimerLua(lua_State *lua, ScriptFuncLua callback, long msec, 
     {
         if (timer.second != nullptr)
             continue;
-        timer.second = new Timer(lua, callback, msec, def, args);
+        timer.second = new Timer(lua, callback, msec, args);
         id = timer.first;
     }
 
     if (id == -1)
     {
-        timers[pointer] = new Timer(lua, callback, msec, def, args);
+        timers[pointer] = new Timer(lua, callback, msec, std::move(args));
         id = pointer;
         pointer++;
     }
@@ -88,32 +78,8 @@ int TimerAPI::CreateTimerLua(lua_State *lua, ScriptFuncLua callback, long msec, 
 }
 #endif
 
-
-int TimerAPI::CreateTimer(ScriptFunc callback, long msec, const std::string &def, std::vector<boost::any> args)
-{
-    int id = -1;
-
-    for (auto timer : timers)
-    {
-        if (timer.second != nullptr)
-            continue;
-        timer.second = new Timer(callback, msec, def, args);
-        id = timer.first;
-    }
-
-    if (id == -1)
-    {
-        timers[pointer] = new Timer(callback, msec, def, args);
-        id = pointer;
-        pointer++;
-    }
-
-    return id;
-}
-
 void TimerAPI::FreeTimer(int timerid)
 {
-
     try
     {
         if (timers.at(timerid) != nullptr)

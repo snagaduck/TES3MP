@@ -126,53 +126,12 @@ void LangLua::Call(const char* name, std::function<void(lua_State*)> pushArgs, i
     }
 }
 
-boost::any LangLua::Call(const char *name, const char *argl, const std::vector<boost::any> &args)
+sol::object LangLua::Call(const char* name, const std::vector<sol::object>& args)
 {
-    int n_args = (int)(strlen(argl));
-
     lua_getglobal(lua, name);
-
-    for (int index = 0; index < n_args; index++)
-    {
-        switch (argl[index])
-        {
-            case 'i':
-                sol::stack::push(lua, boost::any_cast<unsigned int>(args.at(index)));
-                break;
-
-            case 'q':
-                sol::stack::push(lua, boost::any_cast<signed int>(args.at(index)));
-                break;
-
-            case 'l':
-                sol::stack::push(lua, boost::any_cast<unsigned long long>(args.at(index)));
-                break;
-
-            case 'w':
-                sol::stack::push(lua, boost::any_cast<signed long long>(args.at(index)));
-                break;
-
-            case 'f':
-                sol::stack::push(lua, boost::any_cast<double>(args.at(index)));
-                break;
-
-            case 'p':
-                lua_pushlightuserdata(lua, boost::any_cast<void *>(args.at(index)));
-                break;
-
-            case 's':
-                sol::stack::push(lua, boost::any_cast<const char *>(args.at(index)));
-                break;
-
-            case 'b':
-                sol::stack::push(lua, boost::any_cast<int>(args.at(index)));
-                break;
-            default:
-                throw std::runtime_error("Lua call: Unknown argument identifier " + argl[index]);
-        }
-    }
-
-    if (lua_pcall(lua, n_args, 1, 0) != 0)
+    for (const auto& arg : args)
+        sol::stack::push(lua, arg);
+    if (lua_pcall(lua, (int)args.size(), 1, 0) != 0)
     {
         std::string err = lua_tostring(lua, -1);
         lua_pop(lua, 1);
@@ -180,7 +139,7 @@ boost::any LangLua::Call(const char *name, const char *argl, const std::vector<b
     }
     sol::object result = sol::stack::get<sol::object>(lua, -1);
     lua_pop(lua, 1);
-    return boost::any(result);
+    return result;
 }
 
 void LangLua::AddPackagePath(const std::string& path)

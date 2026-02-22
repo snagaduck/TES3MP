@@ -1,69 +1,28 @@
-#include<iostream>
-#include <stdexcept>
 #include "ScriptFunction.hpp"
 
-#if defined (ENABLE_LUA)
+#if defined(ENABLE_LUA)
 #include "LangLua/LangLua.hpp"
-#endif
 
-ScriptFunction::ScriptFunction(ScriptFunc fCpp,char ret_type, const std::string &def) :
-        fCpp(fCpp), ret_type(ret_type), def(def), script_type(SCRIPT_CPP)
+ScriptFunction::ScriptFunction(const std::string& funcName, lua_State* lua)
+    : lua(lua), funcName(funcName)
+{}
+
+sol::object ScriptFunction::Call(const std::vector<sol::object>& args)
 {
-
-}
-#if defined (ENABLE_LUA)
-ScriptFunction::ScriptFunction(const ScriptFuncLua &fLua, lua_State *lua, char ret_type, const std::string &def) :
-        fLua({lua, fLua}), ret_type(ret_type), def(def), script_type(SCRIPT_LUA)
-{
-
-}
-#endif
-
-
-ScriptFunction::~ScriptFunction()
-{
-#if defined (ENABLE_LUA)
-    if (script_type == SCRIPT_LUA)
-        fLua.name.~ScriptFuncLua();
-#endif
-}
-
-boost::any ScriptFunction::Call(const std::vector<boost::any> &args)
-{
-    boost::any result;
-
-    if (def.length() != args.size())
-        throw std::runtime_error("Script call: Number of arguments does not match definition");
-#if defined (ENABLE_LUA)
-    else if (script_type == SCRIPT_LUA)
+    lua_getglobal(lua, funcName.c_str());
+    for (const auto& arg : args)
+        sol::stack::push(lua, arg);
+    int n = (int)args.size();
+    if (lua_pcall(lua, n, 1, 0) != 0)
     {
-        LangLua langLua(fLua.lua);
-        boost::any any = langLua.Call(fLua.name.c_str(), def.c_str(), args);
-
-        switch (ret_type)
-        {
-            case 'i':
-                result = boost::any_cast<sol::object>(any).as<unsigned int>();
-                break;
-            case 'q':
-                result = boost::any_cast<sol::object>(any).as<signed int>();
-                break;
-            case 'f':
-                result = boost::any_cast<sol::object>(any).as<double>();
-                break;
-            case 's':
-                result = boost::any_cast<sol::object>(any).as<const char*>();
-                break;
-            case 'v':
-                result = boost::any();
-                break;
-            default:
-                throw std::runtime_error("Lua call: Unknown return type" + ret_type);
-        }
-
-        lua_settop(fLua.lua, 0);
+        std::string err = lua_tostring(lua, -1);
+        lua_pop(lua, 1);
+        throw std::runtime_error("Lua error in " + funcName + ": " + err);
     }
-#endif
-
+    sol::object result = sol::stack::get<sol::object>(lua, -1);
+    lua_pop(lua, 1);
     return result;
 }
+#endif
+
+ScriptFunction::~ScriptFunction() {}

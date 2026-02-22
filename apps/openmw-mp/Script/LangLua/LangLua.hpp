@@ -6,8 +6,6 @@
 #include <sol/sol.hpp>
 #include <set>
 
-#include <boost/any.hpp>
-#include "../ScriptFunction.hpp"
 #include "../Language.hpp"
 
 class LangLua: public Language
@@ -33,7 +31,7 @@ public:
     virtual int FreeProgram() override;
     virtual bool IsCallbackPresent(const char *name) override;
     virtual void Call(const char* name, std::function<void(lua_State*)> pushArgs, int nargs) override;
-    virtual boost::any Call(const char* name, const char* argl, const std::vector<boost::any>& args) override;
+    virtual sol::object Call(const char* name, const std::vector<sol::object>& args) override;
 private:
     static std::set<std::string> packageCPath;
     static std::set<std::string> packagePath;

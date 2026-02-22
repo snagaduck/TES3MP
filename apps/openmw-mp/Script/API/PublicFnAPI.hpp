@@ -12,9 +12,8 @@ private:
 
     static std::unordered_map<std::string, Public *> publics;
 
-    Public(ScriptFunc _public, const std::string &name, char ret_type, const std::string &def);
 #if defined(ENABLE_LUA)
-    Public(ScriptFuncLua _public, lua_State *lua, const std::string &name, char ret_type, const std::string &def);
+    Public(const std::string& callback, lua_State *lua, const std::string &name);
 #endif
 
 public:
@@ -22,11 +21,7 @@ public:
     static void MakePublic(Args &&... args)
     { new Public(std::forward<Args>(args)...); }
 
-    static boost::any Call(const std::string &name, const std::vector<boost::any> &args);
-
-    static const std::string& GetDefinition(const std::string& name);
-
-    static bool IsLua(const std::string &name);
+    static sol::object Call(const std::string &name, const std::vector<sol::object> &args);
 
     static void DeleteAll();
 };

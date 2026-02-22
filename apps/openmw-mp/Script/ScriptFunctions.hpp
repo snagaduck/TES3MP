@@ -22,7 +22,6 @@
 #include <Script/Functions/Spells.hpp>
 #include <Script/Functions/Stats.hpp>
 #include <Script/Functions/Worldstate.hpp>
-#include <cstdarg>
 #include <apps/openmw-mp/Player.hpp>
 #include <apps/openmw-mp/Utils.hpp>
 #include "ScriptFunction.hpp"
@@ -45,34 +44,6 @@
 class ScriptFunctions
 {
 public:
-
-    static void MakePublic(ScriptFunc _public, const char *name, char ret_type, const char *def) noexcept;
-    static boost::any CallPublic(const char *name, va_list args) noexcept;
-
-     /**
-     * \brief Create a timer that will run a script function after a certain interval.
-     *
-     * \param callback The Lua script function.
-     * \param msec The interval in miliseconds.
-     * \return The ID of the timer thus created.
-     */
-    static int CreateTimer(ScriptFunc callback, int msec) noexcept;
-
-    /**
-    * \brief Create a timer that will run a script function after a certain interval and pass
-    *        certain arguments to it.
-    *
-    * Example usage:
-    * - tes3mp.CreateTimerEx("OnTimerTest1", 250, "i", 90)
-    * - tes3mp.CreateTimerEx("OnTimerTest2", 500, "sif", "Test string", 60, 77.321)
-    *
-    * \param callback The Lua script function.
-    * \param msec The interval in miliseconds.
-    * \param types The argument types.
-    * \param args The arguments.
-    * \return The ID of the timer thus created.
-    */
-    static int CreateTimerEx(ScriptFunc callback, int msec, const char *types, va_list args) noexcept;
 
     /**
     * \brief Start the timer with a certain ID.

@@ -1,50 +1,26 @@
 #ifndef SCRIPTFUNCTION_HPP
 #define SCRIPTFUNCTION_HPP
 
-#include <boost/any.hpp>
 #include <string>
 #include <vector>
-#if defined (ENABLE_LUA)
-#include "LangLua/LangLua.hpp"
-#endif
-
-typedef unsigned long long(*ScriptFunc)();
-#if defined (ENABLE_LUA)
-typedef std::string ScriptFuncLua;
+#if defined(ENABLE_LUA)
+#include <sol/sol.hpp>
+struct lua_State;
 #endif
 
 class ScriptFunction
 {
 protected:
-    union
-    {
-        ScriptFunc fCpp;
-#if defined (ENABLE_LUA)
-        struct
-        {
-            lua_State *lua;
-            ScriptFuncLua name;
-        } fLua;
-#endif
-    };
+#if defined(ENABLE_LUA)
+    lua_State* lua;
+    std::string funcName;
 
-protected:
-    char ret_type;
-    std::string def;
-    int script_type;
-    enum
-    {
-        SCRIPT_CPP,
-        SCRIPT_LUA
-    };
-
-    ScriptFunction(ScriptFunc fCpp, char ret_type, const std::string &def);
-#if defined (ENABLE_LUA)
-    ScriptFunction(const ScriptFuncLua &fPawn, lua_State *lua, char ret_type, const std::string &def);
+    ScriptFunction(const std::string& funcName, lua_State* lua);
 #endif
+    ScriptFunction() = default;
     virtual ~ScriptFunction();
 
-    boost::any Call(const std::vector<boost::any> &args);
+    sol::object Call(const std::vector<sol::object>& args);
 };
 
 #endif //SCRIPTFUNCTION_HPP

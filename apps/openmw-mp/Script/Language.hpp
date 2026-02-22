@@ -3,7 +3,7 @@
 
 #include "Types.hpp"
 
-#include <boost/any.hpp>
+#include <sol/sol.hpp>
 #include <functional>
 #include <vector>
 
@@ -17,7 +17,7 @@ public:
     virtual int FreeProgram() = 0;
     virtual bool IsCallbackPresent(const char* name) = 0;
     virtual void Call(const char* name, std::function<void(lua_State*)> pushArgs, int nargs) = 0;
-    virtual boost::any Call(const char* name, const char* argl, const std::vector<boost::any>& args) = 0;
+    virtual sol::object Call(const char* name, const std::vector<sol::object>& args) = 0;
 
     virtual lib_t GetInterface() = 0;
 

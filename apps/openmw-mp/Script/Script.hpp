@@ -1,7 +1,6 @@
 #ifndef PLUGINSYSTEM3_SCRIPT_HPP
 #define PLUGINSYSTEM3_SCRIPT_HPP
 
-#include <boost/any.hpp>
 #include <memory>
 #include <vector>
 
@@ -9,6 +8,9 @@
 #include "ScriptFunction.hpp"
 #include "ScriptFunctions.hpp"
 #include "Language.hpp"
+#if defined(ENABLE_LUA)
+#include "LangLua/LangLua.hpp"
+#endif
 
 #include "Networking.hpp"
 
