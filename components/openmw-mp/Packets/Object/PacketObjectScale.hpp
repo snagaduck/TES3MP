@@ -8,7 +8,7 @@ namespace mwmp
     class PacketObjectScale : public ObjectPacket
     {
     public:
-        PacketObjectScale(RakNet::RakPeerInterface *peer);
+        PacketObjectScale(mwmp::NetworkManager *network);
 
         virtual void Object(BaseObject &baseObject, bool send);
     };

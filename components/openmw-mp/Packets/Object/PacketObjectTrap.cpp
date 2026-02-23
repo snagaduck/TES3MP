@@ -3,7 +3,7 @@
 
 using namespace mwmp;
 
-PacketObjectTrap::PacketObjectTrap(RakNet::RakPeerInterface *peer) : ObjectPacket(peer)
+PacketObjectTrap::PacketObjectTrap(mwmp::NetworkManager *network) : ObjectPacket(network)
 {
     packetID = ID_OBJECT_TRAP;
     hasCellData = true;

@@ -8,7 +8,7 @@ namespace mwmp
     class PacketActorAuthority : public ActorPacket
     {
     public:
-        PacketActorAuthority(RakNet::RakPeerInterface *peer);
+        PacketActorAuthority(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     };

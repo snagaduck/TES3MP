@@ -8,7 +8,7 @@ namespace mwmp
     class PacketActorCast : public ActorPacket
     {
     public:
-        PacketActorCast(RakNet::RakPeerInterface *peer);
+        PacketActorCast(mwmp::NetworkManager *network);
 
         virtual void Actor(BaseActor &actor, bool send);
     };

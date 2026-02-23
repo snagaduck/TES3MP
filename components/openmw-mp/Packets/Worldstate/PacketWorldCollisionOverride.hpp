@@ -8,7 +8,7 @@ namespace mwmp
     class PacketWorldCollisionOverride : public WorldstatePacket
     {
     public:
-        PacketWorldCollisionOverride(RakNet::RakPeerInterface *peer);
+        PacketWorldCollisionOverride(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     };

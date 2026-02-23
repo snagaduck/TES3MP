@@ -3,7 +3,7 @@
 
 using namespace mwmp;
 
-PacketActorList::PacketActorList(RakNet::RakPeerInterface *peer) : ActorPacket(peer)
+PacketActorList::PacketActorList(mwmp::NetworkManager *network) : ActorPacket(network)
 {
     packetID = ID_ACTOR_LIST;
 }

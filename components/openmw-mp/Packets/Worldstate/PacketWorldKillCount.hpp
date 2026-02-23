@@ -9,7 +9,7 @@ namespace mwmp
     class PacketWorldKillCount: public WorldstatePacket
     {
     public:
-        PacketWorldKillCount(RakNet::RakPeerInterface *peer);
+        PacketWorldKillCount(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     };

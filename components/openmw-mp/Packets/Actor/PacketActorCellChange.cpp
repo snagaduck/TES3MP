@@ -4,7 +4,7 @@
 
 using namespace mwmp;
 
-PacketActorCellChange::PacketActorCellChange(RakNet::RakPeerInterface *peer) : ActorPacket(peer)
+PacketActorCellChange::PacketActorCellChange(mwmp::NetworkManager *network) : ActorPacket(network)
 {
     packetID = ID_ACTOR_CELL_CHANGE;
 }

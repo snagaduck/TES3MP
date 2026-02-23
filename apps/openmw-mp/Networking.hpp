@@ -8,6 +8,7 @@
 #include <components/openmw-mp/Controllers/WorldstatePacketController.hpp>
 #include <components/openmw-mp/Net/PlayerId.hpp>
 #include <components/openmw-mp/Net/NetBuffer.hpp>
+#include <components/openmw-mp/Net/ReceivedPacket.hpp>
 #include <components/openmw-mp/Net/RakNetManager.hpp>
 #include <components/openmw-mp/Packets/PacketPreInit.hpp>
 #include "Player.hpp"
@@ -31,12 +32,12 @@ namespace  mwmp
 
         mwmp::RakNetManager *getRakNetManager() const;
 
-        void processSystemPacket(RakNet::Packet *packet, mwmp::PlayerId pid);
-        void processPlayerPacket(RakNet::Packet *packet, mwmp::PlayerId pid);
-        void processActorPacket(RakNet::Packet *packet, mwmp::PlayerId pid);
-        void processObjectPacket(RakNet::Packet *packet, mwmp::PlayerId pid);
-        void processWorldstatePacket(RakNet::Packet *packet, mwmp::PlayerId pid);
-        void update(RakNet::Packet *packet, mwmp::PlayerId pid, mwmp::NetBuffer &bsIn);
+        void processSystemPacket(mwmp::ReceivedPacket &rp);
+        void processPlayerPacket(mwmp::ReceivedPacket &rp);
+        void processActorPacket(mwmp::ReceivedPacket &rp);
+        void processObjectPacket(mwmp::ReceivedPacket &rp);
+        void processWorldstatePacket(mwmp::ReceivedPacket &rp);
+        void update(mwmp::ReceivedPacket &rp);
 
         unsigned short numberOfConnections() const;
         unsigned int maxConnections() const;
@@ -79,7 +80,7 @@ namespace  mwmp
 
         PacketPreInit::PluginContainer &getSamples();
     private:
-        bool preInit(RakNet::Packet *packet, mwmp::PlayerId pid, mwmp::NetBuffer &bsIn);
+        bool preInit(mwmp::ReceivedPacket &rp, mwmp::PlayerId pid);
         std::string serverPassword;
         static Networking *sThis;
 

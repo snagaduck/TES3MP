@@ -4,6 +4,8 @@
 #include <RakPeerInterface.h>
 #include <string>
 #include <components/openmw-mp/Net/NetBuffer.hpp>
+#include <components/openmw-mp/Net/RakNetManager.hpp>
+#include <components/openmw-mp/Net/ReceivedPacket.hpp>
 
 #include <components/openmw-mp/NetworkMessages.hpp>
 
@@ -32,16 +34,11 @@ namespace mwmp
         void connect(const std::string& ip, unsigned short port, std::vector<std::string> &content, Files::Collections &collections);
         void update();
 
-        SystemPacket *getSystemPacket(RakNet::MessageID id);
-        PlayerPacket *getPlayerPacket(RakNet::MessageID id);
-        ActorPacket *getActorPacket(RakNet::MessageID id);
-        ObjectPacket *getObjectPacket(RakNet::MessageID id);
-        WorldstatePacket *getWorldstatePacket(RakNet::MessageID id);
-
-        RakNet::SystemAddress serverAddress()
-        {
-            return serverAddr;
-        }
+        SystemPacket *getSystemPacket(unsigned char id);
+        PlayerPacket *getPlayerPacket(unsigned char id);
+        ActorPacket *getActorPacket(unsigned char id);
+        ObjectPacket *getObjectPacket(unsigned char id);
+        WorldstatePacket *getWorldstatePacket(unsigned char id);
 
         bool isConnected();
 
@@ -54,7 +51,10 @@ namespace mwmp
     private:
         bool connected;
         RakNet::RakPeerInterface *peer;
-        RakNet::SystemAddress serverAddr;
+        // rakNetManager must be declared before the controller value-members so that
+        // C++ initializes it first in the member-initializer list.
+        mwmp::RakNetManager *rakNetManager;
+        mwmp::PlayerId serverPlayerId;
         mwmp::NetBuffer bsOut;
 
         SystemPacketController systemPacketController;
@@ -67,7 +67,7 @@ namespace mwmp
         ObjectList objectList;
         Worldstate worldstate;
 
-        void receiveMessage(RakNet::Packet *packet);
+        void receiveMessage(mwmp::ReceivedPacket &rp);
 
         void preInit(std::vector<std::string> &content, Files::Collections &collections);
     };

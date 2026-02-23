@@ -3,20 +3,20 @@
 #include "SystemPacketController.hpp"
 
 template <typename T>
-inline void AddPacket(mwmp::SystemPacketController::packets_t *packets, RakNet::RakPeerInterface *peer)
+inline void AddPacket(mwmp::SystemPacketController::packets_t *packets, mwmp::NetworkManager *network)
 {
-    T *packet = new T(peer);
+    T *packet = new T(network);
     typedef mwmp::SystemPacketController::packets_t::value_type value_t;
     packets->insert(value_t(packet->GetPacketID(), value_t::second_type(packet)));
 }
 
-mwmp::SystemPacketController::SystemPacketController(RakNet::RakPeerInterface *peer)
+mwmp::SystemPacketController::SystemPacketController(mwmp::NetworkManager *network)
 {
-    AddPacket<PacketSystemHandshake>(&packets, peer);
+    AddPacket<PacketSystemHandshake>(&packets, network);
 }
 
 
-mwmp::SystemPacket *mwmp::SystemPacketController::GetPacket(RakNet::MessageID id)
+mwmp::SystemPacket *mwmp::SystemPacketController::GetPacket(unsigned char id)
 {
     return packets[(unsigned char)id].get();
 }
@@ -27,7 +27,7 @@ void mwmp::SystemPacketController::SetStream(mwmp::NetBuffer *inStream, mwmp::Ne
         packet.second->SetStreams(inStream, outStream);
 }
 
-bool mwmp::SystemPacketController::ContainsPacket(RakNet::MessageID id)
+bool mwmp::SystemPacketController::ContainsPacket(unsigned char id)
 {
     for(const auto &packet : packets)
     {

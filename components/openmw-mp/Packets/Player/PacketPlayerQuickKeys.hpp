@@ -8,7 +8,7 @@ namespace mwmp
     class PacketPlayerQuickKeys : public PlayerPacket
     {
     public:
-        PacketPlayerQuickKeys(RakNet::RakPeerInterface *peer);
+        PacketPlayerQuickKeys(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     };

@@ -4,13 +4,12 @@
 #include "ProxyMasterPacket.hpp"
 
 using namespace mwmp;
-using namespace RakNet;
 
-PacketMasterAnnounce::PacketMasterAnnounce(RakNet::RakPeerInterface *peer) : BasePacket(peer)
+PacketMasterAnnounce::PacketMasterAnnounce(mwmp::NetworkManager *network) : BasePacket(network)
 {
     packetID = ID_MASTER_ANNOUNCE;
     orderChannel = CHANNEL_MASTER;
-    reliability = RELIABLE_ORDERED_WITH_ACK_RECEIPT;
+    reliable = true;
 }
 
 void PacketMasterAnnounce::Packet(mwmp::NetBuffer *newBitstream, bool send)

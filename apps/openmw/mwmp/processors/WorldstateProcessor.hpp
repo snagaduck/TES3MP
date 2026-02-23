@@ -3,6 +3,7 @@
 
 #include <components/openmw-mp/TimedLog.hpp>
 #include <components/openmw-mp/NetworkMessages.hpp>
+#include <components/openmw-mp/Net/ReceivedPacket.hpp>
 #include <components/openmw-mp/Packets/Worldstate/WorldstatePacket.hpp>
 #include "BaseClientPacketProcessor.hpp"
 
@@ -13,7 +14,7 @@ namespace mwmp
     public:
         virtual void Do(WorldstatePacket &packet, Worldstate &worldstate) = 0;
 
-        static bool Process(RakNet::Packet &packet, Worldstate &worldstate);
+        static bool Process(mwmp::ReceivedPacket &packet, Worldstate &worldstate);
 
         virtual ~WorldstateProcessor();
     };

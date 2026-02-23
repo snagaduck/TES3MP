@@ -1,11 +1,9 @@
 #include <components/openmw-mp/NetworkMessages.hpp>
 #include "PacketWorldRegionAuthority.hpp"
 
-mwmp::PacketWorldRegionAuthority::PacketWorldRegionAuthority(RakNet::RakPeerInterface *peer) : PlayerPacket(peer)
+mwmp::PacketWorldRegionAuthority::PacketWorldRegionAuthority(mwmp::NetworkManager *network) : PlayerPacket(network)
 {
     packetID = ID_WORLD_REGION_AUTHORITY;
-    priority = IMMEDIATE_PRIORITY;
-    reliability = RELIABLE_ORDERED;
 }
 
 void mwmp::PacketWorldRegionAuthority::Packet(mwmp::NetBuffer *newBitstream, bool send)

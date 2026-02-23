@@ -8,7 +8,7 @@ namespace mwmp
     class PacketActorTest : public ActorPacket
     {
     public:
-        PacketActorTest(RakNet::RakPeerInterface *peer);
+        PacketActorTest(mwmp::NetworkManager *network);
 
         virtual void Actor(BaseActor &actor, bool send);
     };

@@ -3,7 +3,7 @@
 
 using namespace mwmp;
 
-PacketScriptMemberShort::PacketScriptMemberShort(RakNet::RakPeerInterface *peer) : ObjectPacket(peer)
+PacketScriptMemberShort::PacketScriptMemberShort(mwmp::NetworkManager *network) : ObjectPacket(network)
 {
     packetID = ID_SCRIPT_MEMBER_SHORT;
 }

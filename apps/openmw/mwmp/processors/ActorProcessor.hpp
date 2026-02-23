@@ -3,6 +3,7 @@
 
 #include <components/openmw-mp/TimedLog.hpp>
 #include <components/openmw-mp/NetworkMessages.hpp>
+#include <components/openmw-mp/Net/ReceivedPacket.hpp>
 #include <components/openmw-mp/Packets/Actor/ActorPacket.hpp>
 #include "../ObjectList.hpp"
 #include "../ActorList.hpp"
@@ -15,7 +16,7 @@ namespace mwmp
     public:
         virtual void Do(ActorPacket &packet, ActorList &actorList) = 0;
 
-        static bool Process(RakNet::Packet &packet, ActorList &actorList);
+        static bool Process(mwmp::ReceivedPacket &packet, ActorList &actorList);
 
         virtual ~ActorProcessor();
     };

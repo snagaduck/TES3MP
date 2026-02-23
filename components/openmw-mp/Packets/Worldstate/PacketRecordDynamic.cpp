@@ -6,7 +6,7 @@
 
 using namespace mwmp;
 
-PacketRecordDynamic::PacketRecordDynamic(RakNet::RakPeerInterface *peer) : WorldstatePacket(peer)
+PacketRecordDynamic::PacketRecordDynamic(mwmp::NetworkManager *network) : WorldstatePacket(network)
 {
     packetID = ID_RECORD_DYNAMIC;
     orderChannel = CHANNEL_WORLDSTATE;

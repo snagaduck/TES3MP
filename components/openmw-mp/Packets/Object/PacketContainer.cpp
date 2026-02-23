@@ -4,7 +4,7 @@
 
 using namespace mwmp;
 
-PacketContainer::PacketContainer(RakNet::RakPeerInterface *peer) : ObjectPacket(peer)
+PacketContainer::PacketContainer(mwmp::NetworkManager *network) : ObjectPacket(network)
 {
     packetID = ID_CONTAINER;
     hasCellData = true;

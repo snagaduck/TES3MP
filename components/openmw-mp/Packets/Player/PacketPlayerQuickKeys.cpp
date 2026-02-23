@@ -3,7 +3,7 @@
 
 using namespace mwmp;
 
-PacketPlayerQuickKeys::PacketPlayerQuickKeys(RakNet::RakPeerInterface *peer) : PlayerPacket(peer)
+PacketPlayerQuickKeys::PacketPlayerQuickKeys(mwmp::NetworkManager *network) : PlayerPacket(network)
 {
     packetID = ID_PLAYER_QUICKKEYS;
 }

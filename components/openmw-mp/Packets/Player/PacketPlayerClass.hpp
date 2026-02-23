@@ -8,7 +8,7 @@ namespace mwmp
     class PacketPlayerClass : public PlayerPacket
     {
     public:
-        PacketPlayerClass(RakNet::RakPeerInterface *peer);
+        PacketPlayerClass(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     };

@@ -2,6 +2,8 @@
 #include "../Networking.hpp"
 #include "../Main.hpp"
 
+#include <components/openmw-mp/Net/ReceivedPacket.hpp>
+
 using namespace mwmp;
 
 template<class T>
@@ -12,24 +14,22 @@ ActorProcessor::~ActorProcessor()
 
 }
 
-bool ActorProcessor::Process(RakNet::Packet &packet, ActorList &actorList)
+bool ActorProcessor::Process(mwmp::ReceivedPacket &rp, ActorList &actorList)
 {
-    std::memcpy(&guid, packet.data + 1, sizeof(mwmp::PlayerId));
-    const size_t hdrLen = 1 + sizeof(mwmp::PlayerId);
-    mwmp::NetBuffer bsIn(packet.data + hdrLen, packet.length > hdrLen ? packet.length - hdrLen : 0);
+    guid = rp.sender;
     actorList.guid = guid;
 
-    ActorPacket *myPacket = Main::get().getNetworking()->getActorPacket(packet.data[0]);
+    ActorPacket *myPacket = Main::get().getNetworking()->getActorPacket(rp.packetId);
 
     myPacket->setActorList(&actorList);
-    myPacket->SetReadStream(&bsIn);
+    myPacket->SetReadStream(&rp.data);
 
     for (auto &processor : processors)
     {
-        if (processor.first == packet.data[0])
+        if (processor.first == rp.packetId)
         {
             myGuid = Main::get().getLocalPlayer()->guid;
-            request = packet.length == myPacket->headerSize();
+            request = rp.data.GetSize() == 0;
 
             actorList.isValid = true;
 

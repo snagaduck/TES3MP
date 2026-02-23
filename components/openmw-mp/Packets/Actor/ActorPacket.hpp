@@ -2,8 +2,6 @@
 #define OPENMW_ACTORPACKET_HPP
 
 #include <string>
-#include <RakNetTypes.h>
-#include <PacketPriority.h>
 #include <components/openmw-mp/Base/BaseActor.hpp>
 
 #include <components/openmw-mp/Packets/BasePacket.hpp>
@@ -14,7 +12,7 @@ namespace mwmp
     class ActorPacket : public BasePacket
     {
     public:
-        ActorPacket(RakNet::RakPeerInterface *peer);
+        ActorPacket(mwmp::NetworkManager *network);
 
         ~ActorPacket();
 

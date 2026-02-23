@@ -4,7 +4,7 @@
 
 using namespace mwmp;
 
-PacketActorDeath::PacketActorDeath(RakNet::RakPeerInterface *peer) : ActorPacket(peer)
+PacketActorDeath::PacketActorDeath(mwmp::NetworkManager *network) : ActorPacket(network)
 {
     packetID = ID_ACTOR_DEATH;
 }

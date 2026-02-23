@@ -8,7 +8,7 @@ namespace mwmp
     class PacketObjectMove : public ObjectPacket
     {
     public:
-        PacketObjectMove(RakNet::RakPeerInterface *peer);
+        PacketObjectMove(mwmp::NetworkManager *network);
 
         virtual void Object(BaseObject &baseObject, bool send);
     };

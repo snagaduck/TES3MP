@@ -8,7 +8,7 @@ namespace mwmp
     class PacketPlayerStatsDynamic : public PlayerPacket
     {
     public:
-        PacketPlayerStatsDynamic(RakNet::RakPeerInterface *peer);
+        PacketPlayerStatsDynamic(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     };

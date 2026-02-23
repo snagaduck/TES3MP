@@ -2,6 +2,7 @@
 #define OPENMW_BASECLIENTPACKETPROCESSOR_HPP
 
 #include <components/openmw-mp/Base/BasePacketProcessor.hpp>
+#include <components/openmw-mp/Net/PlayerId.hpp>
 #include "../LocalPlayer.hpp"
 #include "../DedicatedPlayer.hpp"
 
@@ -10,9 +11,9 @@ namespace mwmp
     class BaseClientPacketProcessor
     {
     public:
-        static void SetServerAddr(RakNet::SystemAddress addr)
+        static void SetServerPlayerId(mwmp::PlayerId pid)
         {
-            serverAddr = addr;
+            serverPlayerId = pid;
         }
 
     protected:
@@ -30,7 +31,7 @@ namespace mwmp
 
     protected:
         static mwmp::PlayerId guid, myGuid;
-        static RakNet::SystemAddress serverAddr;
+        static mwmp::PlayerId serverPlayerId;
 
         static bool request;
     };

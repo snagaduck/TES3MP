@@ -1,17 +1,13 @@
 #include <components/openmw-mp/NetworkMessages.hpp>
-#include <PacketPriority.h>
-#include <RakPeer.h>
 #include "ActorPacket.hpp"
 
 using namespace mwmp;
 
-ActorPacket::ActorPacket(RakNet::RakPeerInterface *peer) : BasePacket(peer)
+ActorPacket::ActorPacket(mwmp::NetworkManager *network) : BasePacket(network)
 {
     packetID = 0;
-    priority = HIGH_PRIORITY;
-    reliability = RELIABLE_ORDERED;
+    reliable = true;
     orderChannel = CHANNEL_ACTOR;
-    this->peer = peer;
 }
 
 ActorPacket::~ActorPacket()

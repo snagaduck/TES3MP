@@ -8,7 +8,7 @@ namespace mwmp
     class PacketObjectActivate : public ObjectPacket
     {
     public:
-        PacketObjectActivate(RakNet::RakPeerInterface *peer);
+        PacketObjectActivate(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     };

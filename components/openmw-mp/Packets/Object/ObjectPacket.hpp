@@ -2,8 +2,6 @@
 #define OPENMW_OBJECTPACKET_HPP
 
 #include <string>
-#include <RakNetTypes.h>
-#include <PacketPriority.h>
 #include <components/openmw-mp/Base/BaseObject.hpp>
 
 #include <components/openmw-mp/Packets/BasePacket.hpp>
@@ -14,7 +12,7 @@ namespace mwmp
     class ObjectPacket : public BasePacket
     {
     public:
-        ObjectPacket(RakNet::RakPeerInterface *peer);
+        ObjectPacket(mwmp::NetworkManager *network);
 
         ~ObjectPacket();
 

@@ -5,7 +5,7 @@ using namespace mwmp;
 
 mwmp::PlayerId BaseClientPacketProcessor::guid;
 mwmp::PlayerId BaseClientPacketProcessor::myGuid;
-RakNet::SystemAddress BaseClientPacketProcessor::serverAddr;
+mwmp::PlayerId BaseClientPacketProcessor::serverPlayerId{mwmp::INVALID_PLAYER_ID};
 bool BaseClientPacketProcessor::request;
 
 LocalPlayer *BaseClientPacketProcessor::getLocalPlayer()

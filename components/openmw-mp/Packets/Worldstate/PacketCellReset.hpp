@@ -9,7 +9,7 @@ namespace mwmp
     class PacketCellReset: public WorldstatePacket
     {
     public:
-        PacketCellReset(RakNet::RakPeerInterface *peer);
+        PacketCellReset(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     };

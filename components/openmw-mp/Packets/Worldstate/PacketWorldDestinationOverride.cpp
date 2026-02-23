@@ -5,7 +5,7 @@
 
 using namespace mwmp;
 
-PacketWorldDestinationOverride::PacketWorldDestinationOverride(RakNet::RakPeerInterface *peer) : WorldstatePacket(peer)
+PacketWorldDestinationOverride::PacketWorldDestinationOverride(mwmp::NetworkManager *network) : WorldstatePacket(network)
 {
     packetID = ID_WORLD_DESTINATION_OVERRIDE;
     orderChannel = CHANNEL_WORLDSTATE;

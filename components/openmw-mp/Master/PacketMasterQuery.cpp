@@ -8,11 +8,11 @@
 using namespace mwmp;
 using namespace RakNet;
 
-PacketMasterQuery::PacketMasterQuery(RakNet::RakPeerInterface *peer) : BasePacket(peer)
+PacketMasterQuery::PacketMasterQuery(mwmp::NetworkManager *network) : BasePacket(network)
 {
     packetID = ID_MASTER_QUERY;
     orderChannel = CHANNEL_MASTER;
-    reliability = RELIABLE_ORDERED_WITH_ACK_RECEIPT;
+    reliable = true;
 }
 
 void PacketMasterQuery::Packet(mwmp::NetBuffer *newBitstream, bool send)

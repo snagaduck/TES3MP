@@ -8,7 +8,7 @@ namespace mwmp
     class PacketObjectLock : public ObjectPacket
     {
     public:
-        PacketObjectLock(RakNet::RakPeerInterface *peer);
+        PacketObjectLock(mwmp::NetworkManager *network);
 
         virtual void Object(BaseObject &baseObject, bool send);
     };

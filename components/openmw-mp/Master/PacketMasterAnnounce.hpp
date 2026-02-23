@@ -11,7 +11,7 @@ namespace mwmp
     {
         friend class ProxyMasterPacket;
     public:
-        explicit PacketMasterAnnounce(RakNet::RakPeerInterface *peer);
+        explicit PacketMasterAnnounce(mwmp::NetworkManager *network);
 
         void Packet(mwmp::NetBuffer *newBitstream, bool send) override;
 

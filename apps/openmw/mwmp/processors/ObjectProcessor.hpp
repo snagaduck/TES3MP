@@ -3,6 +3,7 @@
 
 #include <components/openmw-mp/TimedLog.hpp>
 #include <components/openmw-mp/NetworkMessages.hpp>
+#include <components/openmw-mp/Net/ReceivedPacket.hpp>
 #include <components/openmw-mp/Packets/Object/ObjectPacket.hpp>
 #include "../ObjectList.hpp"
 #include "../LocalPlayer.hpp"
@@ -16,7 +17,7 @@ namespace mwmp
     public:
         virtual void Do(ObjectPacket &packet, ObjectList &objectList) = 0;
 
-        static bool Process(RakNet::Packet &packet, ObjectList &objectList);
+        static bool Process(mwmp::ReceivedPacket &packet, ObjectList &objectList);
 
         virtual ~ObjectProcessor();
     };

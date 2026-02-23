@@ -5,6 +5,7 @@
 #include <components/openmw-mp/Packets/BasePacket.hpp>
 #include <components/openmw-mp/Packets/Worldstate/WorldstatePacket.hpp>
 #include <components/openmw-mp/NetworkMessages.hpp>
+#include <components/openmw-mp/Net/ReceivedPacket.hpp>
 #include "Player.hpp"
 
 namespace mwmp
@@ -15,7 +16,7 @@ namespace mwmp
 
         virtual void Do(WorldstatePacket &packet, Player &player, BaseWorldstate &worldstate);
 
-        static bool Process(RakNet::Packet &packet, BaseWorldstate &worldstate) noexcept;
+        static bool Process(mwmp::ReceivedPacket &packet, BaseWorldstate &worldstate) noexcept;
     };
 }
 

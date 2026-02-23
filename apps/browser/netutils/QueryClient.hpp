@@ -3,6 +3,7 @@
 
 #include <string>
 #include <RakPeerInterface.h>
+#include <components/openmw-mp/Net/RakNetManager.hpp>
 #include <components/openmw-mp/Master/PacketMasterQuery.hpp>
 #include <components/openmw-mp/Master/PacketMasterUpdate.hpp>
 #include <apps/browser/ServerModel.hpp>
@@ -30,6 +31,7 @@ protected:
 private:
     int status;
     RakNet::RakPeerInterface *peer;
+    mwmp::RakNetManager *netManager;
     RakNet::SystemAddress masterAddr;
     mwmp::PacketMasterQuery *pmq;
     mwmp::PacketMasterUpdate *pmu;

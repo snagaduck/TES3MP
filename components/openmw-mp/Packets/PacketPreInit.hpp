@@ -14,7 +14,7 @@ namespace mwmp
         typedef std::pair<std::string, HashList> PluginPair;
         typedef std::vector<PluginPair> PluginContainer;
 
-        PacketPreInit(RakNet::RakPeerInterface *peer);
+        PacketPreInit(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
         void setChecksums(PluginContainer *checksums);

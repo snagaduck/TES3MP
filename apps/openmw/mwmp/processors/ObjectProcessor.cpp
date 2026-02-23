@@ -3,6 +3,8 @@
 
 #include "ObjectProcessor.hpp"
 
+#include <components/openmw-mp/Net/ReceivedPacket.hpp>
+
 using namespace mwmp;
 
 template<class T>
@@ -13,24 +15,22 @@ ObjectProcessor::~ObjectProcessor()
 
 }
 
-bool ObjectProcessor::Process(RakNet::Packet &packet, ObjectList &objectList)
+bool ObjectProcessor::Process(mwmp::ReceivedPacket &rp, ObjectList &objectList)
 {
-    std::memcpy(&guid, packet.data + 1, sizeof(mwmp::PlayerId));
-    const size_t hdrLen = 1 + sizeof(mwmp::PlayerId);
-    mwmp::NetBuffer bsIn(packet.data + hdrLen, packet.length > hdrLen ? packet.length - hdrLen : 0);
+    guid = rp.sender;
     objectList.guid = guid;
 
-    ObjectPacket *myPacket = Main::get().getNetworking()->getObjectPacket(packet.data[0]);
+    ObjectPacket *myPacket = Main::get().getNetworking()->getObjectPacket(rp.packetId);
 
     myPacket->setObjectList(&objectList);
-    myPacket->SetReadStream(&bsIn);
+    myPacket->SetReadStream(&rp.data);
 
     for (auto &processor: processors)
     {
-        if (processor.first == packet.data[0])
+        if (processor.first == rp.packetId)
         {
             myGuid = Main::get().getLocalPlayer()->guid;
-            request = packet.length == myPacket->headerSize();
+            request = rp.data.GetSize() == 0;
 
             objectList.isValid = true;
 

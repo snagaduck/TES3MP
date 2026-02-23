@@ -3,6 +3,7 @@
 #include <BitStream.h>
 #include <components/openmw-mp/NetworkMessages.hpp>
 #include <components/openmw-mp/Net/NetBuffer.hpp>
+#include <components/openmw-mp/Net/RakNetManager.hpp>
 #include <iostream>
 #include <components/openmw-mp/Version.hpp>
 #include <qdebug.h>
@@ -14,8 +15,9 @@ using namespace mwmp;
 QueryClient::QueryClient()
 {
     peer = RakPeerInterface::GetInstance();
-    pmq = new PacketMasterQuery(peer);
-    pmu = new PacketMasterUpdate(peer);
+    netManager = new mwmp::RakNetManager(peer);
+    pmq = new PacketMasterQuery(netManager);
+    pmu = new PacketMasterUpdate(netManager);
     RakNet::SocketDescriptor sd;
     peer->Startup(8, &sd, 1);
     status = -1;
@@ -25,6 +27,7 @@ QueryClient::~QueryClient()
 {
     delete pmq;
     delete pmu;
+    delete netManager;
     RakPeerInterface::DestroyInstance(peer);
 }
 

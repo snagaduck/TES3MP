@@ -8,7 +8,7 @@ namespace mwmp
     class PacketLoaded : public PlayerPacket
     {
     public:
-        PacketLoaded(RakNet::RakPeerInterface *peer) : PlayerPacket(peer)
+        PacketLoaded(mwmp::NetworkManager *network) : PlayerPacket(network)
         {
             packetID = ID_LOADED;
             orderChannel = CHANNEL_SYSTEM;

@@ -1,18 +1,14 @@
 #include <components/openmw-mp/NetworkMessages.hpp>
-#include <PacketPriority.h>
-#include <RakPeer.h>
 #include "ObjectPacket.hpp"
 
 using namespace mwmp;
 
-ObjectPacket::ObjectPacket(RakNet::RakPeerInterface *peer) : BasePacket(peer)
+ObjectPacket::ObjectPacket(mwmp::NetworkManager *network) : BasePacket(network)
 {
     hasCellData = false;
     packetID = 0;
-    priority = HIGH_PRIORITY;
-    reliability = RELIABLE_ORDERED;
+    reliable = true;
     orderChannel = CHANNEL_OBJECT;
-    this->peer = peer;
 }
 
 ObjectPacket::~ObjectPacket()

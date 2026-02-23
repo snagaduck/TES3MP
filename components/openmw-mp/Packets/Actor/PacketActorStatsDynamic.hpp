@@ -8,7 +8,7 @@ namespace mwmp
     class PacketActorStatsDynamic : public ActorPacket
     {
     public:
-        PacketActorStatsDynamic(RakNet::RakPeerInterface *peer);
+        PacketActorStatsDynamic(mwmp::NetworkManager *network);
 
         virtual void Actor(BaseActor &actor, bool send);
     };

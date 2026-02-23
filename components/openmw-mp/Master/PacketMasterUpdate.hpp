@@ -3,6 +3,7 @@
 
 #include "../Packets/BasePacket.hpp"
 #include "MasterData.hpp"
+#include <RakNetTypes.h>
 
 namespace mwmp
 {
@@ -11,7 +12,7 @@ namespace mwmp
     {
         friend class ProxyMasterPacket;
     public:
-        explicit PacketMasterUpdate(RakNet::RakPeerInterface *peer);
+        explicit PacketMasterUpdate(mwmp::NetworkManager *network);
 
         void Packet(mwmp::NetBuffer *newBitstream, bool send) override;
 

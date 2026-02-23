@@ -6,6 +6,7 @@
 #include <components/openmw-mp/Packets/BasePacket.hpp>
 #include <components/openmw-mp/Packets/Actor/ActorPacket.hpp>
 #include <components/openmw-mp/NetworkMessages.hpp>
+#include <components/openmw-mp/Net/ReceivedPacket.hpp>
 #include "Script/Script.hpp"
 #include "Player.hpp"
 
@@ -17,7 +18,7 @@ namespace mwmp
 
         virtual void Do(ActorPacket &packet, Player &player, BaseActorList &actorList);
 
-        static bool Process(RakNet::Packet &packet, BaseActorList &actorList) noexcept;
+        static bool Process(mwmp::ReceivedPacket &packet, BaseActorList &actorList) noexcept;
     };
 }
 

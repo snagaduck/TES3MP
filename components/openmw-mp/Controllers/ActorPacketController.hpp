@@ -2,7 +2,7 @@
 #define OPENMW_ACTORPACKETCONTROLLER_HPP
 
 
-#include <RakPeerInterface.h>
+#include <components/openmw-mp/Net/NetworkManager.hpp>
 #include <components/openmw-mp/Net/NetBuffer.hpp>
 #include "../Packets/Actor/ActorPacket.hpp"
 #include <unordered_map>
@@ -13,11 +13,11 @@ namespace mwmp
     class ActorPacketController
     {
     public:
-        ActorPacketController(RakNet::RakPeerInterface *peer);
-        ActorPacket *GetPacket(RakNet::MessageID id);
+        ActorPacketController(mwmp::NetworkManager *network);
+        ActorPacket *GetPacket(unsigned char id);
         void SetStream(mwmp::NetBuffer *inStream, mwmp::NetBuffer *outStream);
 
-        bool ContainsPacket(RakNet::MessageID id);
+        bool ContainsPacket(unsigned char id);
 
         typedef std::unordered_map<unsigned char, std::unique_ptr<ActorPacket> > packets_t;
     private:

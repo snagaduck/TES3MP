@@ -8,7 +8,7 @@ namespace mwmp
     class PacketPlayerCooldowns : public PlayerPacket
     {
     public:
-        PacketPlayerCooldowns(RakNet::RakPeerInterface *peer);
+        PacketPlayerCooldowns(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     };

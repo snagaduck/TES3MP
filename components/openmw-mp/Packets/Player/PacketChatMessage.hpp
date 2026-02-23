@@ -8,7 +8,7 @@ namespace mwmp
     class PacketChatMessage : public PlayerPacket
     {
     public:
-        PacketChatMessage(RakNet::RakPeerInterface *peer);
+        PacketChatMessage(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     };

@@ -8,7 +8,7 @@ namespace mwmp
     class PacketPlayerShapeshift : public PlayerPacket
     {
     public:
-        PacketPlayerShapeshift(RakNet::RakPeerInterface *peer);
+        PacketPlayerShapeshift(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     };

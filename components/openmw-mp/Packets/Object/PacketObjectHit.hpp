@@ -8,7 +8,7 @@ namespace mwmp
     class PacketObjectHit : public ObjectPacket
     {
     public:
-        PacketObjectHit(RakNet::RakPeerInterface *peer);
+        PacketObjectHit(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     };

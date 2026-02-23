@@ -2,8 +2,6 @@
 #define OPENMW_SYSTEMPACKET_HPP
 
 #include <string>
-#include <RakNetTypes.h>
-#include <PacketPriority.h>
 #include <components/openmw-mp/Base/BaseSystem.hpp>
 
 #include <components/openmw-mp/Packets/BasePacket.hpp>
@@ -13,7 +11,7 @@ namespace mwmp
     class SystemPacket : public BasePacket
     {
     public:
-        SystemPacket(RakNet::RakPeerInterface *peer);
+        SystemPacket(mwmp::NetworkManager *network);
 
         ~SystemPacket();
 

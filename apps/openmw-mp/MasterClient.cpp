@@ -15,8 +15,9 @@ using namespace RakNet;
 
 bool MasterClient::sRun = false;
 
-MasterClient::MasterClient(RakNet::RakPeerInterface *peer, std::string queryAddr, unsigned short queryPort) :
-        masterServer(queryAddr.c_str(), queryPort), peer(peer), pma(peer)
+MasterClient::MasterClient(mwmp::RakNetManager *rakNetManager, std::string queryAddr, unsigned short queryPort) :
+        masterServer(queryAddr.c_str(), queryPort), rakNetManager(rakNetManager),
+        masterServerId(mwmp::INVALID_PLAYER_ID), pma(rakNetManager)
 {
     timeout = 15000; // every 15 seconds
     pma.SetSendStream(&writeStream);
@@ -151,6 +152,7 @@ bool MasterClient::Process(RakNet::Packet *packet)
 
 void MasterClient::Send(mwmp::PacketMasterAnnounce::Func func)
 {
+    RakNet::RakPeerInterface *peer = rakNetManager->GetPeer();
     peer->Connect(masterServer.ToString(false), masterServer.GetPort(), TES3MP_MASTERSERVER_PASSW,
                   strlen(TES3MP_MASTERSERVER_PASSW), 0, 0, 5, 500);
     bool waitForConnect = true;
@@ -160,8 +162,14 @@ void MasterClient::Send(mwmp::PacketMasterAnnounce::Func func)
         switch (state)
         {
             case IS_CONNECTED:
+            {
+                // Register the master server's GUID to get a PlayerId for routing.
+                RakNet::RakNetGUID mguid = peer->GetGuidFromSystemAddress(masterServer);
+                if (!rakNetManager->HasGuid(mguid))
+                    masterServerId = rakNetManager->RegisterGuid(mguid);
                 waitForConnect = false;
                 break;
+            }
             case IS_NOT_CONNECTED:
             case IS_DISCONNECTED:
             case IS_SILENTLY_DISCONNECTING:
@@ -177,7 +185,7 @@ void MasterClient::Send(mwmp::PacketMasterAnnounce::Func func)
         RakSleep(500);
     }
     pma.SetFunc(func);
-    pma.Send(masterServer);
+    pma.Send(masterServerId);
     updated = false;
 }
 

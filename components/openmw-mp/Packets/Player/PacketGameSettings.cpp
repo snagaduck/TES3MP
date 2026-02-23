@@ -3,7 +3,7 @@
 
 using namespace mwmp;
 
-PacketGameSettings::PacketGameSettings(RakNet::RakPeerInterface *peer) : PlayerPacket(peer)
+PacketGameSettings::PacketGameSettings(mwmp::NetworkManager *network) : PlayerPacket(network)
 {
     packetID = ID_GAME_SETTINGS;
     orderChannel = CHANNEL_SYSTEM;

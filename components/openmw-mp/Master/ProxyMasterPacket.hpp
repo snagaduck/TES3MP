@@ -14,7 +14,7 @@ namespace mwmp
     class ProxyMasterPacket : public BasePacket
     {
     private:
-        explicit ProxyMasterPacket(RakNet::RakPeerInterface *peer) : BasePacket(peer)
+        explicit ProxyMasterPacket(mwmp::NetworkManager *network) : BasePacket(network)
         {
         }
 

@@ -8,7 +8,7 @@ namespace mwmp
     class PacketSystemHandshake : public SystemPacket
     {
     public:
-        PacketSystemHandshake(RakNet::RakPeerInterface *peer);
+        PacketSystemHandshake(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
 

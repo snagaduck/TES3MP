@@ -8,7 +8,7 @@ namespace mwmp
     class PacketPlayerResurrect : public PlayerPacket
     {
     public:
-        PacketPlayerResurrect(RakNet::RakPeerInterface *peer);
+        PacketPlayerResurrect(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     };

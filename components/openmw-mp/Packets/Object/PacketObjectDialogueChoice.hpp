@@ -8,7 +8,7 @@ namespace mwmp
     class PacketObjectDialogueChoice : public ObjectPacket
     {
     public:
-        PacketObjectDialogueChoice(RakNet::RakPeerInterface *peer);
+        PacketObjectDialogueChoice(mwmp::NetworkManager *network);
 
         virtual void Object(BaseObject& baseObject, bool send);
     };

@@ -2,10 +2,9 @@
 #define OPENMW_BASEPACKET_HPP
 
 #include <string>
-#include <RakNetTypes.h>
-#include <PacketPriority.h>
 #include <components/openmw-mp/Net/PlayerId.hpp>
 #include <components/openmw-mp/Net/NetBuffer.hpp>
+#include <components/openmw-mp/Net/NetworkManager.hpp>
 
 
 namespace mwmp
@@ -13,13 +12,12 @@ namespace mwmp
     class BasePacket
     {
     public:
-        explicit BasePacket(RakNet::RakPeerInterface *peer);
+        explicit BasePacket(mwmp::NetworkManager *network);
 
         virtual ~BasePacket() = default;
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
         virtual uint32_t Send(bool toOtherPlayers = true);
-        virtual uint32_t Send(RakNet::AddressOrGUID destination); // kept during bridge phase
         virtual uint32_t Send(mwmp::PlayerId target);
         virtual void Read();
 
@@ -111,11 +109,10 @@ namespace mwmp
 
     protected:
         uint8_t packetID;
-        PacketReliability reliability;
-        PacketPriority priority;
+        bool reliable;
         int8_t orderChannel;
         mwmp::NetBuffer *bsRead, *bsSend, *bs;
-        RakNet::RakPeerInterface *peer;
+        mwmp::NetworkManager *network;
         mwmp::PlayerId guid;
         bool packetValid;
     };

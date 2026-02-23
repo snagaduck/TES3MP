@@ -3,7 +3,7 @@
 
 using namespace mwmp;
 
-PacketConsoleCommand::PacketConsoleCommand(RakNet::RakPeerInterface *peer) : ObjectPacket(peer)
+PacketConsoleCommand::PacketConsoleCommand(mwmp::NetworkManager *network) : ObjectPacket(network)
 {
     packetID = ID_CONSOLE_COMMAND;
     hasCellData = true;

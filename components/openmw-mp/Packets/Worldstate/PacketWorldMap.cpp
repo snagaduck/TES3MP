@@ -4,7 +4,7 @@
 
 using namespace mwmp;
 
-PacketWorldMap::PacketWorldMap(RakNet::RakPeerInterface *peer) : WorldstatePacket(peer)
+PacketWorldMap::PacketWorldMap(mwmp::NetworkManager *network) : WorldstatePacket(network)
 {
     packetID = ID_WORLD_MAP;
 }

@@ -8,7 +8,7 @@ namespace mwmp
     class PacketPlayerBounty : public PlayerPacket
     {
     public:
-        PacketPlayerBounty(RakNet::RakPeerInterface *peer);
+        PacketPlayerBounty(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     };

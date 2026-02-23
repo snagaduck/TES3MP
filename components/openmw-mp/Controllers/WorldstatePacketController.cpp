@@ -13,30 +13,30 @@
 #include "WorldstatePacketController.hpp"
 
 template <typename T>
-inline void AddPacket(mwmp::WorldstatePacketController::packets_t *packets, RakNet::RakPeerInterface *peer)
+inline void AddPacket(mwmp::WorldstatePacketController::packets_t *packets, mwmp::NetworkManager *network)
 {
-    T *packet = new T(peer);
+    T *packet = new T(network);
     typedef mwmp::WorldstatePacketController::packets_t::value_type value_t;
     packets->insert(value_t(packet->GetPacketID(), value_t::second_type(packet)));
 }
 
-mwmp::WorldstatePacketController::WorldstatePacketController(RakNet::RakPeerInterface *peer)
+mwmp::WorldstatePacketController::WorldstatePacketController(mwmp::NetworkManager *network)
 {
-    AddPacket<PacketCellReset>(&packets, peer);
-    AddPacket<PacketClientScriptGlobal>(&packets, peer);
-    AddPacket<PacketClientScriptSettings>(&packets, peer);
-    AddPacket<PacketRecordDynamic>(&packets, peer);
-    AddPacket<PacketWorldCollisionOverride>(&packets, peer);
-    AddPacket<PacketWorldDestinationOverride>(&packets, peer);
-    AddPacket<PacketWorldKillCount>(&packets, peer);
-    AddPacket<PacketWorldMap>(&packets, peer);
-    AddPacket<PacketWorldRegionAuthority>(&packets, peer);
-    AddPacket<PacketWorldTime>(&packets, peer);
-    AddPacket<PacketWorldWeather>(&packets, peer);
+    AddPacket<PacketCellReset>(&packets, network);
+    AddPacket<PacketClientScriptGlobal>(&packets, network);
+    AddPacket<PacketClientScriptSettings>(&packets, network);
+    AddPacket<PacketRecordDynamic>(&packets, network);
+    AddPacket<PacketWorldCollisionOverride>(&packets, network);
+    AddPacket<PacketWorldDestinationOverride>(&packets, network);
+    AddPacket<PacketWorldKillCount>(&packets, network);
+    AddPacket<PacketWorldMap>(&packets, network);
+    AddPacket<PacketWorldRegionAuthority>(&packets, network);
+    AddPacket<PacketWorldTime>(&packets, network);
+    AddPacket<PacketWorldWeather>(&packets, network);
 }
 
 
-mwmp::WorldstatePacket *mwmp::WorldstatePacketController::GetPacket(RakNet::MessageID id)
+mwmp::WorldstatePacket *mwmp::WorldstatePacketController::GetPacket(unsigned char id)
 {
     return packets[(unsigned char)id].get();
 }
@@ -47,7 +47,7 @@ void mwmp::WorldstatePacketController::SetStream(mwmp::NetBuffer *inStream, mwmp
         packet.second->SetStreams(inStream, outStream);
 }
 
-bool mwmp::WorldstatePacketController::ContainsPacket(RakNet::MessageID id)
+bool mwmp::WorldstatePacketController::ContainsPacket(unsigned char id)
 {
     for(const auto &packet : packets)
     {

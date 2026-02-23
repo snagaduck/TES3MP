@@ -2,7 +2,7 @@
 #define OPENMW_WORLDSTATEPACKETCONTROLLER_HPP
 
 
-#include <RakPeerInterface.h>
+#include <components/openmw-mp/Net/NetworkManager.hpp>
 #include <components/openmw-mp/Net/NetBuffer.hpp>
 #include "../Packets/Worldstate/WorldstatePacket.hpp"
 #include <unordered_map>
@@ -13,11 +13,11 @@ namespace mwmp
     class WorldstatePacketController
     {
     public:
-        WorldstatePacketController(RakNet::RakPeerInterface *peer);
-        WorldstatePacket *GetPacket(RakNet::MessageID id);
+        WorldstatePacketController(mwmp::NetworkManager *network);
+        WorldstatePacket *GetPacket(unsigned char id);
         void SetStream(mwmp::NetBuffer *inStream, mwmp::NetBuffer *outStream);
 
-        bool ContainsPacket(RakNet::MessageID id);
+        bool ContainsPacket(unsigned char id);
 
         typedef std::unordered_map<unsigned char, std::unique_ptr<WorldstatePacket> > packets_t;
     private:

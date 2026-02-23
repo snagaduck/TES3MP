@@ -2,14 +2,16 @@
 #include "PacketMasterUpdate.hpp"
 #include "ProxyMasterPacket.hpp"
 
+#include <RakNetTypes.h>
+
 using namespace mwmp;
 using namespace RakNet;
 
-PacketMasterUpdate::PacketMasterUpdate(RakNet::RakPeerInterface *peer) : BasePacket(peer)
+PacketMasterUpdate::PacketMasterUpdate(mwmp::NetworkManager *network) : BasePacket(network)
 {
     packetID = ID_MASTER_UPDATE;
     orderChannel = CHANNEL_MASTER;
-    reliability = RELIABLE_ORDERED_WITH_ACK_RECEIPT;
+    reliable = true;
 }
 
 void PacketMasterUpdate::Packet(mwmp::NetBuffer *newBitstream, bool send)

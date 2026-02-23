@@ -9,7 +9,7 @@ namespace mwmp
     class PacketClientScriptGlobal: public WorldstatePacket
     {
     public:
-        PacketClientScriptGlobal(RakNet::RakPeerInterface *peer);
+        PacketClientScriptGlobal(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     };

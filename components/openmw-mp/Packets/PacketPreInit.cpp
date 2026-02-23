@@ -2,7 +2,7 @@
 #include <components/openmw-mp/TimedLog.hpp>
 #include "PacketPreInit.hpp"
 
-mwmp::PacketPreInit::PacketPreInit(RakNet::RakPeerInterface *peer) : BasePacket(peer)
+mwmp::PacketPreInit::PacketPreInit(mwmp::NetworkManager *network) : BasePacket(network)
 {
     packetID = ID_GAME_PREINIT;
 }

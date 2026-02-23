@@ -8,7 +8,7 @@ namespace mwmp
     class PacketPlayerSpeech : public PlayerPacket
     {
     public:
-        PacketPlayerSpeech(RakNet::RakPeerInterface *peer);
+        PacketPlayerSpeech(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     };

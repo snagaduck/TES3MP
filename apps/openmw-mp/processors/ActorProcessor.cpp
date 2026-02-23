@@ -1,6 +1,5 @@
 #include "ActorProcessor.hpp"
 #include "Networking.hpp"
-#include <components/openmw-mp/Net/RakNetManager.hpp>
 
 using namespace mwmp;
 
@@ -12,19 +11,19 @@ void ActorProcessor::Do(ActorPacket &packet, Player &player, BaseActorList &acto
     packet.Send(true);
 }
 
-bool ActorProcessor::Process(RakNet::Packet &packet, BaseActorList &actorList) noexcept
+bool ActorProcessor::Process(mwmp::ReceivedPacket &packet, BaseActorList &actorList) noexcept
 {
     // Clear our BaseActorList before loading new data in it
     actorList.cell.blank();
     actorList.baseActors.clear();
-    actorList.guid = mwmp::RakNetManager::getInstance()->ToPlayerId(packet.guid);
+    actorList.guid = packet.sender;
 
     for (auto &processor : processors)
     {
-        if (processor.first == packet.data[0])
+        if (processor.first == packet.packetId)
         {
             Player *player = Players::getPlayer(actorList.guid);
-            ActorPacket *myPacket = Networking::get().getActorPacketController()->GetPacket(packet.data[0]);
+            ActorPacket *myPacket = Networking::get().getActorPacketController()->GetPacket(packet.packetId);
 
             myPacket->setActorList(&actorList);
             actorList.isValid = true;

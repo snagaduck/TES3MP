@@ -3,6 +3,7 @@
 
 #include <components/openmw-mp/TimedLog.hpp>
 #include <components/openmw-mp/NetworkMessages.hpp>
+#include <components/openmw-mp/Net/ReceivedPacket.hpp>
 #include <components/openmw-mp/Packets/System/SystemPacket.hpp>
 #include "../LocalSystem.hpp"
 #include "BaseClientPacketProcessor.hpp"
@@ -14,7 +15,7 @@ namespace mwmp
     public:
         virtual void Do(SystemPacket &packet, BaseSystem *system) = 0;
 
-        static bool Process(RakNet::Packet &packet);
+        static bool Process(mwmp::ReceivedPacket &packet);
 
         virtual ~SystemProcessor();
     };

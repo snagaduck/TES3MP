@@ -8,7 +8,7 @@ namespace mwmp
     class PacketObjectState : public ObjectPacket
     {
     public:
-        PacketObjectState(RakNet::RakPeerInterface *peer);
+        PacketObjectState(mwmp::NetworkManager *network);
 
         virtual void Object(BaseObject &baseObject, bool send);
     };

@@ -193,10 +193,13 @@ std::string listComparison(PacketPreInit::PluginContainer checksums, PacketPreIn
     return sstr.str();
 }
 
-Networking::Networking(): peer(RakNet::RakPeerInterface::GetInstance()), systemPacketController(peer),
-    playerPacketController(peer), actorPacketController(peer), objectPacketController(peer),
-    worldstatePacketController(peer)
+Networking::Networking(): peer(RakNet::RakPeerInterface::GetInstance()),
+    rakNetManager(new mwmp::RakNetManager(peer)),
+    systemPacketController(rakNetManager),
+    playerPacketController(rakNetManager), actorPacketController(rakNetManager),
+    objectPacketController(rakNetManager), worldstatePacketController(rakNetManager)
 {
+    mwmp::RakNetManager::setInstance(rakNetManager);
 
     RakNet::SocketDescriptor sd;
     sd.port=0;
@@ -217,6 +220,8 @@ Networking::~Networking()
 {
     peer->Shutdown(100);
     peer->CloseConnection(peer->GetSystemAddressFromIndex(0), true, 0);
+    mwmp::RakNetManager::setInstance(nullptr);
+    delete rakNetManager;
     RakNet::RakPeerInterface::DestroyInstance(peer);
 }
 
@@ -254,9 +259,19 @@ void Networking::update()
                 errmsg = "Connection lost.";
                 break;
             default:
-                receiveMessage(packet);
-                //LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "Message with identifier %i has arrived.", packet->data[0]);
+            {
+                if (packet->length < 2)
+                    break;
+                const size_t hdrLen = 1 + sizeof(mwmp::PlayerId);
+                mwmp::ReceivedPacket rp;
+                rp.packetId = packet->data[0];
+                rp.sender = rakNetManager->ToPlayerId(packet->guid);
+                rp.senderAddress = packet->systemAddress.ToString();
+                rp.data = mwmp::NetBuffer(packet->data + hdrLen,
+                    packet->length > hdrLen ? packet->length - hdrLen : 0);
+                receiveMessage(rp);
                 break;
+            }
         }
     }
 
@@ -317,14 +332,14 @@ void Networking::connect(const std::string &ip, unsigned short port, std::vector
                 }
                 case ID_CONNECTION_REQUEST_ACCEPTED:
                 {
-                    serverAddr = packet->systemAddress;
-                    BaseClientPacketProcessor::SetServerAddr(packet->systemAddress);
+                    serverPlayerId = rakNetManager->RegisterGuid(packet->guid);
+                    BaseClientPacketProcessor::SetServerPlayerId(serverPlayerId);
 
                     connected = true;
                     queue = false;
 
                     LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Received ID_CONNECTION_REQUESTED_ACCEPTED from %s",
-                                       serverAddr.ToString());
+                                       packet->systemAddress.ToString());
 
                     break;
                 }
@@ -373,12 +388,12 @@ void Networking::preInit(std::vector<std::string> &content, Files::Collections &
             throw std::runtime_error("Plugin doesn't exist.");
     }
 
-    PacketPreInit packetPreInit(peer);
+    PacketPreInit packetPreInit(rakNetManager);
     mwmp::NetBuffer bs;
     packetPreInit.setChecksums(&checksums);
     packetPreInit.setGUID(mwmp::INVALID_PLAYER_ID);
     packetPreInit.SetSendStream(&bs);
-    packetPreInit.Send(serverAddr);
+    packetPreInit.Send(serverPlayerId);
 
     PacketPreInit::PluginContainer checksumsResponse;
     bool done = false;
@@ -426,59 +441,56 @@ void Networking::preInit(std::vector<std::string> &content, Files::Collections &
     }
 }
 
-void Networking::receiveMessage(RakNet::Packet *packet)
+void Networking::receiveMessage(mwmp::ReceivedPacket &rp)
 {
-    if (packet->length < 2)
-        return;
-
-    if (systemPacketController.ContainsPacket(packet->data[0]))
+    if (systemPacketController.ContainsPacket(rp.packetId))
     {
-        if (!SystemProcessor::Process(*packet))
-            LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled SystemPacket with identifier %i has arrived", packet->data[0]);
+        if (!SystemProcessor::Process(rp))
+            LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled SystemPacket with identifier %i has arrived", rp.packetId);
     }
-    else if (playerPacketController.ContainsPacket(packet->data[0]))
+    else if (playerPacketController.ContainsPacket(rp.packetId))
     {
-        if (!PlayerProcessor::Process(*packet))
-            LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled PlayerPacket with identifier %i has arrived", packet->data[0]);
+        if (!PlayerProcessor::Process(rp))
+            LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled PlayerPacket with identifier %i has arrived", rp.packetId);
     }
-    else if (actorPacketController.ContainsPacket(packet->data[0]))
+    else if (actorPacketController.ContainsPacket(rp.packetId))
     {
-        if (!ActorProcessor::Process(*packet, actorList))
-            LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled ActorPacket with identifier %i has arrived", packet->data[0]);
+        if (!ActorProcessor::Process(rp, actorList))
+            LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled ActorPacket with identifier %i has arrived", rp.packetId);
     }
-    else if (objectPacketController.ContainsPacket(packet->data[0]))
+    else if (objectPacketController.ContainsPacket(rp.packetId))
     {
-        if (!ObjectProcessor::Process(*packet, objectList))
-            LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled ObjectPacket with identifier %i has arrived", packet->data[0]);
+        if (!ObjectProcessor::Process(rp, objectList))
+            LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled ObjectPacket with identifier %i has arrived", rp.packetId);
     }
-    else if (worldstatePacketController.ContainsPacket(packet->data[0]))
+    else if (worldstatePacketController.ContainsPacket(rp.packetId))
     {
-        if (!WorldstateProcessor::Process(*packet, worldstate))
-            LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled WorldstatePacket with identifier %i has arrived", packet->data[0]);
+        if (!WorldstateProcessor::Process(rp, worldstate))
+            LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled WorldstatePacket with identifier %i has arrived", rp.packetId);
     }
 }
 
-SystemPacket *Networking::getSystemPacket(RakNet::MessageID id)
+SystemPacket *Networking::getSystemPacket(unsigned char id)
 {
     return systemPacketController.GetPacket(id);
 }
 
-PlayerPacket *Networking::getPlayerPacket(RakNet::MessageID id)
+PlayerPacket *Networking::getPlayerPacket(unsigned char id)
 {
     return playerPacketController.GetPacket(id);
 }
 
-ActorPacket *Networking::getActorPacket(RakNet::MessageID id)
+ActorPacket *Networking::getActorPacket(unsigned char id)
 {
     return actorPacketController.GetPacket(id);
 }
 
-ObjectPacket *Networking::getObjectPacket(RakNet::MessageID id)
+ObjectPacket *Networking::getObjectPacket(unsigned char id)
 {
     return objectPacketController.GetPacket(id);
 }
 
-WorldstatePacket *Networking::getWorldstatePacket(RakNet::MessageID id)
+WorldstatePacket *Networking::getWorldstatePacket(unsigned char id)
 {
     return worldstatePacketController.GetPacket(id);
 }

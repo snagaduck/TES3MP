@@ -8,7 +8,7 @@ namespace mwmp
     class PacketObjectAnimPlay : public ObjectPacket
     {
     public:
-        PacketObjectAnimPlay(RakNet::RakPeerInterface *peer);
+        PacketObjectAnimPlay(mwmp::NetworkManager *network);
 
         virtual void Object(BaseObject &baseObject, bool send);
     };

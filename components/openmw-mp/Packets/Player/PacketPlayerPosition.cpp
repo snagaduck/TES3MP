@@ -3,11 +3,9 @@
 
 using namespace mwmp;
 
-PacketPlayerPosition::PacketPlayerPosition(RakNet::RakPeerInterface *peer) : PlayerPacket(peer)
+PacketPlayerPosition::PacketPlayerPosition(mwmp::NetworkManager *network) : PlayerPacket(network)
 {
     packetID = ID_PLAYER_POSITION;
-    priority = MEDIUM_PRIORITY;
-    //reliability = UNRELIABLE_SEQUENCED;
 }
 
 void PacketPlayerPosition::Packet(mwmp::NetBuffer *newBitstream, bool send)

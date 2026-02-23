@@ -1,6 +1,5 @@
 #include "ObjectProcessor.hpp"
 #include "Networking.hpp"
-#include <components/openmw-mp/Net/RakNetManager.hpp>
 
 using namespace mwmp;
 
@@ -12,19 +11,19 @@ void ObjectProcessor::Do(ObjectPacket &packet, Player &player, BaseObjectList &o
     packet.Send(true);
 }
 
-bool ObjectProcessor::Process(RakNet::Packet &packet, BaseObjectList &objectList) noexcept
+bool ObjectProcessor::Process(mwmp::ReceivedPacket &packet, BaseObjectList &objectList) noexcept
 {
     // Clear our BaseObjectList before loading new data in it
     objectList.cell.blank();
     objectList.baseObjects.clear();
-    objectList.guid = mwmp::RakNetManager::getInstance()->ToPlayerId(packet.guid);
+    objectList.guid = packet.sender;
 
     for (auto &processor : processors)
     {
-        if (processor.first == packet.data[0])
+        if (processor.first == packet.packetId)
         {
             Player *player = Players::getPlayer(objectList.guid);
-            ObjectPacket *myPacket = Networking::get().getObjectPacketController()->GetPacket(packet.data[0]);
+            ObjectPacket *myPacket = Networking::get().getObjectPacketController()->GetPacket(packet.packetId);
 
             myPacket->setObjectList(&objectList);
             objectList.isValid = true;
@@ -36,7 +35,7 @@ bool ObjectProcessor::Process(RakNet::Packet &packet, BaseObjectList &objectList
                 processor.second->Do(*myPacket, *player, objectList);
             else
                 LOG_MESSAGE_SIMPLE(TimedLog::LOG_ERROR, "Received %s that failed integrity check and was ignored!", processor.second->strPacketID.c_str());
-            
+
             return true;
         }
     }

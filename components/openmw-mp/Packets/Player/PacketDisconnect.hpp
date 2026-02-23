@@ -9,7 +9,7 @@ namespace mwmp
     class PacketDisconnect : public PlayerPacket
     {
     public:
-        PacketDisconnect(RakNet::RakPeerInterface *peer) : PlayerPacket(peer)
+        PacketDisconnect(mwmp::NetworkManager *network) : PlayerPacket(network)
         {
             packetID = ID_USER_DISCONNECTED;
             orderChannel = CHANNEL_SYSTEM;

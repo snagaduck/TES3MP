@@ -4,7 +4,7 @@
 
 using namespace mwmp;
 
-PacketActorAnimPlay::PacketActorAnimPlay(RakNet::RakPeerInterface *peer) : ActorPacket(peer)
+PacketActorAnimPlay::PacketActorAnimPlay(mwmp::NetworkManager *network) : ActorPacket(network)
 {
     packetID = ID_ACTOR_ANIM_PLAY;
 }

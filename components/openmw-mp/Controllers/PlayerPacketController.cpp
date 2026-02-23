@@ -45,63 +45,63 @@
 #include "PlayerPacketController.hpp"
 
 template <typename T>
-inline void AddPacket(mwmp::PlayerPacketController::packets_t *packets, RakNet::RakPeerInterface *peer)
+inline void AddPacket(mwmp::PlayerPacketController::packets_t *packets, mwmp::NetworkManager *network)
 {
-    T *packet = new T(peer);
+    T *packet = new T(network);
     typedef mwmp::PlayerPacketController::packets_t::value_type value_t;
     packets->insert(value_t(packet->GetPacketID(), value_t::second_type(packet)));
 }
 
-mwmp::PlayerPacketController::PlayerPacketController(RakNet::RakPeerInterface *peer)
+mwmp::PlayerPacketController::PlayerPacketController(mwmp::NetworkManager *network)
 {
-    AddPacket<PacketDisconnect>(&packets, peer);
-    AddPacket<PacketChatMessage>(&packets, peer);
-    AddPacket<PacketGUIBoxes>(&packets, peer);
-    AddPacket<PacketLoaded>(&packets, peer);
-    AddPacket<PacketGameSettings>(&packets, peer);
-    AddPacket<PacketPlayerSpellsActive>(&packets, peer);
+    AddPacket<PacketDisconnect>(&packets, network);
+    AddPacket<PacketChatMessage>(&packets, network);
+    AddPacket<PacketGUIBoxes>(&packets, network);
+    AddPacket<PacketLoaded>(&packets, network);
+    AddPacket<PacketGameSettings>(&packets, network);
+    AddPacket<PacketPlayerSpellsActive>(&packets, network);
 
-    AddPacket<PacketPlayerAlly>(&packets, peer);
-    AddPacket<PacketPlayerAnimFlags>(&packets, peer);
-    AddPacket<PacketPlayerAnimPlay>(&packets, peer);
-    AddPacket<PacketPlayerAttack>(&packets, peer);
-    AddPacket<PacketPlayerAttribute>(&packets, peer);
-    AddPacket<PacketPlayerBaseInfo>(&packets, peer);
-    AddPacket<PacketPlayerBehavior>(&packets, peer);
-    AddPacket<PacketPlayerBook>(&packets, peer);
-    AddPacket<PacketPlayerBounty>(&packets, peer);
-    AddPacket<PacketPlayerCast>(&packets, peer);
-    AddPacket<PacketPlayerCellChange>(&packets, peer);
-    AddPacket<PacketPlayerCellState>(&packets, peer);
-    AddPacket<PacketPlayerCharGen>(&packets, peer);
-    AddPacket<PacketPlayerClass>(&packets, peer);
-    AddPacket<PacketPlayerCooldowns>(&packets, peer);
-    AddPacket<PacketPlayerDeath>(&packets, peer);
-    AddPacket<PacketPlayerEquipment>(&packets, peer);
-    AddPacket<PacketPlayerFaction>(&packets, peer);
-    AddPacket<PacketPlayerInput>(&packets, peer);
-    AddPacket<PacketPlayerInventory>(&packets, peer);
-    AddPacket<PacketPlayerItemUse>(&packets, peer);
-    AddPacket<PacketPlayerJail>(&packets, peer);
-    AddPacket<PacketPlayerJournal>(&packets, peer);
-    AddPacket<PacketPlayerLevel>(&packets, peer);
-    AddPacket<PacketPlayerMiscellaneous>(&packets, peer);
-    AddPacket<PacketPlayerMomentum>(&packets, peer);
-    AddPacket<PacketPlayerPosition>(&packets, peer);
-    AddPacket<PacketPlayerQuickKeys>(&packets, peer);
-    AddPacket<PacketPlayerReputation>(&packets, peer);
-    AddPacket<PacketPlayerRest>(&packets, peer);
-    AddPacket<PacketPlayerResurrect>(&packets, peer);
-    AddPacket<PacketPlayerShapeshift>(&packets, peer);
-    AddPacket<PacketPlayerSkill>(&packets, peer);
-    AddPacket<PacketPlayerSpeech>(&packets, peer);
-    AddPacket<PacketPlayerSpellbook>(&packets, peer);
-    AddPacket<PacketPlayerStatsDynamic>(&packets, peer);
-    AddPacket<PacketPlayerTopic>(&packets, peer);
+    AddPacket<PacketPlayerAlly>(&packets, network);
+    AddPacket<PacketPlayerAnimFlags>(&packets, network);
+    AddPacket<PacketPlayerAnimPlay>(&packets, network);
+    AddPacket<PacketPlayerAttack>(&packets, network);
+    AddPacket<PacketPlayerAttribute>(&packets, network);
+    AddPacket<PacketPlayerBaseInfo>(&packets, network);
+    AddPacket<PacketPlayerBehavior>(&packets, network);
+    AddPacket<PacketPlayerBook>(&packets, network);
+    AddPacket<PacketPlayerBounty>(&packets, network);
+    AddPacket<PacketPlayerCast>(&packets, network);
+    AddPacket<PacketPlayerCellChange>(&packets, network);
+    AddPacket<PacketPlayerCellState>(&packets, network);
+    AddPacket<PacketPlayerCharGen>(&packets, network);
+    AddPacket<PacketPlayerClass>(&packets, network);
+    AddPacket<PacketPlayerCooldowns>(&packets, network);
+    AddPacket<PacketPlayerDeath>(&packets, network);
+    AddPacket<PacketPlayerEquipment>(&packets, network);
+    AddPacket<PacketPlayerFaction>(&packets, network);
+    AddPacket<PacketPlayerInput>(&packets, network);
+    AddPacket<PacketPlayerInventory>(&packets, network);
+    AddPacket<PacketPlayerItemUse>(&packets, network);
+    AddPacket<PacketPlayerJail>(&packets, network);
+    AddPacket<PacketPlayerJournal>(&packets, network);
+    AddPacket<PacketPlayerLevel>(&packets, network);
+    AddPacket<PacketPlayerMiscellaneous>(&packets, network);
+    AddPacket<PacketPlayerMomentum>(&packets, network);
+    AddPacket<PacketPlayerPosition>(&packets, network);
+    AddPacket<PacketPlayerQuickKeys>(&packets, network);
+    AddPacket<PacketPlayerReputation>(&packets, network);
+    AddPacket<PacketPlayerRest>(&packets, network);
+    AddPacket<PacketPlayerResurrect>(&packets, network);
+    AddPacket<PacketPlayerShapeshift>(&packets, network);
+    AddPacket<PacketPlayerSkill>(&packets, network);
+    AddPacket<PacketPlayerSpeech>(&packets, network);
+    AddPacket<PacketPlayerSpellbook>(&packets, network);
+    AddPacket<PacketPlayerStatsDynamic>(&packets, network);
+    AddPacket<PacketPlayerTopic>(&packets, network);
 }
 
 
-mwmp::PlayerPacket *mwmp::PlayerPacketController::GetPacket(RakNet::MessageID id)
+mwmp::PlayerPacket *mwmp::PlayerPacketController::GetPacket(unsigned char id)
 {
     return packets[(unsigned char)id].get();
 }
@@ -112,7 +112,7 @@ void mwmp::PlayerPacketController::SetStream(mwmp::NetBuffer *inStream, mwmp::Ne
         packet.second->SetStreams(inStream, outStream);
 }
 
-bool mwmp::PlayerPacketController::ContainsPacket(RakNet::MessageID id)
+bool mwmp::PlayerPacketController::ContainsPacket(unsigned char id)
 {
     for(const auto &packet : packets)
     {

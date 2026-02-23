@@ -9,7 +9,7 @@ namespace mwmp
     class PacketRecordDynamic: public WorldstatePacket
     {
     public:
-        PacketRecordDynamic(RakNet::RakPeerInterface *peer);
+        PacketRecordDynamic(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
 

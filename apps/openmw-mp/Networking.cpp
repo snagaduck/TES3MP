@@ -45,11 +45,11 @@ Networking::Networking(RakNet::RakPeerInterface *peer) : mclient(nullptr)
 
     CellController::create();
 
-    systemPacketController = new SystemPacketController(peer);
-    playerPacketController = new PlayerPacketController(peer);
-    actorPacketController = new ActorPacketController(peer);
-    objectPacketController = new ObjectPacketController(peer);
-    worldstatePacketController = new WorldstatePacketController(peer);
+    systemPacketController = new SystemPacketController(rakNetManager);
+    playerPacketController = new PlayerPacketController(rakNetManager);
+    actorPacketController = new ActorPacketController(rakNetManager);
+    objectPacketController = new ObjectPacketController(rakNetManager);
+    worldstatePacketController = new WorldstatePacketController(rakNetManager);
 
     // Set send stream
     systemPacketController->SetStream(0, &bsOut);
@@ -94,27 +94,27 @@ bool Networking::isPassworded() const
     return serverPassword != TES3MP_DEFAULT_PASSW;
 }
 
-void Networking::processSystemPacket(RakNet::Packet *packet, mwmp::PlayerId pid)
+void Networking::processSystemPacket(mwmp::ReceivedPacket &rp)
 {
-    Player *player = Players::getPlayer(pid);
+    Player *player = Players::getPlayer(rp.sender);
 
-    SystemPacket *myPacket = systemPacketController->GetPacket(packet->data[0]);
+    SystemPacket *myPacket = systemPacketController->GetPacket(rp.packetId);
 
-    if (packet->data[0] == ID_SYSTEM_HANDSHAKE)
+    if (rp.packetId == ID_SYSTEM_HANDSHAKE)
     {
         myPacket->setSystem(&baseSystem);
         myPacket->Read();
 
         if (!myPacket->isPacketValid())
         {
-            LOG_MESSAGE_SIMPLE(TimedLog::LOG_ERROR, "Invalid handshake packet from client at %s", packet->systemAddress.ToString());
+            LOG_MESSAGE_SIMPLE(TimedLog::LOG_ERROR, "Invalid handshake packet from client at %s", rp.senderAddress.c_str());
             kickPlayer(player->guid);
             return;
         }
 
         if (player->isHandshaked())
         {
-            LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Wrong handshake with client at %s", packet->systemAddress.ToString());
+            LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Wrong handshake with client at %s", rp.senderAddress.c_str());
             kickPlayer(player->guid);
             return;
         }
@@ -124,14 +124,14 @@ void Networking::processSystemPacket(RakNet::Packet *packet, mwmp::PlayerId pid)
             if (isPassworded())
             {
                 LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Wrong server password %s used by client at %s",
-                    baseSystem.serverPassword.c_str(), packet->systemAddress.ToString());
+                    baseSystem.serverPassword.c_str(), rp.senderAddress.c_str());
                 kickPlayer(player->guid);
                 return;
             }
             else
             {
                 LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "Client at %s tried to join using password, despite the server not being passworded",
-                    packet->systemAddress.ToString());
+                    rp.senderAddress.c_str());
             }
         }
         player->setHandshake();
@@ -139,16 +139,16 @@ void Networking::processSystemPacket(RakNet::Packet *packet, mwmp::PlayerId pid)
     }
 }
 
-void Networking::processPlayerPacket(RakNet::Packet *packet, mwmp::PlayerId pid)
+void Networking::processPlayerPacket(mwmp::ReceivedPacket &rp)
 {
-    Player *player = Players::getPlayer(pid);
+    Player *player = Players::getPlayer(rp.sender);
 
-    PlayerPacket *myPacket = playerPacketController->GetPacket(packet->data[0]);
+    PlayerPacket *myPacket = playerPacketController->GetPacket(rp.packetId);
 
     if (!player->isHandshaked())
     {
         player->incrementHandshakeAttempts();
-        LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Have not completed handshake with client at %s", packet->systemAddress.ToString());
+        LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Have not completed handshake with client at %s", rp.senderAddress.c_str());
         LOG_APPEND(TimedLog::LOG_WARN, "- Attempts so far: %i", player->getHandshakeAttempts());
 
         if (player->getHandshakeAttempts() > 20)
@@ -159,22 +159,22 @@ void Networking::processPlayerPacket(RakNet::Packet *packet, mwmp::PlayerId pid)
         return;
     }
 
-    if (packet->data[0] == ID_LOADED)
+    if (rp.packetId == ID_LOADED)
     {
         player->setLoadState(Player::LOADED);
 
-        unsigned short slotId = Players::getPlayer(pid)->getId();
+        unsigned short slotId = Players::getPlayer(rp.sender)->getId();
         Script::Call("OnPlayerConnect", slotId);
 
         if (player->getLoadState() == Player::KICKED) // kicked inside in OnPlayerConnect
         {
-            playerPacketController->GetPacket(ID_USER_DISCONNECTED)->setPlayer(Players::getPlayer(pid));
+            playerPacketController->GetPacket(ID_USER_DISCONNECTED)->setPlayer(Players::getPlayer(rp.sender));
             playerPacketController->GetPacket(ID_USER_DISCONNECTED)->Send(false);
-            Players::deletePlayer(pid);
+            Players::deletePlayer(rp.sender);
             return;
         }
     }
-    else if (packet->data[0] == ID_PLAYER_BASEINFO)
+    else if (rp.packetId == ID_PLAYER_BASEINFO)
     {
         LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "Received ID_PLAYER_BASEINFO about %s", player->npc.mName.c_str());
 
@@ -188,73 +188,73 @@ void Networking::processPlayerPacket(RakNet::Packet *packet, mwmp::PlayerId pid)
     else if (player->getLoadState() == Player::LOADED)
     {
         player->setLoadState(Player::POSTLOADED);
-        newPlayer(pid);
+        newPlayer(rp.sender);
         return;
     }
 
 
-    if (!PlayerProcessor::Process(*packet))
-        LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled PlayerPacket with identifier %i has arrived", packet->data[0]);
+    if (!PlayerProcessor::Process(rp))
+        LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled PlayerPacket with identifier %i has arrived", rp.packetId);
 
 }
 
-void Networking::processActorPacket(RakNet::Packet *packet, mwmp::PlayerId pid)
+void Networking::processActorPacket(mwmp::ReceivedPacket &rp)
 {
-    Player *player = Players::getPlayer(pid);
+    Player *player = Players::getPlayer(rp.sender);
 
     if (!player->isHandshaked() || player->getLoadState() != Player::POSTLOADED)
         return;
 
-    if (!ActorProcessor::Process(*packet, baseActorList))
-        LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled ActorPacket with identifier %i has arrived", packet->data[0]);
+    if (!ActorProcessor::Process(rp, baseActorList))
+        LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled ActorPacket with identifier %i has arrived", rp.packetId);
 
 }
 
-void Networking::processObjectPacket(RakNet::Packet *packet, mwmp::PlayerId pid)
+void Networking::processObjectPacket(mwmp::ReceivedPacket &rp)
 {
-    Player *player = Players::getPlayer(pid);
+    Player *player = Players::getPlayer(rp.sender);
 
     if (!player->isHandshaked() || player->getLoadState() != Player::POSTLOADED)
         return;
 
-    if (!ObjectProcessor::Process(*packet, baseObjectList))
-        LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled ObjectPacket with identifier %i has arrived", packet->data[0]);
+    if (!ObjectProcessor::Process(rp, baseObjectList))
+        LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled ObjectPacket with identifier %i has arrived", rp.packetId);
 
 }
 
-void Networking::processWorldstatePacket(RakNet::Packet *packet, mwmp::PlayerId pid)
+void Networking::processWorldstatePacket(mwmp::ReceivedPacket &rp)
 {
-    Player *player = Players::getPlayer(pid);
+    Player *player = Players::getPlayer(rp.sender);
 
     if (!player->isHandshaked() || player->getLoadState() != Player::POSTLOADED)
         return;
 
-    if (!WorldstateProcessor::Process(*packet, baseWorldstate))
-        LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled WorldstatePacket with identifier %i has arrived", packet->data[0]);
+    if (!WorldstateProcessor::Process(rp, baseWorldstate))
+        LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled WorldstatePacket with identifier %i has arrived", rp.packetId);
 
 }
 
-bool Networking::preInit(RakNet::Packet *packet, mwmp::PlayerId pid, mwmp::NetBuffer &bsIn)
+bool Networking::preInit(mwmp::ReceivedPacket &rp, mwmp::PlayerId pid)
 {
-    if (packet->data[0] != ID_GAME_PREINIT)
+    if (rp.packetId != ID_GAME_PREINIT)
     {
         LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "%s sent wrong first packet (ID_GAME_PREINIT was expected)",
-                           packet->systemAddress.ToString());
-        peer->CloseConnection(packet->systemAddress, true);
+                           rp.senderAddress.c_str());
+        rakNetManager->CloseConnection(pid, true);
     }
 
-    LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "Received ID_GAME_PREINIT from %s", packet->systemAddress.ToString());
+    LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "Received ID_GAME_PREINIT from %s", rp.senderAddress.c_str());
     PacketPreInit::PluginContainer dataFiles;
 
-    PacketPreInit packetPreInit(peer);
-    packetPreInit.SetReadStream(&bsIn);
+    PacketPreInit packetPreInit(rakNetManager);
+    packetPreInit.SetReadStream(&rp.data);
     packetPreInit.setChecksums(&dataFiles);
     packetPreInit.Read();
 
     if (!packetPreInit.isPacketValid() || dataFiles.empty())
     {
         LOG_APPEND(TimedLog::LOG_ERROR, "- Packet was invalid");
-        peer->CloseConnection(packet->systemAddress, false); // close connection without notification
+        rakNetManager->CloseConnection(pid, false); // close connection without notification
         return false;
     }
 
@@ -289,17 +289,17 @@ bool Networking::preInit(RakNet::Packet *packet, mwmp::PlayerId pid, mwmp::NetBu
     {
         LOG_APPEND(TimedLog::LOG_INFO, "- Client was not allowed to connect due to incompatible data files");
         packetPreInit.setChecksums(&samples);
-        packetPreInit.Send(packet->systemAddress);
-        peer->CloseConnection(packet->systemAddress, true);
+        packetPreInit.Send(pid);
+        rakNetManager->CloseConnection(pid, true);
     }
     else
     {
         LOG_APPEND(TimedLog::LOG_INFO, "- Client was allowed to connect");
         PacketPreInit::PluginContainer tmp;
         packetPreInit.setChecksums(&tmp);
-        packetPreInit.Send(packet->systemAddress);
+        packetPreInit.Send(pid);
         Players::newPlayer(pid); // create player if connection allowed
-        systemPacketController->SetStream(&bsIn, nullptr); // and request handshake
+        systemPacketController->SetStream(&rp.data, nullptr); // and request handshake
         systemPacketController->GetPacket(ID_SYSTEM_HANDSHAKE)->RequestData(pid);
         return true;
     }
@@ -307,35 +307,35 @@ bool Networking::preInit(RakNet::Packet *packet, mwmp::PlayerId pid, mwmp::NetBu
     return false;
 }
 
-void Networking::update(RakNet::Packet *packet, mwmp::PlayerId pid, mwmp::NetBuffer &bsIn)
+void Networking::update(mwmp::ReceivedPacket &rp)
 {
-    if (systemPacketController->ContainsPacket(packet->data[0]))
+    if (systemPacketController->ContainsPacket(rp.packetId))
     {
-        systemPacketController->SetStream(&bsIn, nullptr);
-        processSystemPacket(packet, pid);
+        systemPacketController->SetStream(&rp.data, nullptr);
+        processSystemPacket(rp);
     }
-    else if (playerPacketController->ContainsPacket(packet->data[0]))
+    else if (playerPacketController->ContainsPacket(rp.packetId))
     {
-        playerPacketController->SetStream(&bsIn, nullptr);
-        processPlayerPacket(packet, pid);
+        playerPacketController->SetStream(&rp.data, nullptr);
+        processPlayerPacket(rp);
     }
-    else if (actorPacketController->ContainsPacket(packet->data[0]))
+    else if (actorPacketController->ContainsPacket(rp.packetId))
     {
-        actorPacketController->SetStream(&bsIn, 0);
-        processActorPacket(packet, pid);
+        actorPacketController->SetStream(&rp.data, 0);
+        processActorPacket(rp);
     }
-    else if (objectPacketController->ContainsPacket(packet->data[0]))
+    else if (objectPacketController->ContainsPacket(rp.packetId))
     {
-        objectPacketController->SetStream(&bsIn, 0);
-        processObjectPacket(packet, pid);
+        objectPacketController->SetStream(&rp.data, 0);
+        processObjectPacket(rp);
     }
-    else if (worldstatePacketController->ContainsPacket(packet->data[0]))
+    else if (worldstatePacketController->ContainsPacket(rp.packetId))
     {
-        worldstatePacketController->SetStream(&bsIn, 0);
-        processWorldstatePacket(packet, pid);
+        worldstatePacketController->SetStream(&rp.data, 0);
+        processWorldstatePacket(rp);
     }
     else
-        LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled RakNet packet with identifier %i has arrived", packet->data[0]);
+        LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Unhandled packet with identifier %i has arrived", rp.packetId);
 }
 
 void Networking::newPlayer(mwmp::PlayerId guid)
@@ -482,8 +482,7 @@ Networking *Networking::getPtr()
 
 std::string Networking::getSystemAddress(mwmp::PlayerId guid)
 {
-    RakNet::RakNetGUID rakGuid = rakNetManager->ToGuid(guid);
-    return peer->GetSystemAddressFromGuid(rakGuid).ToString();
+    return rakNetManager->GetAddress(guid);
 }
 
 mwmp::RakNetManager *Networking::getRakNetManager() const
@@ -497,7 +496,7 @@ void Networking::stopServer(int code)
     exitCode = code;
 }
 
-void signalHandler(int signum) 
+void signalHandler(int signum)
 {
     std::cout << "Interrupt signal (" << signum << ") received.\n";
     //15 is SIGTERM(Normal OS stop call), 2 is SIGINT(Ctrl+C)
@@ -513,12 +512,12 @@ int Networking::mainLoop()
 
 #ifndef _WIN32
     struct sigaction sigIntHandler;
-    
+
     sigIntHandler.sa_handler = signalHandler;
     sigemptyset(&sigIntHandler.sa_mask);
     sigIntHandler.sa_flags = 0;
 #endif
-    
+
     while (running && !killLoop)
     {
 #ifndef _WIN32
@@ -568,21 +567,29 @@ int Networking::mainLoop()
                     break;
                 default:
                 {
-                    // Skip 1-byte packetID + 8-byte PlayerId header; wrap the payload only.
+                    // Build ReceivedPacket: payload is header-stripped (skip packetID + PlayerId)
                     const size_t hdrLen = 1 + sizeof(mwmp::PlayerId);
-                    mwmp::NetBuffer bsIn(
+                    mwmp::ReceivedPacket rp;
+                    rp.packetId = packet->data[0];
+                    rp.data = mwmp::NetBuffer(
                         packet->data + hdrLen,
                         packet->length > hdrLen ? packet->length - hdrLen : 0);
 
                     mwmp::PlayerId pid = rakNetManager->ToPlayerId(packet->guid);
 
                     if (Players::doesPlayerExist(pid))
-                        update(packet, pid, bsIn);
+                    {
+                        rp.sender = pid;
+                        rp.senderAddress = rakNetManager->GetAddress(pid);
+                        update(rp);
+                    }
                     else
                     {
                         // First contact from this GUID — register it to get a PlayerId
                         pid = rakNetManager->RegisterGuid(packet->guid);
-                        preInit(packet, pid, bsIn);
+                        rp.sender = pid;
+                        rp.senderAddress = rakNetManager->GetAddress(pid);
+                        preInit(rp, pid);
                     }
                     break;
                 }
@@ -640,7 +647,7 @@ MasterClient *Networking::getMasterClient()
 
 void Networking::InitQuery(std::string queryAddr, unsigned short queryPort)
 {
-    mclient = new MasterClient(peer, queryAddr, queryPort);
+    mclient = new MasterClient(rakNetManager, queryAddr, queryPort);
 }
 
 void Networking::postInit()

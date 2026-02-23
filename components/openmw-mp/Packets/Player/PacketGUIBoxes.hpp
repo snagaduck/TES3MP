@@ -8,7 +8,7 @@ namespace mwmp
     class PacketGUIBoxes : public PlayerPacket
     {
     public:
-        PacketGUIBoxes(RakNet::RakPeerInterface *peer);
+        PacketGUIBoxes(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     };

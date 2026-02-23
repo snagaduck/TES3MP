@@ -2,8 +2,6 @@
 #define OPENMW_PLAYERPACKET_HPP
 
 #include <string>
-#include <RakNetTypes.h>
-#include <PacketPriority.h>
 #include <components/openmw-mp/Base/BasePlayer.hpp>
 
 #include <components/openmw-mp/Packets/BasePacket.hpp>
@@ -13,7 +11,7 @@ namespace mwmp
     class PlayerPacket : public BasePacket
     {
     public:
-        PlayerPacket(RakNet::RakPeerInterface *peer);
+        PlayerPacket(mwmp::NetworkManager *network);
 
         ~PlayerPacket();
 

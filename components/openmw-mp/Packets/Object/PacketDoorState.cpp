@@ -3,7 +3,7 @@
 
 using namespace mwmp;
 
-PacketDoorState::PacketDoorState(RakNet::RakPeerInterface *peer) : ObjectPacket(peer)
+PacketDoorState::PacketDoorState(mwmp::NetworkManager *network) : ObjectPacket(network)
 {
     packetID = ID_DOOR_STATE;
     hasCellData = true;

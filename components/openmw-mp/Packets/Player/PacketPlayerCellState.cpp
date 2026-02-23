@@ -2,11 +2,9 @@
 #include "PacketPlayerCellState.hpp"
 
 
-mwmp::PacketPlayerCellState::PacketPlayerCellState(RakNet::RakPeerInterface *peer) : PlayerPacket(peer)
+mwmp::PacketPlayerCellState::PacketPlayerCellState(mwmp::NetworkManager *network) : PlayerPacket(network)
 {
     packetID = ID_PLAYER_CELL_STATE;
-    priority = IMMEDIATE_PRIORITY;
-    reliability = RELIABLE_ORDERED;
 }
 
 void mwmp::PacketPlayerCellState::Packet(mwmp::NetBuffer *newBitstream, bool send)

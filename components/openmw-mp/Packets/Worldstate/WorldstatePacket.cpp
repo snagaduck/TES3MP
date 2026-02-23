@@ -1,17 +1,13 @@
 #include <components/openmw-mp/NetworkMessages.hpp>
-#include <PacketPriority.h>
-#include <RakPeer.h>
 #include "WorldstatePacket.hpp"
 
 using namespace mwmp;
 
-WorldstatePacket::WorldstatePacket(RakNet::RakPeerInterface *peer) : BasePacket(peer)
+WorldstatePacket::WorldstatePacket(mwmp::NetworkManager *network) : BasePacket(network)
 {
     packetID = 0;
-    priority = HIGH_PRIORITY;
-    reliability = RELIABLE_ORDERED;
+    reliable = true;
     orderChannel = CHANNEL_WORLDSTATE;
-    this->peer = peer;
 }
 
 WorldstatePacket::~WorldstatePacket()

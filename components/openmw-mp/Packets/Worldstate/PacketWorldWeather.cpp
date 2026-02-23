@@ -3,7 +3,7 @@
 
 using namespace mwmp;
 
-PacketWorldWeather::PacketWorldWeather(RakNet::RakPeerInterface *peer) : WorldstatePacket(peer)
+PacketWorldWeather::PacketWorldWeather(mwmp::NetworkManager *network) : WorldstatePacket(network)
 {
     packetID = ID_WORLD_WEATHER;
     orderChannel = CHANNEL_WORLDSTATE;

@@ -2,7 +2,7 @@
 #define OPENMW_SYSTEMPACKETCONTROLLER_HPP
 
 
-#include <RakPeerInterface.h>
+#include <components/openmw-mp/Net/NetworkManager.hpp>
 #include <components/openmw-mp/Net/NetBuffer.hpp>
 #include "../Packets/System/SystemPacket.hpp"
 #include <unordered_map>
@@ -13,11 +13,11 @@ namespace mwmp
     class SystemPacketController
     {
     public:
-        SystemPacketController(RakNet::RakPeerInterface *peer);
-        SystemPacket *GetPacket(RakNet::MessageID id);
+        SystemPacketController(mwmp::NetworkManager *network);
+        SystemPacket *GetPacket(unsigned char id);
         void SetStream(mwmp::NetBuffer *inStream, mwmp::NetBuffer *outStream);
 
-        bool ContainsPacket(RakNet::MessageID id);
+        bool ContainsPacket(unsigned char id);
 
         typedef std::unordered_map<unsigned char, std::unique_ptr<SystemPacket> > packets_t;
     private:

@@ -4,7 +4,7 @@
 
 using namespace mwmp;
 
-PacketPlayerStatsDynamic::PacketPlayerStatsDynamic(RakNet::RakPeerInterface *peer) : PlayerPacket(peer)
+PacketPlayerStatsDynamic::PacketPlayerStatsDynamic(mwmp::NetworkManager *network) : PlayerPacket(network)
 {
     packetID = ID_PLAYER_STATS_DYNAMIC;
 }

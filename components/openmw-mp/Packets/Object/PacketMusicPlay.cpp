@@ -3,7 +3,7 @@
 
 using namespace mwmp;
 
-PacketMusicPlay::PacketMusicPlay(RakNet::RakPeerInterface *peer) : ObjectPacket(peer)
+PacketMusicPlay::PacketMusicPlay(mwmp::NetworkManager *network) : ObjectPacket(network)
 {
     packetID = ID_MUSIC_PLAY;
 }

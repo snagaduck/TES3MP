@@ -9,7 +9,7 @@ namespace mwmp
     {
     public:
         const static int AttributeCount = 8;
-        PacketPlayerAttribute(RakNet::RakPeerInterface *peer);
+        PacketPlayerAttribute(mwmp::NetworkManager *network);
 
         virtual void Packet(mwmp::NetBuffer *newBitstream, bool send);
     };

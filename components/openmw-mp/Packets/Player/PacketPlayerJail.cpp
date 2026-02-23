@@ -4,7 +4,7 @@
 
 using namespace mwmp;
 
-PacketPlayerJail::PacketPlayerJail(RakNet::RakPeerInterface *peer) : PlayerPacket(peer)
+PacketPlayerJail::PacketPlayerJail(mwmp::NetworkManager *network) : PlayerPacket(network)
 {
     packetID = ID_PLAYER_JAIL;
 }

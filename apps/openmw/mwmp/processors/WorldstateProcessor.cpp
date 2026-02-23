@@ -3,6 +3,8 @@
 
 #include "WorldstateProcessor.hpp"
 
+#include <components/openmw-mp/Net/ReceivedPacket.hpp>
+
 using namespace mwmp;
 
 template<class T>
@@ -13,24 +15,22 @@ WorldstateProcessor::~WorldstateProcessor()
 
 }
 
-bool WorldstateProcessor::Process(RakNet::Packet &packet, Worldstate &worldstate)
+bool WorldstateProcessor::Process(mwmp::ReceivedPacket &rp, Worldstate &worldstate)
 {
-    std::memcpy(&guid, packet.data + 1, sizeof(mwmp::PlayerId));
-    const size_t hdrLen = 1 + sizeof(mwmp::PlayerId);
-    mwmp::NetBuffer bsIn(packet.data + hdrLen, packet.length > hdrLen ? packet.length - hdrLen : 0);
+    guid = rp.sender;
     worldstate.guid = guid;
 
-    WorldstatePacket *myPacket = Main::get().getNetworking()->getWorldstatePacket(packet.data[0]);
+    WorldstatePacket *myPacket = Main::get().getNetworking()->getWorldstatePacket(rp.packetId);
 
     myPacket->setWorldstate(&worldstate);
-    myPacket->SetReadStream(&bsIn);
+    myPacket->SetReadStream(&rp.data);
 
     for (auto &processor : processors)
     {
-        if (processor.first == packet.data[0])
+        if (processor.first == rp.packetId)
         {
             myGuid = Main::get().getLocalPlayer()->guid;
-            request = packet.length == myPacket->headerSize();
+            request = rp.data.GetSize() == 0;
 
             worldstate.isValid = true;
 

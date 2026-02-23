@@ -3,7 +3,7 @@
 
 using namespace mwmp;
 
-PacketPlayerLevel::PacketPlayerLevel(RakNet::RakPeerInterface *peer) : PlayerPacket(peer)
+PacketPlayerLevel::PacketPlayerLevel(mwmp::NetworkManager *network) : PlayerPacket(network)
 {
     packetID = ID_PLAYER_LEVEL;
 }

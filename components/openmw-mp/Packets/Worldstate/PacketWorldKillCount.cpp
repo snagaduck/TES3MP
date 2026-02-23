@@ -3,7 +3,7 @@
 
 using namespace mwmp;
 
-PacketWorldKillCount::PacketWorldKillCount(RakNet::RakPeerInterface *peer) : WorldstatePacket(peer)
+PacketWorldKillCount::PacketWorldKillCount(mwmp::NetworkManager *network) : WorldstatePacket(network)
 {
     packetID = ID_WORLD_KILL_COUNT;
     orderChannel = CHANNEL_SYSTEM;

@@ -3,7 +3,7 @@
 
 using namespace mwmp;
 
-PacketObjectDialogueChoice::PacketObjectDialogueChoice(RakNet::RakPeerInterface *peer) : ObjectPacket(peer)
+PacketObjectDialogueChoice::PacketObjectDialogueChoice(mwmp::NetworkManager *network) : ObjectPacket(network)
 {
     packetID = ID_OBJECT_DIALOGUE_CHOICE;
     hasCellData = true;

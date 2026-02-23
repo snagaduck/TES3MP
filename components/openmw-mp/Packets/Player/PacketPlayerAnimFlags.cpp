@@ -1,7 +1,7 @@
 #include <components/openmw-mp/NetworkMessages.hpp>
 #include "PacketPlayerAnimFlags.hpp"
 
-mwmp::PacketPlayerAnimFlags::PacketPlayerAnimFlags(RakNet::RakPeerInterface *peer) : PlayerPacket(peer)
+mwmp::PacketPlayerAnimFlags::PacketPlayerAnimFlags(mwmp::NetworkManager *network) : PlayerPacket(network)
 {
     packetID = ID_PLAYER_ANIM_FLAGS;
 }

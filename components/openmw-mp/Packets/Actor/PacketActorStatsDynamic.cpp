@@ -5,7 +5,7 @@
 
 using namespace mwmp;
 
-PacketActorStatsDynamic::PacketActorStatsDynamic(RakNet::RakPeerInterface *peer) : ActorPacket(peer)
+PacketActorStatsDynamic::PacketActorStatsDynamic(mwmp::NetworkManager *network) : ActorPacket(network)
 {
     packetID = ID_ACTOR_STATS_DYNAMIC;
 }

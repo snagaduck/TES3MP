@@ -3,7 +3,7 @@
 
 using namespace mwmp;
 
-PacketObjectLock::PacketObjectLock(RakNet::RakPeerInterface *peer) : ObjectPacket(peer)
+PacketObjectLock::PacketObjectLock(mwmp::NetworkManager *network) : ObjectPacket(network)
 {
     packetID = ID_OBJECT_LOCK;
     hasCellData = true;

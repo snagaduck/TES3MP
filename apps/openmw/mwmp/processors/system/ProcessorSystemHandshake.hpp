@@ -20,7 +20,7 @@ namespace mwmp
         virtual void Do(SystemPacket &packet, BaseSystem *system)
         {
             packet.setSystem(Main::get().getLocalSystem());
-            packet.Send(serverAddr);
+            packet.Send(serverPlayerId);
         }
     };
 }

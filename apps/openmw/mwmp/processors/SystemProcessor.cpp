@@ -2,6 +2,8 @@
 #include "SystemProcessor.hpp"
 #include "../Main.hpp"
 
+#include <components/openmw-mp/Net/ReceivedPacket.hpp>
+
 using namespace mwmp;
 
 template<class T>
@@ -12,26 +14,19 @@ SystemProcessor::~SystemProcessor()
 
 }
 
-bool SystemProcessor::Process(RakNet::Packet &packet)
+bool SystemProcessor::Process(mwmp::ReceivedPacket &rp)
 {
-    std::memcpy(&guid, packet.data + 1, sizeof(mwmp::PlayerId));
-    const size_t hdrLen = 1 + sizeof(mwmp::PlayerId);
-    mwmp::NetBuffer bsIn(packet.data + hdrLen, packet.length > hdrLen ? packet.length - hdrLen : 0);
+    guid = rp.sender;
 
-    SystemPacket *myPacket = Main::get().getNetworking()->getSystemPacket(packet.data[0]);
-    myPacket->SetReadStream(&bsIn);
-
-    /*if (myPacket == 0)
-    {
-        // error: packet not found
-    }*/
+    SystemPacket *myPacket = Main::get().getNetworking()->getSystemPacket(rp.packetId);
+    myPacket->SetReadStream(&rp.data);
 
     for (auto &processor : processors)
     {
-        if (processor.first == packet.data[0])
+        if (processor.first == rp.packetId)
         {
             myGuid = Main::get().getLocalSystem()->guid;
-            request = packet.length == myPacket->headerSize();
+            request = rp.data.GetSize() == 0;
 
             BaseSystem *system = 0;
             system = Main::get().getLocalSystem();
