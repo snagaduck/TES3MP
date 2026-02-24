@@ -1,6 +1,8 @@
 #include <stdexcept>
 #include <iostream>
 #include <string>
+#include <chrono>
+#include <thread>
 
 #include <components/openmw-mp/TimedLog.hpp>
 #include <components/openmw-mp/Utils.hpp>
@@ -25,7 +27,6 @@
 #include "../mwworld/inventorystore.hpp"
 
 #include <SDL_messagebox.h>
-#include <RakSleep.h>
 #include <iomanip>
 #include <components/version/version.hpp>
 
@@ -193,178 +194,70 @@ std::string listComparison(PacketPreInit::PluginContainer checksums, PacketPreIn
     return sstr.str();
 }
 
-Networking::Networking(): peer(RakNet::RakPeerInterface::GetInstance()),
-    rakNetManager(new mwmp::RakNetManager(peer)),
-    systemPacketController(rakNetManager),
-    playerPacketController(rakNetManager), actorPacketController(rakNetManager),
-    objectPacketController(rakNetManager), worldstatePacketController(rakNetManager)
+Networking::Networking():
+    systemPacketController(&gnsManager),
+    playerPacketController(&gnsManager), actorPacketController(&gnsManager),
+    objectPacketController(&gnsManager), worldstatePacketController(&gnsManager)
 {
-    mwmp::RakNetManager::setInstance(rakNetManager);
-
-    RakNet::SocketDescriptor sd;
-    sd.port=0;
-    auto b = peer->Startup(1, &sd, 1);
-    RakAssert(b==RakNet::CRABNET_STARTED);
-
     systemPacketController.SetStream(0, &bsOut);
     playerPacketController.SetStream(0, &bsOut);
     actorPacketController.SetStream(0, &bsOut);
     objectPacketController.SetStream(0, &bsOut);
     worldstatePacketController.SetStream(0, &bsOut);
 
-    connected = 0;
+    serverPlayerId = gnsManager.getServerPlayerId();
+    connected = false;
     ProcessorInitializer();
 }
 
 Networking::~Networking()
 {
-    peer->Shutdown(100);
-    peer->CloseConnection(peer->GetSystemAddressFromIndex(0), true, 0);
-    mwmp::RakNetManager::setInstance(nullptr);
-    delete rakNetManager;
-    RakNet::RakPeerInterface::DestroyInstance(peer);
+    gnsManager.Disconnect();
 }
 
 void Networking::update()
 {
-    RakNet::Packet *packet;
-    std::string errmsg = "";
-
-    for (packet=peer->Receive(); packet; peer->DeallocatePacket(packet), packet=peer->Receive())
+    // Check for disconnect events
+    for (auto& ev : gnsManager.PollEvents())
     {
-        switch (packet->data[0])
+        if (ev.type == GNSNetworkManager::EventType::Disconnected
+            || ev.type == GNSNetworkManager::EventType::Failed)
         {
-            case ID_REMOTE_DISCONNECTION_NOTIFICATION:
-                LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "Another client has disconnected.");
-                break;
-            case ID_REMOTE_CONNECTION_LOST:
-                LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "Another client has lost connection.");
-                break;
-            case ID_REMOTE_NEW_INCOMING_CONNECTION:
-                LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "Another client has connected.");
-                break;
-            case ID_CONNECTION_REQUEST_ACCEPTED:
-                LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Our connection request has been accepted.");
-                break;
-            case ID_NEW_INCOMING_CONNECTION:
-                LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "A connection is incoming.");
-                break;
-            case ID_NO_FREE_INCOMING_CONNECTIONS:
-                errmsg = "The server is full.";
-                break;
-            case ID_DISCONNECTION_NOTIFICATION:
-                errmsg = "We have been disconnected.";
-                break;
-            case ID_CONNECTION_LOST:
-                errmsg = "Connection lost.";
-                break;
-            default:
-            {
-                if (packet->length < 2)
-                    break;
-                const size_t hdrLen = 1 + sizeof(mwmp::PlayerId);
-                mwmp::ReceivedPacket rp;
-                rp.packetId = packet->data[0];
-                rp.sender = rakNetManager->ToPlayerId(packet->guid);
-                rp.senderAddress = packet->systemAddress.ToString();
-                rp.data = mwmp::NetBuffer(packet->data + hdrLen,
-                    packet->length > hdrLen ? packet->length - hdrLen : 0);
-                receiveMessage(rp);
-                break;
-            }
+            const char* errmsg = "Connection lost.";
+            LOG_MESSAGE_SIMPLE(TimedLog::LOG_ERROR, errmsg);
+            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "tes3mp", errmsg, 0);
+            MWBase::Environment::get().getStateManager()->requestQuit();
+            return;
         }
     }
 
-    if (!errmsg.empty())
-    {
-        LOG_MESSAGE_SIMPLE(TimedLog::LOG_ERROR, errmsg.c_str());
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "tes3mp", errmsg.c_str(), 0);
-        MWBase::Environment::get().getStateManager()->requestQuit();
-    }
+    for (auto& rp : gnsManager.PollMessages())
+        receiveMessage(rp);
 }
 
 void Networking::connect(const std::string &ip, unsigned short port, std::vector<std::string> &content, Files::Collections &collections)
 {
-    RakNet::SystemAddress master;
-    master.SetBinaryAddress(ip.c_str());
-    master.SetPortHostOrder(port);
-    std::string errmsg = "";
-
-    std::stringstream sstr;
-    sstr << TES3MP_VERSION;
-    sstr << TES3MP_PROTO_VERSION;
-    std::string commitHashString = Version::getOpenmwVersion(Main::getResDir()).mCommitHash;
-    // Remove carriage returns added to version file on Windows
-    commitHashString.erase(std::remove(commitHashString.begin(), commitHashString.end(), '\r'), commitHashString.end());
-    sstr << commitHashString;
-
-    if (peer->Connect(master.ToString(false), master.GetPort(), sstr.str().c_str(), (int) sstr.str().size(), 0, 0, 3, 500, 0) != RakNet::CONNECTION_ATTEMPT_STARTED)
-        errmsg = "Connection attempt failed.\n";
-
-    bool queue = true;
-    while (queue)
+    if (!gnsManager.Connect(ip, port))
     {
-        for (RakNet::Packet *packet = peer->Receive(); packet; peer->DeallocatePacket(packet), packet = peer->Receive())
-        {
-            switch (packet->data[0])
-            {
-                case ID_CONNECTION_ATTEMPT_FAILED:
-                {
-                    errmsg = "Connection failed.\n"
-                            "Either the IP address is wrong or a firewall on either system is blocking\n"
-                            "UDP packets on the port you have chosen.";
-                    queue = false;
-                    break;
-                }
-                case ID_INVALID_PASSWORD:
-                {
-                    errmsg = "Version mismatch!\nYour client is on version " TES3MP_VERSION "\n"
-                        "Please make sure the server is on the same version.";
-                    queue = false;
-                    break;
-                }
-                case ID_INCOMPATIBLE_PROTOCOL_VERSION:
-                {
-                    errmsg = "Network protocol mismatch!\nMake sure your client is really on the same version\n"
-                        "as the server you are trying to connect to.";
-                    queue = false;
-                    break;
-                }
-                case ID_CONNECTION_REQUEST_ACCEPTED:
-                {
-                    serverPlayerId = rakNetManager->RegisterGuid(packet->guid);
-                    BaseClientPacketProcessor::SetServerPlayerId(serverPlayerId);
-
-                    connected = true;
-                    queue = false;
-
-                    LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Received ID_CONNECTION_REQUESTED_ACCEPTED from %s",
-                                       packet->systemAddress.ToString());
-
-                    break;
-                }
-                case ID_DISCONNECTION_NOTIFICATION:
-                    throw std::runtime_error("ID_DISCONNECTION_NOTIFICATION.\n");
-                case ID_CONNECTION_BANNED:
-                    throw std::runtime_error("You have been banned from this server.\n");
-                case ID_CONNECTION_LOST:
-                    throw std::runtime_error("ID_CONNECTION_LOST.\n");
-                default:
-                    LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "Connection message with identifier %i has arrived in initialization.",
-                                       packet->data[0]);
-            }
-        }
-    }
-
-    if (!errmsg.empty())
-    {
+        std::string errmsg = "Connection failed.\n"
+            "Either the IP address is wrong or a firewall is blocking UDP on the chosen port.";
         LOG_MESSAGE_SIMPLE(TimedLog::LOG_ERROR, errmsg.c_str());
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "tes3mp", errmsg.c_str(), 0);
+        return;
     }
-    else
-        preInit(content, collections);
 
-    getLocalPlayer()->guid = getLocalSystem()->guid = static_cast<mwmp::PlayerId>(peer->GetMyGUID().g);
+    serverPlayerId = gnsManager.getServerPlayerId();
+    BaseClientPacketProcessor::SetServerPlayerId(serverPlayerId);
+    connected = true;
+
+    LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "GNS client: connected to %s:%d", ip.c_str(), port);
+
+    preInit(content, collections);
+
+    // Assign client's local guid — use a stable hash of the server address as a
+    // stand-in since GNS doesn't expose a self-GUID.
+    getLocalPlayer()->guid = getLocalSystem()->guid =
+        static_cast<mwmp::PlayerId>(std::hash<std::string>{}(ip + ":" + std::to_string(port)));
 }
 
 void Networking::preInit(std::vector<std::string> &content, Files::Collections &collections)
@@ -388,7 +281,7 @@ void Networking::preInit(std::vector<std::string> &content, Files::Collections &
             throw std::runtime_error("Plugin doesn't exist.");
     }
 
-    PacketPreInit packetPreInit(rakNetManager);
+    PacketPreInit packetPreInit(&gnsManager);
     mwmp::NetBuffer bs;
     packetPreInit.setChecksums(&checksums);
     packetPreInit.setGUID(mwmp::INVALID_PLAYER_ID);
@@ -399,35 +292,30 @@ void Networking::preInit(std::vector<std::string> &content, Files::Collections &
     bool done = false;
     while (!done)
     {
-        RakNet::Packet *packet = peer->Receive();
-        if (!packet)
+        auto messages = gnsManager.PollMessages();
+        if (messages.empty())
         {
-            RakSleep(500);
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
             continue;
         }
 
-        uint8_t packetId = packet->data[0];
-        switch(packetId)
+        for (auto& rp : messages)
         {
-            case ID_DISCONNECTION_NOTIFICATION:
-            case ID_CONNECTION_LOST:
-                done = true;
-                break;
-            case ID_GAME_PREINIT:
+            if (rp.packetId == ID_GAME_PREINIT)
             {
-                // Skip 1-byte packetID + 8-byte PlayerId header; wrap the payload.
-                const size_t hdrLen = 1 + sizeof(mwmp::PlayerId);
-                mwmp::NetBuffer bsIn(
-                    packet->data + hdrLen,
-                    packet->length > hdrLen ? packet->length - hdrLen : 0);
+                mwmp::NetBuffer bsIn = rp.data;
                 packetPreInit.setChecksums(&checksumsResponse);
                 packetPreInit.Packet(&bsIn, false);
                 done = true;
                 break;
             }
+            else if (rp.packetId == ID_DISCONNECTION_NOTIFICATION
+                  || rp.packetId == ID_CONNECTION_LOST)
+            {
+                done = true;
+                break;
+            }
         }
-
-        peer->DeallocatePacket(packet);
     }
 
     if (!checksumsResponse.empty()) // something wrong

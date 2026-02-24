@@ -1,10 +1,8 @@
 #ifndef OPENMW_NETWORKING_HPP
 #define OPENMW_NETWORKING_HPP
 
-#include <RakPeerInterface.h>
 #include <string>
 #include <components/openmw-mp/Net/NetBuffer.hpp>
-#include <components/openmw-mp/Net/RakNetManager.hpp>
 #include <components/openmw-mp/Net/ReceivedPacket.hpp>
 
 #include <components/openmw-mp/NetworkMessages.hpp>
@@ -17,6 +15,7 @@
 
 #include <components/files/collections.hpp>
 
+#include "GNSNetworkManager.hpp"
 #include "LocalSystem.hpp"
 #include "ActorList.hpp"
 #include "ObjectList.hpp"
@@ -50,10 +49,9 @@ namespace mwmp
 
     private:
         bool connected;
-        RakNet::RakPeerInterface *peer;
-        // rakNetManager must be declared before the controller value-members so that
+        // gnsManager must be declared before the controller value-members so that
         // C++ initializes it first in the member-initializer list.
-        mwmp::RakNetManager *rakNetManager;
+        GNSNetworkManager gnsManager;
         mwmp::PlayerId serverPlayerId;
         mwmp::NetBuffer bsOut;
 

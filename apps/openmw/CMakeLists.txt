@@ -99,7 +99,7 @@ add_openmw_dir (mwbase
     inputmanager windowmanager statemanager
     )
 
-add_openmw_dir (mwmp Main Networking LocalSystem LocalPlayer DedicatedPlayer PlayerList LocalActor DedicatedActor ActorList
+add_openmw_dir (mwmp Main Networking GNSNetworkManager LocalSystem LocalPlayer DedicatedPlayer PlayerList LocalActor DedicatedActor ActorList
     ObjectList Worldstate Cell CellController GUIController MechanicsHelper RecordHelper ScriptController
     )
 
@@ -169,6 +169,9 @@ endif ()
 include_directories(
     ${FFmpeg_INCLUDE_DIRS}
 )
+if(GameNetworkingSockets_FOUND)
+    include_directories(${GameNetworkingSockets_INCLUDE})
+endif()
 
 target_link_libraries(tes3mp
     # CMake's built-in OSG finder does not use pkgconfig, so we have to
@@ -196,6 +199,7 @@ target_link_libraries(tes3mp
     "oics"
     components
     ${RakNet_LIBRARY}
+    $<$<BOOL:${GameNetworkingSockets_FOUND}>:${GameNetworkingSockets_LIBRARY_RELEASE}>
 )
 
 if(OSG_STATIC)
