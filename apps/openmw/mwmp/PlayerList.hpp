@@ -12,7 +12,6 @@
 #include "DedicatedPlayer.hpp"
 
 #include <map>
-#include <RakNetTypes.h>
 
 namespace MWMechanics
 {

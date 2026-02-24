@@ -1,262 +1,204 @@
-#include <RakSleep.h>
-#include <Getche.h>
-#include <sstream>
-#include <iostream>
-#include <thread>
-#include <RakPeerInterface.h>
 #include "MasterClient.hpp"
+#include "Networking.hpp"
 #include <components/openmw-mp/TimedLog.hpp>
 #include <components/openmw-mp/Version.hpp>
-#include <components/openmw-mp/Master/PacketMasterAnnounce.hpp>
-#include "Networking.hpp"
+
+#include <curl/curl.h>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+
+#include <cassert>
+#include <chrono>
+#include <sstream>
+#include <thread>
 
 using namespace mwmp;
-using namespace RakNet;
 
 bool MasterClient::sRun = false;
 
-MasterClient::MasterClient(std::string queryAddr, unsigned short queryPort) :
-        masterServer(queryAddr.c_str(), queryPort),
-        peer(RakNet::RakPeerInterface::GetInstance()),
-        rakNetManager(new mwmp::RakNetManager(peer)),
-        masterServerId(mwmp::INVALID_PLAYER_ID), pma(rakNetManager)
+static std::string buildJson(const QueryData& qd, unsigned short gamePort)
 {
-    RakNet::SocketDescriptor sd;
-    peer->Startup(1, &sd, 1);
-    timeout = 15000; // every 15 seconds
-    pma.SetSendStream(&writeStream);
-    pma.SetServer(&queryData);
-    updated = true;
+    boost::property_tree::ptree pt;
+    pt.put("hostname",    qd.GetName());
+    pt.put("modname",     qd.GetGameMode());
+    pt.put("version",     qd.GetVersion());
+    pt.put("passw",       qd.GetPassword() != 0);
+    pt.put("port",        gamePort);
+    pt.put("players",     qd.GetPlayers());
+    pt.put("max_players", qd.GetMaxPlayers());
+    std::ostringstream ss;
+    boost::property_tree::write_json(ss, pt, false);
+    return ss.str();
+}
+
+static int httpPost(const std::string& url, const std::string& json)
+{
+    CURL* curl = curl_easy_init();
+    if (!curl)
+        return -1;
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json.c_str());
+    curl_slist* headers = curl_slist_append(nullptr, "Content-Type: application/json");
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5L);
+    // Suppress response output
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, +[](char*, size_t, size_t n, void*) { return n; });
+    CURLcode res = curl_easy_perform(curl);
+    curl_slist_free_all(headers);
+    curl_easy_cleanup(curl);
+    return (res == CURLE_OK) ? 0 : -1;
+}
+
+MasterClient::MasterClient(std::string masterAddr, unsigned short masterPort)
+    : masterUrl("http://" + masterAddr + ":" + std::to_string(masterPort))
+    , timeout(15000)
+    , updated(true)
+{
 }
 
 MasterClient::~MasterClient()
 {
-    delete rakNetManager;
-    RakNet::RakPeerInterface::DestroyInstance(peer);
+    Stop();
 }
 
 void MasterClient::SetPlayers(unsigned pl)
 {
-    mutexData.lock();
-    if (queryData.GetPlayers() != pl)
+    std::lock_guard<std::mutex> lock(mutexData);
+    if ((unsigned)queryData.GetPlayers() != pl)
     {
         queryData.SetPlayers(pl);
         updated = true;
     }
-    mutexData.unlock();
 }
 
 void MasterClient::SetMaxPlayers(unsigned pl)
 {
-    mutexData.lock();
-    if (queryData.GetMaxPlayers() != pl)
+    std::lock_guard<std::mutex> lock(mutexData);
+    if ((unsigned)queryData.GetMaxPlayers() != pl)
     {
         queryData.SetMaxPlayers(pl);
         updated = true;
     }
-    mutexData.unlock();
 }
 
 void MasterClient::SetHostname(std::string hostname)
 {
-    mutexData.lock();
+    std::lock_guard<std::mutex> lock(mutexData);
     std::string substr = hostname.substr(0, 200);
     if (queryData.GetName() != substr)
     {
         queryData.SetName(substr.c_str());
         updated = true;
     }
-    mutexData.unlock();
 }
 
 void MasterClient::SetModname(std::string modname)
 {
-    mutexData.lock();
+    std::lock_guard<std::mutex> lock(mutexData);
     std::string substr = modname.substr(0, 200);
     if (queryData.GetGameMode() != substr)
     {
         queryData.SetGameMode(substr.c_str());
         updated = true;
     }
-    mutexData.unlock();
 }
 
 void MasterClient::SetRuleString(std::string key, std::string value)
 {
-    mutexData.lock();
-    if (queryData.rules.find(key) == queryData.rules.end() || queryData.rules[key].type != 's'
-        || queryData.rules[key].str != value)
+    std::lock_guard<std::mutex> lock(mutexData);
+    if (queryData.rules.find(key) == queryData.rules.end()
+        || queryData.rules[key].type != 's'
+        || queryData.rules[key].str  != value)
     {
         ServerRule rule;
-        rule.str = value;
+        rule.str  = value;
         rule.type = ServerRule::Type::string;
         queryData.rules.insert({key, rule});
         updated = true;
     }
-    mutexData.unlock();
 }
 
 void MasterClient::SetRuleValue(std::string key, double value)
 {
-    mutexData.lock();
-    if (queryData.rules.find(key) == queryData.rules.end() || queryData.rules[key].type != 'v'
-        || queryData.rules[key].val != value)
+    std::lock_guard<std::mutex> lock(mutexData);
+    if (queryData.rules.find(key) == queryData.rules.end()
+        || queryData.rules[key].type != 'v'
+        || queryData.rules[key].val  != value)
     {
         ServerRule rule;
-        rule.val = value;
+        rule.val  = value;
         rule.type = ServerRule::Type::number;
         queryData.rules.insert({key, rule});
         updated = true;
     }
-    mutexData.unlock();
 }
 
 void MasterClient::PushPlugin(Plugin plugin)
 {
-    mutexData.lock();
+    std::lock_guard<std::mutex> lock(mutexData);
     queryData.plugins.push_back(plugin);
     updated = true;
-    mutexData.unlock();
 }
 
-void MasterClient::PollPackets()
+void MasterClient::Send()
 {
-    RakNet::Packet *packet;
-    while ((packet = peer->Receive()) != nullptr)
+    unsigned short gamePort = Networking::get().getPort();
+    std::string json;
     {
-        if (packet->systemAddress != masterServer)
-        {
-            peer->DeallocatePacket(packet);
-            continue;
-        }
-
-        mwmp::NetBuffer rs(packet->data, packet->length);
-        uint8_t pid;
-        rs.Read(pid);
-        switch (pid)
-        {
-            case ID_SND_RECEIPT_ACKED:
-            case ID_CONNECTION_ATTEMPT_FAILED:
-            case ID_CONNECTION_REQUEST_ACCEPTED:
-            case ID_DISCONNECTION_NOTIFICATION:
-                break;
-            case ID_MASTER_QUERY:
-                break;
-            case ID_MASTER_ANNOUNCE:
-                pma.SetReadStream(&rs);
-                pma.Read();
-                if (pma.GetFunc() == PacketMasterAnnounce::FUNCTION_KEEP)
-                    LOG_MESSAGE_SIMPLE(TimedLog::LOG_VERBOSE, "Server data successfully updated on master server");
-                else if (pma.GetFunc() == PacketMasterAnnounce::FUNCTION_DELETE)
-                {
-                    if (timeout != 0)
-                    {
-                        LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Update rate is too low,"
-                                " and the master server has deleted information about the server. Trying low rate...");
-                        if ((timeout - step_rate) >= step_rate)
-                            SetUpdateRate(timeout - step_rate);
-                        updated = true;
-                    }
-                }
-                break;
-            default:
-                LOG_MESSAGE_SIMPLE(TimedLog::LOG_ERROR, "Received wrong packet from master server with id: %d", packet->data[0]);
-                break;
-        }
-        peer->DeallocatePacket(packet);
+        std::lock_guard<std::mutex> lock(mutexData);
+        json = buildJson(queryData, gamePort);
+        updated = false;
     }
-}
 
-void MasterClient::Send(mwmp::PacketMasterAnnounce::Func func)
-{
-    RakNet::RakPeerInterface *peer = rakNetManager->GetPeer();
-    peer->Connect(masterServer.ToString(false), masterServer.GetPort(), TES3MP_MASTERSERVER_PASSW,
-                  strlen(TES3MP_MASTERSERVER_PASSW), 0, 0, 5, 500);
-    bool waitForConnect = true;
-    while (waitForConnect)
-    {
-        ConnectionState state = peer->GetConnectionState(masterServer);
-        switch (state)
-        {
-            case IS_CONNECTED:
-            {
-                // Register the master server's GUID to get a PlayerId for routing.
-                RakNet::RakNetGUID mguid = peer->GetGuidFromSystemAddress(masterServer);
-                if (!rakNetManager->HasGuid(mguid))
-                    masterServerId = rakNetManager->RegisterGuid(mguid);
-                waitForConnect = false;
-                break;
-            }
-            case IS_NOT_CONNECTED:
-            case IS_DISCONNECTED:
-            case IS_SILENTLY_DISCONNECTING:
-            case IS_DISCONNECTING:
-            {
-                LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Cannot connect to master server: %s", masterServer.ToString());
-                return;
-            }
-            case IS_PENDING:
-            case IS_CONNECTING:
-                break;
-        }
-        RakSleep(500);
-    }
-    pma.SetFunc(func);
-    pma.Send(masterServerId);
-    updated = false;
+    std::string url = masterUrl + "/api/servers";
+    if (httpPost(url, json) != 0)
+        LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "MasterClient: failed to reach master server at %s", url.c_str());
+    else
+        LOG_MESSAGE_SIMPLE(TimedLog::LOG_VERBOSE, "MasterClient: updated on master server");
 }
 
 void MasterClient::Thread()
 {
     assert(!sRun);
-
     sRun = true;
 
-    queryData.SetPassword((int) Networking::get().isPassworded());
     queryData.SetVersion(TES3MP_VERSION);
+    queryData.SetPassword((int)Networking::get().isPassworded());
 
-    auto *players = Players::getPlayers();
+    auto* players = Players::getPlayers();
     while (sRun)
     {
-        SetPlayers((int) players->size());
+        SetPlayers((int)players->size());
 
-        auto pIt = players->begin();
-        if (queryData.players.size() != players->size())
+        // Rebuild player name list if it changed
+        bool playerListChanged = (queryData.players.size() != players->size());
+        if (!playerListChanged)
         {
-            queryData.players.clear();
-            updated = true;
-        }
-        else
-        {
-            for (int i = 0; pIt != players->end(); i++, pIt++)
+            auto pIt = players->begin();
+            for (size_t i = 0; i < queryData.players.size(); ++i, ++pIt)
             {
                 if (queryData.players[i] != pIt->second->npc.mName)
                 {
-                    queryData.players.clear();
-                    updated = true;
+                    playerListChanged = true;
                     break;
                 }
             }
         }
 
-        if (updated)
+        if (playerListChanged)
         {
-            updated = false;
-            if (pIt != players->end())
+            std::lock_guard<std::mutex> lock(mutexData);
+            queryData.players.clear();
+            for (auto& p : *players)
             {
-                for (auto player : *players)
-                {
-                    if (!player.second->npc.mName.empty())
-                        queryData.players.push_back(player.second->npc.mName);
-                }
+                if (!p.second->npc.mName.empty())
+                    queryData.players.push_back(p.second->npc.mName);
             }
-            Send(PacketMasterAnnounce::FUNCTION_ANNOUNCE);
+            updated = true;
         }
-        else
-            Send(PacketMasterAnnounce::FUNCTION_KEEP);
 
-        PollPackets();
-        RakSleep(timeout);
+        Send();
+        std::this_thread::sleep_for(std::chrono::milliseconds(timeout));
     }
 }
 
@@ -276,9 +218,9 @@ void MasterClient::Stop()
 
 void MasterClient::SetUpdateRate(unsigned int rate)
 {
-    if (timeout < min_rate)
-        timeout = min_rate;
-    else if (timeout > max_rate)
-        timeout = max_rate;
+    if (rate < min_rate)
+        rate = min_rate;
+    else if (rate > max_rate)
+        rate = max_rate;
     timeout = rate;
 }

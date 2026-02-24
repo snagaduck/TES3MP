@@ -309,12 +309,6 @@ void Networking::preInit(std::vector<std::string> &content, Files::Collections &
                 done = true;
                 break;
             }
-            else if (rp.packetId == ID_DISCONNECTION_NOTIFICATION
-                  || rp.packetId == ID_CONNECTION_LOST)
-            {
-                done = true;
-                break;
-            }
         }
     }
 

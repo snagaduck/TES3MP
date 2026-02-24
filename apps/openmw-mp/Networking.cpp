@@ -1,6 +1,5 @@
 #include "Player.hpp"
 #include "processors/ProcessorInitializer.hpp"
-#include <Kbhit.h>
 
 #include <components/misc/stringops.hpp>
 #include <components/openmw-mp/NetworkMessages.hpp>
@@ -14,6 +13,10 @@
 #include <chrono>
 #include <thread>
 #include <csignal>
+#ifndef _WIN32
+#include <sys/select.h>
+#include <unistd.h>
+#endif
 
 #include "Networking.hpp"
 #include "MasterClient.hpp"
@@ -518,8 +521,16 @@ int Networking::mainLoop()
         sigaction(SIGTERM, &sigIntHandler, NULL);
         sigaction(SIGINT, &sigIntHandler, NULL);
 #endif
-        if (kbhit() && getch() == '\n')
-            break;
+#ifndef _WIN32
+        {
+            fd_set rfds;
+            FD_ZERO(&rfds);
+            FD_SET(STDIN_FILENO, &rfds);
+            struct timeval tv = {0, 0};
+            if (select(1, &rfds, nullptr, nullptr, &tv) > 0 && getchar() == '\n')
+                break;
+        }
+#endif
 
         // Process connection events (new connections / disconnections)
         for (auto& event : gnsManager->PollConnectionEvents())

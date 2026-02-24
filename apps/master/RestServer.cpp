@@ -96,19 +96,16 @@ void RestServer::start()
         }
     };
 
-    //Add query for < 0.6 servers
     httpServer.resource[ServersRegex]["POST"] = [this](auto response, auto request) {
         try
         {
             ptree pt;
             read_json(request->content, pt);
 
-            MasterServer::SServer server;
-            ptreeToServer(pt, server);
-
             unsigned short port = pt.get<unsigned short>("port");
-            server.lastUpdate = steady_clock::now();
-            serverMap->insert({RakNet::SystemAddress(request->remote_endpoint_address.c_str(), port), server});
+            auto& entry = (*serverMap)[RakNet::SystemAddress(request->remote_endpoint_address.c_str(), port)];
+            ptreeToServer(pt, entry);
+            entry.lastUpdate = steady_clock::now();
             updatedCache = true;
 
             *response << response201;

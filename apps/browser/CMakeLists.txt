@@ -18,6 +18,9 @@ set(BROWSER
         PingHelper.cpp
         QueryHelper.cpp
         ${CMAKE_SOURCE_DIR}/files/tes3mp/browser.rc
+        ${CMAKE_SOURCE_DIR}/components/openmw-mp/Net/RakNetManager.cpp
+        ${CMAKE_SOURCE_DIR}/components/openmw-mp/Master/PacketMasterQuery.cpp
+        ${CMAKE_SOURCE_DIR}/components/openmw-mp/Master/PacketMasterUpdate.cpp
         )
 
 set(BROWSER_HEADER_MOC

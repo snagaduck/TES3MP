@@ -5,7 +5,12 @@ add_definitions(-std=gnu++14)
 
 include_directories("./")
 
-set(SOURCE_FILES main.cpp MasterServer.cpp MasterServer.hpp RestServer.cpp RestServer.hpp)
+set(SOURCE_FILES
+    main.cpp MasterServer.cpp MasterServer.hpp RestServer.cpp RestServer.hpp
+    ${CMAKE_SOURCE_DIR}/components/openmw-mp/Net/RakNetManager.cpp
+    ${CMAKE_SOURCE_DIR}/components/openmw-mp/Master/PacketMasterQuery.cpp
+    ${CMAKE_SOURCE_DIR}/components/openmw-mp/Master/PacketMasterUpdate.cpp
+)
 
 add_executable(masterserver ${SOURCE_FILES})
 target_link_libraries(masterserver ${RakNet_LIBRARY} components)

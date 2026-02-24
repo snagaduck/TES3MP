@@ -175,16 +175,18 @@ if (UNIX)
 	target_compile_options(tes3mp-server PRIVATE -Wno-ignored-qualifiers)
 endif()
 
+find_package(CURL REQUIRED)
+
 target_link_libraries(tes3mp-server
     #${Boost_SYSTEM_LIBRARY}
     #${Boost_THREAD_LIBRARY}
     #${Boost_FILESYSTEM_LIBRARY}
     #${Boost_PROGRAM_OPTIONS_LIBRARY}
-    ${RakNet_LIBRARY}
     $<$<BOOL:${GameNetworkingSockets_FOUND}>:${GameNetworkingSockets_LIBRARY_RELEASE}>
     components
     ${LuaJit_LIBRARIES}
     ${Breakpad_Library}
+    ${CURL_LIBRARIES}
 )
 
 if (UNIX)

@@ -198,7 +198,6 @@ target_link_libraries(tes3mp
     "osg-ffmpeg-videoplayer"
     "oics"
     components
-    ${RakNet_LIBRARY}
     $<$<BOOL:${GameNetworkingSockets_FOUND}>:${GameNetworkingSockets_LIBRARY_RELEASE}>
 )
 

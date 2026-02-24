@@ -13,7 +13,6 @@
 #include "../mwworld/manualref.hpp"
 
 #include <map>
-#include <RakNetTypes.h>
 
 namespace MWMechanics
 {

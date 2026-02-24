@@ -1,7 +1,10 @@
 #ifndef OPENMW_NETWORKMESSAGES_HPP
 #define OPENMW_NETWORKMESSAGES_HPP
 
-#include <MessageIdentifiers.h>
+#include <cstdint>
+
+// RakNet reserved IDs occupy 0-133; game-specific IDs start at 134.
+static constexpr uint8_t ID_USER_PACKET_ENUM = 134;
 
 enum GameMessages
 {

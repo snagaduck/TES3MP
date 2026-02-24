@@ -182,10 +182,6 @@ add_component_dir (openmw-mp
         TimedLog Utils ErrorMessages NetworkMessages Version
         )
 
-add_component_dir (openmw-mp/Net
-        RakNetManager
-        )
-
 add_component_dir (openmw-mp/Base
         BaseActor BaseObject BasePacketProcessor BasePlayer BaseStructs BaseSystem BaseWorldstate
         )
@@ -195,7 +191,7 @@ add_component_dir (openmw-mp/Controllers
         )
 
 add_component_dir(openmw-mp/Master
-        MasterData PacketMasterQuery PacketMasterUpdate PacketMasterAnnounce BaseMasterPacket ProxyMasterPacket
+        MasterData PacketMasterAnnounce ProxyMasterPacket
         )
 
 add_component_dir (openmw-mp/Packets

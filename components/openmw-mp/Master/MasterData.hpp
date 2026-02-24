@@ -6,13 +6,11 @@
 #include <vector>
 #include <map>
 #include <list>
-#include <MessageIdentifiers.h>
-
 enum MASTER_PACKETS
 {
-    ID_MASTER_QUERY = ID_USER_PACKET_ENUM,
-    ID_MASTER_UPDATE,
-    ID_MASTER_ANNOUNCE
+    ID_MASTER_QUERY   = 134,
+    ID_MASTER_UPDATE  = 135,
+    ID_MASTER_ANNOUNCE = 136
 };
 
 struct ServerRule
