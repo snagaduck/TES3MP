@@ -17,6 +17,7 @@ FIND_LIBRARY(GameNetworkingSockets_LIBRARY_RELEASE
     /usr/local/lib
     /opt/local/lib
     $ENV{GNS_ROOT}/lib
+    $ENV{HOME}/.local/lib
 )
 
 FIND_PATH(GameNetworkingSockets_INCLUDE
@@ -29,6 +30,7 @@ FIND_PATH(GameNetworkingSockets_INCLUDE
     /usr/local/include/GameNetworkingSockets
     /opt/local/include
     $ENV{GNS_ROOT}/include
+    $ENV{HOME}/.local/include/GameNetworkingSockets
 )
 
 IF(GameNetworkingSockets_INCLUDE AND GameNetworkingSockets_LIBRARY_RELEASE)

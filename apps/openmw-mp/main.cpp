@@ -15,11 +15,6 @@
 #include <components/openmw-mp/Utils.hpp>
 #include <components/openmw-mp/Version.hpp>
 
-#include <BitStream.h>
-#include <MessageIdentifiers.h>
-#include <RakPeer.h>
-#include <RakPeerInterface.h>
-
 #include "Player.hpp"
 #include "Networking.hpp"
 #include "MasterClient.hpp"
@@ -217,55 +212,15 @@ int main(int argc, char *argv[])
 
     int code;
 
-    RakNet::RakPeerInterface *peer = RakNet::RakPeerInterface::GetInstance();
-
-    std::stringstream sstr;
-    sstr << TES3MP_VERSION;
-    sstr << TES3MP_PROTO_VERSION;
     // Remove carriage returns added to version file on Windows
     version.mCommitHash.erase(std::remove(version.mCommitHash.begin(), version.mCommitHash.end(), '\r'), version.mCommitHash.end());
-    sstr << version.mCommitHash;
-
-    peer->SetIncomingPassword(sstr.str().c_str(), (int) sstr.str().size());
-
-    if (RakNet::NonNumericHostString(address.c_str()))
-    {
-        LOG_MESSAGE_SIMPLE(TimedLog::LOG_ERROR, "You cannot use non-numeric addresses for the server.");
-        return 1;
-    }
-
-    RakNet::SocketDescriptor sd((unsigned short) port, address.c_str());
 
     try
     {
         for (auto plugin : plugins)
             Script::LoadScript(plugin.c_str(), pluginHome.c_str());
 
-        switch (peer->Startup((unsigned) players, &sd, 1))
-        {
-            case RakNet::CRABNET_STARTED:
-                break;
-            case RakNet::CRABNET_ALREADY_STARTED:
-                throw std::runtime_error("Already started");
-            case RakNet::INVALID_SOCKET_DESCRIPTORS:
-                throw std::runtime_error("Incorrect port or address");
-            case RakNet::INVALID_MAX_CONNECTIONS:
-                throw std::runtime_error("Max players cannot be negative or 0");
-            case RakNet::SOCKET_FAILED_TO_BIND:
-            case RakNet::SOCKET_PORT_ALREADY_IN_USE:
-            case RakNet::PORT_CANNOT_BE_ZERO:
-                throw std::runtime_error("Failed to bind port. Make sure a server isn't already running on that port.");
-            case RakNet::SOCKET_FAILED_TEST_SEND:
-            case RakNet::SOCKET_FAMILY_NOT_SUPPORTED:
-            case RakNet::FAILED_TO_CREATE_NETWORK_THREAD:
-            case RakNet::COULD_NOT_GENERATE_GUID:
-            case RakNet::STARTUP_OTHER_FAILURE:
-                throw std::runtime_error("Cannot start server");
-        }
-
-        peer->SetMaximumIncomingConnections((unsigned short) (players));
-
-        Networking networking(peer);
+        Networking networking(static_cast<uint16_t>(port), address, static_cast<unsigned int>(players));
         networking.setServerPassword(password);
 
         if (mgr.getBool("enabled", "MasterServer"))
@@ -312,8 +267,6 @@ int main(int argc, char *argv[])
         Script::Call("OnServerScriptCrash", e.what());
         throw; //fall through
     }
-
-    RakNet::RakPeerInterface::DestroyInstance(peer);
 
     if (code == 0)
         LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "Quitting peacefully.");

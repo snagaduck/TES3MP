@@ -42,6 +42,7 @@ set(SERVER
     main.cpp
     Player.cpp
     Networking.cpp
+    GNSNetworkManager.cpp
     MasterClient.cpp
     Cell.cpp
     CellController.cpp
@@ -146,6 +147,9 @@ source_group(tes3mp-server\\processors FILES ${PROCESSORS})
 
 include_directories("./")
 include_directories(${CMAKE_SOURCE_DIR}/extern)
+if(GameNetworkingSockets_FOUND)
+    include_directories(${GameNetworkingSockets_INCLUDE})
+endif()
 
 # Main executable
 
@@ -177,7 +181,7 @@ target_link_libraries(tes3mp-server
     #${Boost_FILESYSTEM_LIBRARY}
     #${Boost_PROGRAM_OPTIONS_LIBRARY}
     ${RakNet_LIBRARY}
-    $<$<BOOL:${GameNetworkingSockets_FOUND}>:${GameNetworkingSockets_LIBRARY}>
+    $<$<BOOL:${GameNetworkingSockets_FOUND}>:${GameNetworkingSockets_LIBRARY_RELEASE}>
     components
     ${LuaJit_LIBRARIES}
     ${Breakpad_Library}

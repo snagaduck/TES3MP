@@ -4,6 +4,8 @@
 #include <string>
 #include <mutex>
 #include <thread>
+#include <RakPeerInterface.h>
+#include <RakNetTypes.h>
 #include <components/openmw-mp/Master/MasterData.hpp>
 #include <components/openmw-mp/Net/NetBuffer.hpp>
 #include <components/openmw-mp/Net/PlayerId.hpp>
@@ -17,7 +19,8 @@ public:
     static const unsigned int min_rate = 1000;
     static const unsigned int max_rate = 60000;
 public:
-    MasterClient(mwmp::RakNetManager *rakNetManager, std::string queryAddr, unsigned short queryPort);
+    MasterClient(std::string queryAddr, unsigned short queryPort);
+    ~MasterClient();
     void SetPlayers(unsigned pl);
     void SetMaxPlayers(unsigned pl);
     void SetHostname(std::string hostname);
@@ -26,16 +29,17 @@ public:
     void SetRuleValue(std::string key, double value);
     void PushPlugin(Plugin plugin);
 
-    bool Process(RakNet::Packet *packet);
     void Start();
     void Stop();
     void SetUpdateRate(unsigned int rate);
 
 private:
     void Send(mwmp::PacketMasterAnnounce::Func func);
+    void PollPackets();
     void Thread();
 private:
     RakNet::SystemAddress masterServer;
+    RakNet::RakPeerInterface *peer;
     mwmp::RakNetManager *rakNetManager;
     mwmp::PlayerId masterServerId;
     QueryData queryData;

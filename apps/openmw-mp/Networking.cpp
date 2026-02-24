@@ -1,6 +1,5 @@
 #include "Player.hpp"
 #include "processors/ProcessorInitializer.hpp"
-#include <RakPeer.h>
 #include <Kbhit.h>
 
 #include <components/misc/stringops.hpp>
@@ -34,22 +33,22 @@ static bool dataFileEnforcementState = true;
 static bool scriptErrorIgnoringState = false;
 bool killLoop = false;
 
-Networking::Networking(RakNet::RakPeerInterface *peer) : mclient(nullptr)
+Networking::Networking(uint16_t port, const std::string& address, unsigned int maxConnections) : mclient(nullptr)
 {
     sThis = this;
-    this->peer = peer;
     players = Players::getPlayers();
 
-    rakNetManager = new mwmp::RakNetManager(peer);
-    mwmp::RakNetManager::setInstance(rakNetManager);
+    gnsManager = new GNSNetworkManager(maxConnections);
+    if (!gnsManager->Init(port, address))
+        throw std::runtime_error("Failed to start GNS server on port " + std::to_string(port));
 
     CellController::create();
 
-    systemPacketController = new SystemPacketController(rakNetManager);
-    playerPacketController = new PlayerPacketController(rakNetManager);
-    actorPacketController = new ActorPacketController(rakNetManager);
-    objectPacketController = new ObjectPacketController(rakNetManager);
-    worldstatePacketController = new WorldstatePacketController(rakNetManager);
+    systemPacketController = new SystemPacketController(gnsManager);
+    playerPacketController = new PlayerPacketController(gnsManager);
+    actorPacketController = new ActorPacketController(gnsManager);
+    objectPacketController = new ObjectPacketController(gnsManager);
+    worldstatePacketController = new WorldstatePacketController(gnsManager);
 
     // Set send stream
     systemPacketController->SetStream(0, &bsOut);
@@ -75,13 +74,12 @@ Networking::~Networking()
     CellController::destroy();
 
     sThis = 0;
-    mwmp::RakNetManager::setInstance(nullptr);
-    delete rakNetManager;
     delete systemPacketController;
     delete playerPacketController;
     delete actorPacketController;
     delete objectPacketController;
     delete worldstatePacketController;
+    delete gnsManager;
 }
 
 void Networking::setServerPassword(std::string password) noexcept
@@ -240,13 +238,13 @@ bool Networking::preInit(mwmp::ReceivedPacket &rp, mwmp::PlayerId pid)
     {
         LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "%s sent wrong first packet (ID_GAME_PREINIT was expected)",
                            rp.senderAddress.c_str());
-        rakNetManager->CloseConnection(pid, true);
+        gnsManager->CloseConnection(pid, true);
     }
 
     LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "Received ID_GAME_PREINIT from %s", rp.senderAddress.c_str());
     PacketPreInit::PluginContainer dataFiles;
 
-    PacketPreInit packetPreInit(rakNetManager);
+    PacketPreInit packetPreInit(gnsManager);
     packetPreInit.SetReadStream(&rp.data);
     packetPreInit.setChecksums(&dataFiles);
     packetPreInit.Read();
@@ -254,7 +252,7 @@ bool Networking::preInit(mwmp::ReceivedPacket &rp, mwmp::PlayerId pid)
     if (!packetPreInit.isPacketValid() || dataFiles.empty())
     {
         LOG_APPEND(TimedLog::LOG_ERROR, "- Packet was invalid");
-        rakNetManager->CloseConnection(pid, false); // close connection without notification
+        gnsManager->CloseConnection(pid, false); // close connection without notification
         return false;
     }
 
@@ -290,7 +288,7 @@ bool Networking::preInit(mwmp::ReceivedPacket &rp, mwmp::PlayerId pid)
         LOG_APPEND(TimedLog::LOG_INFO, "- Client was not allowed to connect due to incompatible data files");
         packetPreInit.setChecksums(&samples);
         packetPreInit.Send(pid);
-        rakNetManager->CloseConnection(pid, true);
+        gnsManager->CloseConnection(pid, true);
     }
     else
     {
@@ -393,7 +391,6 @@ void Networking::disconnectPlayer(mwmp::PlayerId guid)
 
     playerPacketController->GetPacket(ID_USER_DISCONNECTED)->setPlayer(player);
     playerPacketController->GetPacket(ID_USER_DISCONNECTED)->Send(true);
-    rakNetManager->UnregisterGuid(rakNetManager->ToGuid(guid));
     Players::deletePlayer(guid);
 }
 
@@ -482,12 +479,12 @@ Networking *Networking::getPtr()
 
 std::string Networking::getSystemAddress(mwmp::PlayerId guid)
 {
-    return rakNetManager->GetAddress(guid);
+    return gnsManager->GetAddress(guid);
 }
 
-mwmp::RakNetManager *Networking::getRakNetManager() const
+GNSNetworkManager *Networking::getGNSManager() const
 {
-    return rakNetManager;
+    return gnsManager;
 }
 
 void Networking::stopServer(int code)
@@ -508,11 +505,8 @@ void signalHandler(int signum)
 
 int Networking::mainLoop()
 {
-    RakNet::Packet *packet;
-
 #ifndef _WIN32
     struct sigaction sigIntHandler;
-
     sigIntHandler.sa_handler = signalHandler;
     sigemptyset(&sigIntHandler.sa_mask);
     sigIntHandler.sa_flags = 0;
@@ -526,75 +520,31 @@ int Networking::mainLoop()
 #endif
         if (kbhit() && getch() == '\n')
             break;
-        for (packet=peer->Receive(); packet; peer->DeallocatePacket(packet), packet=peer->Receive())
+
+        // Process connection events (new connections / disconnections)
+        for (auto& event : gnsManager->PollConnectionEvents())
         {
-            if (getMasterClient()->Process(packet))
-                continue;
-
-            switch (packet->data[0])
+            if (event.type == GNSNetworkManager::ConnectionEvent::Connected)
             {
-                case ID_REMOTE_DISCONNECTION_NOTIFICATION:
-                    LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Client at %s has disconnected", packet->systemAddress.ToString());
-                    break;
-                case ID_REMOTE_CONNECTION_LOST:
-                    LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Client at %s has lost connection", packet->systemAddress.ToString());
-                    break;
-                case ID_REMOTE_NEW_INCOMING_CONNECTION:
-                    LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Client at %s has connected", packet->systemAddress.ToString());
-                    break;
-                case ID_CONNECTION_REQUEST_ACCEPTED:    // client to server
-                {
-                    LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Our connection request has been accepted");
-                    break;
-                }
-                case ID_NEW_INCOMING_CONNECTION:
-                    LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "A connection is incoming from %s", packet->systemAddress.ToString());
-                    break;
-                case ID_NO_FREE_INCOMING_CONNECTIONS:
-                    LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "The server is full");
-                    break;
-                case ID_DISCONNECTION_NOTIFICATION:
-                    LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN,  "Client at %s has disconnected", packet->systemAddress.ToString());
-                    disconnectPlayer(rakNetManager->ToPlayerId(packet->guid));
-                    break;
-                case ID_CONNECTION_LOST:
-                    LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Client at %s has lost connection", packet->systemAddress.ToString());
-                    disconnectPlayer(rakNetManager->ToPlayerId(packet->guid));
-                    break;
-                case ID_SND_RECEIPT_ACKED:
-                case ID_CONNECTED_PING:
-                case ID_UNCONNECTED_PING:
-                    break;
-                default:
-                {
-                    // Build ReceivedPacket: payload is header-stripped (skip packetID + PlayerId)
-                    const size_t hdrLen = 1 + sizeof(mwmp::PlayerId);
-                    mwmp::ReceivedPacket rp;
-                    rp.packetId = packet->data[0];
-                    rp.data = mwmp::NetBuffer(
-                        packet->data + hdrLen,
-                        packet->length > hdrLen ? packet->length - hdrLen : 0);
-
-                    mwmp::PlayerId pid = rakNetManager->ToPlayerId(packet->guid);
-
-                    if (Players::doesPlayerExist(pid))
-                    {
-                        rp.sender = pid;
-                        rp.senderAddress = rakNetManager->GetAddress(pid);
-                        update(rp);
-                    }
-                    else
-                    {
-                        // First contact from this GUID — register it to get a PlayerId
-                        pid = rakNetManager->RegisterGuid(packet->guid);
-                        rp.sender = pid;
-                        rp.senderAddress = rakNetManager->GetAddress(pid);
-                        preInit(rp, pid);
-                    }
-                    break;
-                }
+                LOG_MESSAGE_SIMPLE(TimedLog::LOG_INFO, "Client connected from %s", event.address.c_str());
+            }
+            else
+            {
+                LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Client at %s has disconnected", event.address.c_str());
+                if (Players::doesPlayerExist(event.pid))
+                    disconnectPlayer(event.pid);
             }
         }
+
+        // Process game messages
+        for (auto& rp : gnsManager->PollMessages())
+        {
+            if (Players::doesPlayerExist(rp.sender))
+                update(rp);
+            else
+                preInit(rp, rp.sender);
+        }
+
         TimerAPI::Tick();
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
@@ -605,39 +555,37 @@ int Networking::mainLoop()
 
 void Networking::kickPlayer(mwmp::PlayerId guid, bool sendNotification)
 {
-    RakNet::RakNetGUID rakGuid = rakNetManager->ToGuid(guid);
-    peer->CloseConnection(rakGuid, sendNotification);
+    gnsManager->CloseConnection(guid, sendNotification);
 }
 
 void Networking::banAddress(const char *ipAddress)
 {
-    peer->AddToBanList(ipAddress);
+    gnsManager->banAddress(ipAddress);
 }
 
 void Networking::unbanAddress(const char *ipAddress)
 {
-    peer->RemoveFromBanList(ipAddress);
+    gnsManager->unbanAddress(ipAddress);
 }
 
 unsigned short Networking::numberOfConnections() const
 {
-    return peer->NumberOfConnections();
+    return static_cast<unsigned short>(gnsManager->numberOfConnections());
 }
 
 unsigned int Networking::maxConnections() const
 {
-    return peer->GetMaximumIncomingConnections();
+    return gnsManager->maxConnections();
 }
 
 int Networking::getAvgPing(mwmp::PlayerId pid) const
 {
-    RakNet::RakNetGUID rakGuid = rakNetManager->ToGuid(pid);
-    return peer->GetAveragePing(rakGuid);
+    return gnsManager->getAvgPing(pid);
 }
 
 unsigned short Networking::getPort() const
 {
-    return peer->GetMyBoundAddress().GetPort();
+    return gnsManager->getPort();
 }
 
 MasterClient *Networking::getMasterClient()
@@ -647,7 +595,7 @@ MasterClient *Networking::getMasterClient()
 
 void Networking::InitQuery(std::string queryAddr, unsigned short queryPort)
 {
-    mclient = new MasterClient(rakNetManager, queryAddr, queryPort);
+    mclient = new MasterClient(queryAddr, queryPort);
 }
 
 void Networking::postInit()

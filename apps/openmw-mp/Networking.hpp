@@ -9,8 +9,8 @@
 #include <components/openmw-mp/Net/PlayerId.hpp>
 #include <components/openmw-mp/Net/NetBuffer.hpp>
 #include <components/openmw-mp/Net/ReceivedPacket.hpp>
-#include <components/openmw-mp/Net/RakNetManager.hpp>
 #include <components/openmw-mp/Packets/PacketPreInit.hpp>
+#include "GNSNetworkManager.hpp"
 #include "Player.hpp"
 
 class MasterClient;
@@ -19,7 +19,7 @@ namespace  mwmp
     class Networking
     {
     public:
-        Networking(RakNet::RakPeerInterface *peer);
+        Networking(uint16_t port, const std::string& address, unsigned int maxConnections);
         ~Networking();
 
         void newPlayer(mwmp::PlayerId guid);
@@ -30,7 +30,7 @@ namespace  mwmp
         void unbanAddress(const char *ipAddress);
         std::string getSystemAddress(mwmp::PlayerId guid);
 
-        mwmp::RakNetManager *getRakNetManager() const;
+        GNSNetworkManager *getGNSManager() const;
 
         void processSystemPacket(mwmp::ReceivedPacket &rp);
         void processPlayerPacket(mwmp::ReceivedPacket &rp);
@@ -84,8 +84,7 @@ namespace  mwmp
         std::string serverPassword;
         static Networking *sThis;
 
-        RakNet::RakPeerInterface *peer;
-        mwmp::RakNetManager *rakNetManager;
+        GNSNetworkManager *gnsManager;
         mwmp::NetBuffer bsOut;
         TPlayers *players;
         MasterClient *mclient;

@@ -15,14 +15,24 @@ using namespace RakNet;
 
 bool MasterClient::sRun = false;
 
-MasterClient::MasterClient(mwmp::RakNetManager *rakNetManager, std::string queryAddr, unsigned short queryPort) :
-        masterServer(queryAddr.c_str(), queryPort), rakNetManager(rakNetManager),
+MasterClient::MasterClient(std::string queryAddr, unsigned short queryPort) :
+        masterServer(queryAddr.c_str(), queryPort),
+        peer(RakNet::RakPeerInterface::GetInstance()),
+        rakNetManager(new mwmp::RakNetManager(peer)),
         masterServerId(mwmp::INVALID_PLAYER_ID), pma(rakNetManager)
 {
+    RakNet::SocketDescriptor sd;
+    peer->Startup(1, &sd, 1);
     timeout = 15000; // every 15 seconds
     pma.SetSendStream(&writeStream);
     pma.SetServer(&queryData);
     updated = true;
+}
+
+MasterClient::~MasterClient()
+{
+    delete rakNetManager;
+    RakNet::RakPeerInterface::DestroyInstance(peer);
 }
 
 void MasterClient::SetPlayers(unsigned pl)
@@ -109,45 +119,52 @@ void MasterClient::PushPlugin(Plugin plugin)
     mutexData.unlock();
 }
 
-bool MasterClient::Process(RakNet::Packet *packet)
+void MasterClient::PollPackets()
 {
-    if (!sRun || packet->systemAddress != masterServer)
-        return false;
-
-    mwmp::NetBuffer rs(packet->data, packet->length);
-    uint8_t pid;
-    rs.Read(pid);
-    switch (pid)
+    RakNet::Packet *packet;
+    while ((packet = peer->Receive()) != nullptr)
     {
-        case ID_SND_RECEIPT_ACKED:
-        case ID_CONNECTION_ATTEMPT_FAILED:
-        case ID_CONNECTION_REQUEST_ACCEPTED:
-        case ID_DISCONNECTION_NOTIFICATION:
-            break;
-        case ID_MASTER_QUERY:
-            break;
-        case ID_MASTER_ANNOUNCE:
-            pma.SetReadStream(&rs);
-            pma.Read();
-            if (pma.GetFunc() == PacketMasterAnnounce::FUNCTION_KEEP)
-                LOG_MESSAGE_SIMPLE(TimedLog::LOG_VERBOSE, "Server data successfully updated on master server");
-            else if (pma.GetFunc() == PacketMasterAnnounce::FUNCTION_DELETE)
-            {
-                if (timeout != 0)
+        if (packet->systemAddress != masterServer)
+        {
+            peer->DeallocatePacket(packet);
+            continue;
+        }
+
+        mwmp::NetBuffer rs(packet->data, packet->length);
+        uint8_t pid;
+        rs.Read(pid);
+        switch (pid)
+        {
+            case ID_SND_RECEIPT_ACKED:
+            case ID_CONNECTION_ATTEMPT_FAILED:
+            case ID_CONNECTION_REQUEST_ACCEPTED:
+            case ID_DISCONNECTION_NOTIFICATION:
+                break;
+            case ID_MASTER_QUERY:
+                break;
+            case ID_MASTER_ANNOUNCE:
+                pma.SetReadStream(&rs);
+                pma.Read();
+                if (pma.GetFunc() == PacketMasterAnnounce::FUNCTION_KEEP)
+                    LOG_MESSAGE_SIMPLE(TimedLog::LOG_VERBOSE, "Server data successfully updated on master server");
+                else if (pma.GetFunc() == PacketMasterAnnounce::FUNCTION_DELETE)
                 {
-                    LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Update rate is too low,"
-                            " and the master server has deleted information about the server. Trying low rate...");
-                    if ((timeout - step_rate) >= step_rate)
-                        SetUpdateRate(timeout - step_rate);
-                    updated = true;
+                    if (timeout != 0)
+                    {
+                        LOG_MESSAGE_SIMPLE(TimedLog::LOG_WARN, "Update rate is too low,"
+                                " and the master server has deleted information about the server. Trying low rate...");
+                        if ((timeout - step_rate) >= step_rate)
+                            SetUpdateRate(timeout - step_rate);
+                        updated = true;
+                    }
                 }
-            }
-            break;
-        default:
-            LOG_MESSAGE_SIMPLE(TimedLog::LOG_ERROR, "Received wrong packet from master server with id: %d", packet->data[0]);
-            return false;
+                break;
+            default:
+                LOG_MESSAGE_SIMPLE(TimedLog::LOG_ERROR, "Received wrong packet from master server with id: %d", packet->data[0]);
+                break;
+        }
+        peer->DeallocatePacket(packet);
     }
-    return true;
 }
 
 void MasterClient::Send(mwmp::PacketMasterAnnounce::Func func)
@@ -237,6 +254,8 @@ void MasterClient::Thread()
         }
         else
             Send(PacketMasterAnnounce::FUNCTION_KEEP);
+
+        PollPackets();
         RakSleep(timeout);
     }
 }
